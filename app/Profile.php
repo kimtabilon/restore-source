@@ -15,7 +15,7 @@ class Profile extends Model
         'title', 'address', 'phone', 'tel', 'company', 'job_title', 'catch_phrase',
     ];
 
-    public function donor() {       return $this->belongsTo('App\Donor'); } 
-    public function photos() {      return $this->hasMany('App\ProfilePhoto'); } 
-    public function contacts() {    return $this->hasMany('App\SecondaryContact'); } 
+    public function donor() {               return $this->belongsTo('App\Donor'); } 
+    public function profilePhotos() {       return $this->hasMany('App\ProfilePhoto'); } 
+    public function secondaryContacts() {   return $this->hasMany('App\SecondaryContact'); } 
 }

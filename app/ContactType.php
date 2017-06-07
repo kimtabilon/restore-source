@@ -15,5 +15,5 @@ class ContactType extends Model
         'name', 'description',
     ];
 
-    public function contacts() { return $this->hasMany('App\SecondaryContact'); } 
+    public function secondaryContacts() { return $this->hasMany('App\SecondaryContact'); } 
 }

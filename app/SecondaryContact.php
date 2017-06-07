@@ -15,6 +15,6 @@ class SecondaryContact extends Model
         'information',
     ];
 
-    public function profile() { return $this->belongsTo('App\Profile'); }
-    public function type() {    return $this->belongsTo('App\ContactType'); }
+    public function profile() {         return $this->belongsTo('App\Profile'); }
+    public function contactType() {     return $this->belongsTo('App\ContactType'); }
 }

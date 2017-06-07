@@ -16,5 +16,5 @@ class Transaction extends Model
     ];
 
     public function inventories() {     return $this->hasMany('App\Inventory'); }
-    public function payment_type() {    return $this->belongsTo('App\PaymentType'); }
+    public function paymentType() {     return $this->belongsTo('App\PaymentType'); }
 }

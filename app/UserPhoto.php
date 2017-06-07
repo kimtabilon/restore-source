@@ -15,5 +15,5 @@ class UserPhoto extends Model
         'primary', 'cover',
     ];
 
-    public function profile() { return $this->belongsTo('App\User'); } 
+    public function user() { return $this->belongsTo('App\User'); } 
 }
