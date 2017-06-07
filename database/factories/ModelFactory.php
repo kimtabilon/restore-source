@@ -24,14 +24,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
-        'given_name'        => $faker->firstName($gender = null|'male'|'female'),
+        'given_name'        => $faker->firstName,
         'middle_name'       => $faker->lastName,
         'last_name'         => $faker->lastName,
         'username'          => $faker->userName,
-        'email'             => $faker->unique()->safeEmail,
+        'email'             => $faker->safeEmail,
         'password'          => $password ?: $password = bcrypt('secret'),
         'role_id'           => 1,
-        'remember_token'    => $faker->sha256,
+        'remember_token'    => str_random(10),
     ];
 });
 
@@ -59,7 +59,7 @@ $factory->define(App\DonorType::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Donor::class, function (Faker\Generator $faker) {
     return [
-        'given_name'    => $faker->firstName($gender = null|'male'|'female'),
+        'given_name'    => $faker->firstName,
         'middle_name'   => $faker->lastName,
         'last_name'     => $faker->lastName,
         'email'         => $faker->unique()->safeEmail,
