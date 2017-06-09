@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,4 +34,12 @@ class User extends Authenticatable
     public function userPhotos() {  return $this->hasMany('App\UserPhoto'); } 
     public function discounts() {   return $this->hasMany('App\Discount'); } 
     public function inventories() { return $this->hasMany('App\Inventory'); } 
+
+    public function getNameAttribute() {
+        return ucfirst($this->given_name) . ' ' . ucfirst($this->last_name);
+    }
+
+    public function getDateCreatedAttribute() {
+        return Carbon::parse($this->created_at)->diffForHumans();
+    }
 }

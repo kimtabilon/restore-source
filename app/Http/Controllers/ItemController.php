@@ -6,20 +6,38 @@ use \App\ItemStatus;
 use \App\Inventory;
 use \App\Item;
 use \App\Category;
+use Session;
 
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    public function index($id=1)
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-    	$data = ItemStatus::with([
-    											'inventories', 
-    											'inventories.item', 
-    											'inventories.itemPrice', 
-    											'inventories.donor',
-    										])->get();  
+        $this->middleware('auth');
+    }
 
-    	return view('item.index', ['status' => $data, 'id' => $id]);
+    public function index($slug='for-review')
+    {
+    	$inventories = ItemStatus::where('slug', $slug)->with([
+					'inventories', 
+					'inventories.item', 
+					'inventories.itemPrice', 
+					'inventories.donor',
+				])->first()->inventories;  
+
+        // Session::flash('message', [
+        //             'title'=>'Alert',
+        //             'text'=>'This is a message!',
+        //             'type'=>'danger',
+        //             'icon'=>'ban'
+        //         ]); 
+        // dd($data);
+    	return view('item.index', ['inventories' => $inventories, 'slug' => $slug]);
     }
 }

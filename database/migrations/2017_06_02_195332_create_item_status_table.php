@@ -16,6 +16,7 @@ class CreateItemStatusTable extends Migration
         Schema::create('item_status', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('slug');
             $table->text('description');
             $table->timestamps();
         });

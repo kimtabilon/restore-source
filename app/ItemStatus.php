@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class ItemStatus extends Model
 {
+    use Sluggable;
 
 	protected $table = 'item_status';
     
@@ -19,4 +21,18 @@ class ItemStatus extends Model
     ];
 
     public function inventories() { return $this->hasMany('App\Inventory'); } 
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 }
