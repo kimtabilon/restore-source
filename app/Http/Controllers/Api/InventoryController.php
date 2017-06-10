@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use \App\ItemStatus;
 use \App\Inventory;
 use \App\Item;
 use \App\Category;
+use App\Http\Controllers\Controller;
 use Session;
 
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
+class InventoryController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -22,14 +23,18 @@ class ItemController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($slug='for-review')
+    public function index($slug)
     {
-    	$inventories = ItemStatus::where('slug', $slug)->with([
+    	return ItemStatus::where('slug', $slug)
+                ->with([
 					'inventories', 
-					'inventories.item', 
+                    'inventories.item', 
+					'inventories.item.itemCodes', 
 					'inventories.itemPrice', 
 					'inventories.donor',
-				])->first()->inventories;  
+				])
+                ->first()->inventories; 
+
 
         // Session::flash('message', [
         //             'title'=>'Alert',
@@ -38,7 +43,7 @@ class ItemController extends Controller
         //             'icon'=>'ban'
         //         ]); 
         // dd($data);
-    	return view('item.index', ['inventories' => $inventories, 'slug' => $slug]);
+    	
     }
 
     public function angular()

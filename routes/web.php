@@ -17,6 +17,16 @@ Route::get('/', function () {
 
 Route::get('items/{id?}', 'ItemController@index');
 
+Route::get('angular', 'ItemController@angular');
+Route::get('apiV2/items/{id?}', 'ItemController@list');
+
+Route::get('inventories/{status?}', 'InventoryController@index');
+Route::group(['prefix' => 'api/v1'], function () {
+	Route::get('inventories/{status?}', 'Api\InventoryController@index');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+

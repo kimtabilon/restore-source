@@ -140,13 +140,13 @@ return [
             'submenu' => [
                 [
                     'text' => 'For Review',
-                    'url'  => 'items/for-review',
+                    'url'  => 'inventories/for-review',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Under Repair',
-                    'url'  => 'items/under-repair',
+                    'url'  => 'inventories/under-repair',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'aqua',
                 ],
@@ -157,48 +157,48 @@ return [
                     'submenu' => [
                         [
                             'text' => 'Floor Item',
-                            'url'  => 'items/for-approval',
+                            'url'  => 'inventories/for-approval',
                         ],
                         [
                             'text' => 'Transfer',
-                            'url'  => 'items/for-transfer',
+                            'url'  => 'inventories/for-transfer',
                         ],
                         [
                             'text' => 'Disposal',
-                            'url'  => 'items/for-disposal',
+                            'url'  => 'inventories/for-disposal',
                         ],
                     ],    
                 ],
                 [
                     'text' => 'Good',
-                    'url'  => 'items/good',
+                    'url'  => 'inventories/good',
                     'can'  => 'cashier-manager-access',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Sold',
-                    'url'  => 'items/sold',
+                    'url'  => 'inventories/sold',
                     'can'  => 'manager-access',
                     'icon_color' => 'yellow',
                 ],
                 [
                     'text' => 'Transferred',
                     'can'  => 'manager-access',
-                    'url'  => 'items/transferrd',
+                    'url'  => 'inventories/transferred',
                 ],
                 [
                     'text' => 'Disposed',
                     'can'  => 'manager-access',
-                    'url'  => 'items/disposed',
+                    'url'  => 'inventories/disposed',
                 ],
                 [
                     'text' => 'Refunded',
-                    'url'  => 'items/refunded',
+                    'url'  => 'inventories/refunded',
                     'can'  => 'manager-access',
                 ],
                 [
                     'text' => 'Returned',
-                    'url'  => 'items/returned',
+                    'url'  => 'inventories/returned',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'red',
                 ],

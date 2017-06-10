@@ -19,6 +19,7 @@
         "cviebrock/eloquent-sluggable": "^4.2",
         "jeroennoten/laravel-adminlte": "^1.19",
         "laravel/framework": "5.4.*",
+        "laravel/passport": "^2.0",
         "laravel/tinker": "~1.0",
         "nesbot/carbon": "^1.22"
     },

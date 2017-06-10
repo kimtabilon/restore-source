@@ -178,11 +178,9 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         JeroenNoten\LaravelAdminLte\ServiceProvider::class,
-
         Barryvdh\Debugbar\ServiceProvider::class,
-
         Cviebrock\EloquentSluggable\ServiceProvider::class,
-
+        Laravel\Passport\PassportServiceProvider::class,
     ],
 
     /*
