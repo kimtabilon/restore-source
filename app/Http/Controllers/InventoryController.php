@@ -27,4 +27,6 @@ class InventoryController extends Controller
     	return view('inventory.index', ['slug' => $status]);
     }
 
+    
+
 }

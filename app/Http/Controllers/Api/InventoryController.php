@@ -7,8 +7,6 @@ use \App\Inventory;
 use \App\Item;
 use \App\Category;
 use App\Http\Controllers\Controller;
-use Session;
-
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -34,28 +32,45 @@ class InventoryController extends Controller
 					'inventories.donor',
 				])
                 ->first()->inventories; 
-
-
-        // Session::flash('message', [
-        //             'title'=>'Alert',
-        //             'text'=>'This is a message!',
-        //             'type'=>'danger',
-        //             'icon'=>'ban'
-        //         ]); 
-        // dd($data);
     	
     }
 
-    public function angular()
+    public function update(Request $request)
     {
-        return view('item.angular');
+        // return $request->input('id');
+        $data = $request->all();
+
+        switch ($data['type']) {
+            case 'item':
+                $item               = Item::with('itemCodes')->where('id', $data['id'])->first();
+                $item->name         = $data['name'];
+                $item->description  = $data['description'];
+                $item->save();
+
+                return $item;
+                break;
+            
+            default:
+                break;
+        }
+        // return $data;
     }
 
-    public function list($id=false)
+    public function transfer(Request $request, $status)
     {
-        if($id)
-            return Item::find($id);
-        else
-            return Item::all();
+        $items = $request->all();
+        $inv = [];
+        // return $items;
+        foreach ($items as $item) {
+            $inventory = Inventory::find($item['id']);
+            $inventory->item_status_id = $status;
+            $inventory->save();
+            $inv[] = $inventory;
+        }
+        return $inv;
+        // return $request->input('status');
+        // return $status;
     }
+
+    
 }

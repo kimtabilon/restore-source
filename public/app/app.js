@@ -1,6 +1,25 @@
-var app = angular.module('inventory', [], function($interpolateProvider) {
+var app = angular.module('inventory', [], function($interpolateProvider, $locationProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
-    }).constant('API_URL', 'http://127.0.0.1:8000/api/v1/');
+        $locationProvider.html5Mode({
+		  enabled: true,
+		  requireBase: false
+		});
+    })
+	.constant('API_URL', 'http://127.0.0.1:8000/api/v1/')
+	.filter( 'camelCase', function ()
+	 {
+	     var camelCaseFilter = function ( input )
+	     {
+	     	if(input)
+	     	{	
+	         var words = input.split( ' ' );
+	         for ( var i = 0, len = words.length; i < len; i++ )
+	             words[i] = words[i].charAt( 0 ).toUpperCase() + words[i].slice( 1 );
+	         return words.join( ' ' );
+	        } 
+	     };
+	     return camelCaseFilter;
+	 });
 
       

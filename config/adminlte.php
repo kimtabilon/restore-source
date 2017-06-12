@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'inventories',
 
     'logout_url' => 'logout',
 
@@ -132,7 +132,7 @@ return [
         ],
         [
             'text'        => 'Inventory',
-            'url'         => 'items',
+            'url'         => '#good',
             'icon'        => 'th',
             // 'label'       => 4,
             // 'label_color' => 'success',
@@ -140,65 +140,65 @@ return [
             'submenu' => [
                 [
                     'text' => 'For Review',
-                    'url'  => 'inventories/for-review',
+                    'url'  => 'inventories#for-review',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Under Repair',
-                    'url'  => 'inventories/under-repair',
+                    'url'  => 'inventories#under-repair',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'aqua',
                 ],
                 [
                     'text' => 'For Approval',
                     'can'  => 'manager-access',
+                    'url'  => 'inventories#for-approval',
                     'icon_color' => 'aqua',
                     'submenu' => [
                         [
                             'text' => 'Floor Item',
-                            'url'  => 'inventories/for-approval',
+                            'url'  => 'inventories#for-approval',
                         ],
                         [
                             'text' => 'Transfer',
-                            'url'  => 'inventories/for-transfer',
+                            'url'  => 'inventories#for-transfer',
                         ],
                         [
                             'text' => 'Disposal',
-                            'url'  => 'inventories/for-disposal',
+                            'url'  => 'inventories#for-disposal',
                         ],
                     ],    
                 ],
                 [
                     'text' => 'Good',
-                    'url'  => 'inventories/good',
-                    'can'  => 'cashier-manager-access',
+                    'url'  => 'inventories#good',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Sold',
-                    'url'  => 'inventories/sold',
+                    'url'  => 'inventories#sold',
                     'can'  => 'manager-access',
                     'icon_color' => 'yellow',
                 ],
                 [
                     'text' => 'Transferred',
                     'can'  => 'manager-access',
-                    'url'  => 'inventories/transferred',
+                    'url'  => 'inventories#transferred',
                 ],
                 [
                     'text' => 'Disposed',
                     'can'  => 'manager-access',
-                    'url'  => 'inventories/disposed',
+                    'url'  => 'inventories#disposed',
                 ],
                 [
                     'text' => 'Refunded',
-                    'url'  => 'inventories/refunded',
+                    'url'  => 'inventories#refunded',
                     'can'  => 'manager-access',
                 ],
                 [
                     'text' => 'Returned',
-                    'url'  => 'inventories/returned',
+                    'url'  => 'inventories#returned',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'red',
                 ],
