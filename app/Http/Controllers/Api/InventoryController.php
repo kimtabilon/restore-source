@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use \App\ItemStatus;
+use \App\ItemCodeType;
 use \App\Inventory;
 use \App\Item;
 use \App\Category;
@@ -29,6 +30,7 @@ class InventoryController extends Controller
 					'inventories', 
 					'inventories.item', 
 					'inventories.item.itemCodes', 
+					'inventories.item.itemCodes.itemCodeType', 
 					'inventories.itemPrice', 
 					'inventories.donor',
 				])
@@ -108,6 +110,11 @@ class InventoryController extends Controller
 			default:
 				break;
 		}        
+	}
+
+	public function statusAndCodeTypes() 
+	{
+		return [ 'status'=>ItemStatus::all(), 'code_types'=>ItemCodeType::all() ];
 	}
 
 	

@@ -2,10 +2,10 @@ app
 .controller('inventoriesController', function($scope, $http, $location, $filter, API_URL) {	
 
 	$http
-	.get(API_URL + 'item-status')
+	.get(API_URL + 'item-status-and-code-types')
 	.then(function(response) {
-		$scope.itemStatus = response.data;
-		// console.log(response.data);
+		$scope.itemStatus 		= response.data.status;
+		$scope.itemCodeTypes 	= response.data.code_types;
 	});	
 
 	// ITEMS
@@ -30,7 +30,6 @@ app
 				$scope.SelectedItems = [];
 			inv.selected = toggleStatus; 
 		});
-		// console.log($scope.SelectedItems);
 		$scope.countSelectedItems = $scope.SelectedItems.length;
 		
 	}
@@ -38,7 +37,6 @@ app
 	$scope.checked = function(inventory) {
 	    if (inventory.selected) {
 	        $scope.SelectedItems.push(inventory);
-	        // $scope.isAllSelected = true;
 	    }
 	    else {
 	      var index = $scope.SelectedItems.indexOf(inventory);
@@ -46,8 +44,6 @@ app
 	        $scope.SelectedItems.splice(index, 1);
 	      }
 	    }
-	    // $scope.isAllSelected = $scope.inventories.every(function(inv){ return inv.selected; })
-	    // console.log($scope.SelectedItems)  //array of selected items
 	    $scope.countSelectedItems = $scope.SelectedItems.length;
 	}
 
@@ -94,6 +90,21 @@ app
 		}
 		$scope.selectedStatus = null;	
 			
+	}
+
+	$scope.sum = function(data, field) {
+		var total = 0;
+		angular.forEach(data, function(data) {
+			total += data[field];
+		});
+
+		return total;
+	}
+
+	$scope.code = function(data, type) {		
+		var codeType 	= $filter('filter')($scope.itemCodeTypes, { name: type });
+		var match 		= $filter('filter')(data, { item_code_type_id: codeType[0].id });
+		return match.reverse()[0].code;
 	}
 
 	$scope.toggle = function(type, data, index) {

@@ -11,6 +11,8 @@ class ItemCodeTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\ItemCodeType::class)->create();
+        factory(App\ItemCodeType::class)->create(['name'=>'Barcode']);
+        factory(App\ItemCodeType::class)->create(['name'=>'RF Code']);
+        factory(App\ItemCodeType::class)->create(['name'=>'QR Code']);
     }
 }

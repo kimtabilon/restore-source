@@ -36,7 +36,7 @@
                                 <td ng-click="toggle('item', inventory, $index)"><% inventory.item.name %></td>
                                 <td><% inventory.quantity %></td>
                                 <td><% inventory.item_price.market_price %></td>
-                                <td><% inventory.item.item_codes[0].code %></td>
+                                <td><% code(inventory.item.item_codes, 'Barcode') %></td>
                                 <td><% inventory.donor.given_name %> <% inventory.donor.last_name %></td>
                             </tr>
                     </table>

@@ -94,7 +94,6 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
 
 $factory->define(App\ItemCodeType::class, function (Faker\Generator $faker) {
     return [
-        'name'          => 'Barcode',
         'description'   => $faker->realText($maxNbChars = 50, $indexSize = 2)
     ];
 });
@@ -103,15 +102,12 @@ $factory->define(App\Item::class, function (Faker\Generator $faker) {
     return [
         'name'          => $faker->company,
         'description'   => $faker->realText($maxNbChars = 50, $indexSize = 2),
-        'category_id'   => 1,
     ];
 });
 
 $factory->define(App\ItemCode::class, function (Faker\Generator $faker) {
     return [
-        'code'              => $faker->ean13,
-        'item_id'           => 1,
-        'item_code_type_id' => 1
+        'code' => $faker->ean13,
     ];
 });
 
@@ -159,15 +155,11 @@ $factory->define(App\Inventory::class, function (Faker\Generator $faker) {
                                 return factory(App\ItemImage::class)->create()->id;
                             },
         'transaction_id'    => $faker->numberBetween($min = 1, $max = 30),
+        'remarks'           => $faker->realText($maxNbChars = 20, $indexSize = 2),
+        'quantity'          => $faker->numberBetween($min = 1, $max = 30),
     ];
 });
 
-$factory->define(App\ItemQuantity::class, function (Faker\Generator $faker) {
-    return [
-        'remarks'           => $faker->realText($maxNbChars = 20, $indexSize = 2),
-        'number'          => $faker->numberBetween($min = 1, $max = 30),
-    ];
-});
 
 $factory->define(App\Transaction::class, function (Faker\Generator $faker) {
     return [

@@ -27,7 +27,7 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::post('inventories/transferOrCreate', 'Api\InventoryController@transferOrCreate');
 	Route::post('inventories/transfer/{status}', 'Api\InventoryController@transfer');
 
-	Route::get('item-status', 'Api\ItemStatusController@index');
+	Route::get('item-status-and-code-types', 'Api\InventoryController@statusAndCodeTypes');
 });
 
 Auth::routes();
