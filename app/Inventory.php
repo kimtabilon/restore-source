@@ -11,10 +11,9 @@ class Inventory extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'quantity', 'remarks',
-    ];
+    protected $fillable = [];
 
+    public function quantities() {  return $this->hasMany('App\ItemQuantity'); } 
     public function user() {        return $this->belongsTo('App\User'); } 
     public function donor() {       return $this->belongsTo('App\Donor'); } 
     public function item() {        return $this->belongsTo('App\Item'); } 

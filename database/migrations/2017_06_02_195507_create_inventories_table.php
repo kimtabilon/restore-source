@@ -22,8 +22,6 @@ class CreateInventoriesTable extends Migration
             $table->integer('item_status_id')   ->unsigned();
             $table->integer('item_image_id')    ->unsigned();
             $table->integer('transaction_id')   ->unsigned();
-            $table->integer('quantity');
-            $table->text('remarks');
             $table->timestamps();
 
             $table->foreign('user_id')          ->references('id')->on('users');
