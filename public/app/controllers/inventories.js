@@ -1,7 +1,5 @@
 app
 .controller('inventoriesController', function($scope, $http, $location, $filter, API_URL) {	
-	// ITEM STATUS
-	$scope.selectedStatus = '';
 
 	$http
 	.get(API_URL + 'item-status')
@@ -54,27 +52,48 @@ app
 	}
 
 	$scope.transfer = function(status) {
-		var active = $filter('filter')($scope.itemStatus,{ id: status });
-		if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active[0].name + "'. Continue?")) {
-	        $http({
-	            method: 'POST',
-	            url: API_URL + 'inventories/transfer/' + status,
-	            data: $scope.SelectedItems
-	        })
-            .then(function (response) {
-				console.log(response.data);
-            });
+		if(status!=null)
+		{
+			var active = $filter('filter')($scope.itemStatus,{ id: status });
+			if($scope.countSelectedItems==1) {
+				
+				$scope.modal = {
+					action: 'change-quantity',
+	            	title: "Transfer to '"+ active[0].name +"' Item - " + $scope.SelectedItems[0].item.name + " (" + $scope.SelectedItems[0].quantity + ")",
+	            	field: { quantity: 'Quantity (only)' },
+	            	data: {  status: status, action: 'change-quantity', quantity: $scope.SelectedItems[0].quantity, inventory: $scope.SelectedItems[0]},
+	            	button: 'Transfer'
+	            };
 
-	        angular.forEach($scope.SelectedItems, function(item){ 
-	        	var index = $scope.inventories.indexOf(item);
-				$scope.inventories.splice(index,1);
-			});
-			$scope.countSelectedItems = 0;
-	        $scope.SelectedItems = [];
-	    }
-	    else {
+	            $('#inventoryModal').modal('show');
+				// $scope.modal.title = 
+	            // $scope.data = { type: '', id: data.item.id ,name: data.item.name, description: data.item.description};
+			}
+			else {
+				if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active[0].name + "'. Continue?")) {
+			        $http({
+			            method: 'POST',
+			            url: API_URL + 'inventories/transfer/' + status,
+			            data: $scope.SelectedItems
+			        })
+		            .then(function (response) {
+						console.log(response.data);
+		            });
 
-	    }
+			        angular.forEach($scope.SelectedItems, function(item){ 
+			        	var index = $scope.inventories.indexOf(item);
+						$scope.inventories.splice(index,1);
+					});
+					$scope.countSelectedItems = 0;
+			        $scope.SelectedItems = [];
+			    }
+			    else {
+
+			    }
+			}
+		}
+		$scope.selectedStatus = null;	
+			
 	}
 
 	$scope.toggle = function(type, data, index) {
@@ -83,33 +102,57 @@ app
 
         switch (type) {
             case 'item':
-                $scope.form_title = "Modify Item";
-                $scope.data = { type: type, id: data.item.id ,name: data.item.name, description: data.item.description};
+                $scope.modal = {
+                	action: 'modify-item',
+                	title: "Modify Item",
+                	field: { name: 'Name', description: 'Description' },
+                	data: { type: type, id: data.item.id, name: data.item.name, description: data.item.description},
+                	button: 'Save changes'
+                };	
             	break;
             default:
                 break;
         }
-        $('#editItemModal').modal('show');
+        $('#inventoryModal').modal('show');
     }
 
-    $scope.update = function(type, data, index) {
+    $scope.update = function(action, data, index) {
         
-        switch (type) {
-            case 'item':
+        switch (action) {
+            case 'modify-item':
                 $http({
 		            method: 'POST',
-		            url: API_URL + 'inventories',
+		            url: API_URL + 'inventories/update',
 		            data: data
 		        })
 	            .then(function (response) {
 					if(index !== -1){
-						
 						$scope.inventories[index].item = response.data;
-						$('#editItemModal').modal('hide');
+						$('#inventoryModal').modal('hide');
 						console.log(response.data);
 					}
 	            });
                 break;
+
+            case 'change-quantity':
+            	$http({
+		            method: 'POST',
+		            url: API_URL + 'inventories/transferOrCreate',
+		            data: data
+		        })
+	            .then(function (response) {
+					if(index !== -1){
+						var index = $scope.inventories.indexOf($scope.SelectedItems[0]);
+						$scope.inventories[index].quantity = response.data;
+						$scope.inventories[index].selected = false;
+						$scope.SelectedItems = [];
+						$scope.countSelectedItems = 0;
+
+						$('#inventoryModal').modal('hide');
+						console.log(response.data);
+					}
+	            });
+            	break;    
             default:
                 break;
         }

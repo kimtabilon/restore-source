@@ -23,7 +23,8 @@ Route::get('apiV2/items/{id?}', 'ItemController@list');
 Route::get('inventories/{status?}', 'InventoryController@index');
 Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('inventories/{status?}', 'Api\InventoryController@index');
-	Route::post('inventories', 'Api\InventoryController@update');
+	Route::post('inventories/update', 'Api\InventoryController@update');
+	Route::post('inventories/transferOrCreate', 'Api\InventoryController@transferOrCreate');
 	Route::post('inventories/transfer/{status}', 'Api\InventoryController@transfer');
 
 	Route::get('item-status', 'Api\ItemStatusController@index');

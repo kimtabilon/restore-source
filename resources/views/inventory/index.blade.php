@@ -42,58 +42,48 @@
                     </table>
                 </div> 
                 <div class="box-footer" ng-show="countSelectedItems">
-                    <select style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
-                        ng-model="selectedStatus" 
-                        ng-options="status.id as status.name for status in itemStatus"
-                        ng-change="transfer(selectedStatus)">
-                        <option 
-                            ng-selected="countSelectedItems==0"
-                            ng-pluralize
-                            count="countSelectedItems"
-                            when="{'0': 'No selected item',
-                                   'one': 'Move item',
-                                   'other': 'Move {} items'}">
-                        </option>
-                    </select>
+                        <select style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
+                            ng-model="selectedStatus" 
+                            ng-options="status.id as status.name for status in itemStatus"
+                            ng-change="transfer(selectedStatus)">
+                            <option 
+                                ng-click="transfer(selectedStatus)"
+                                ng-selected="countSelectedItems==0"
+                                ng-pluralize
+                                count="countSelectedItems"
+                                when="{'0': 'No selected item',
+                                       'one': 'Move item',
+                                       'other': 'Move {} items'}">
+                            </option>
+                        </select>
                 </div>   
 
             </div>
         </div>
 
         <!-- Modal (Pop up when detail button clicked) -->
-        <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+        <div class="modal fade" id="inventoryModal" tabindex="-1" role="dialog" aria-labelledby="inventoryModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title" id="editItemModalLabel"><% form_title %></h4>
+                        <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
                     </div>
                     <div class="modal-body">
-                        <form name="frmEmployees" class="form-horizontal" novalidate="">
-                            <div class="form-group error">
-                                <label for="name" class="col-sm-3 control-label">Name</label>
+                        <form name="items" class="form-horizontal" novalidate="">
+                            <div class="form-group error" ng-repeat="(field, label) in modal.field">
+                                <label for="name" class="col-sm-3 control-label"><% label %></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control has-error" id="name" name="name" placeholder="Item Name" value="<% data.name %>" 
-                                    ng-model="data.name" ng-required="true">
+                                    <input type="text" class="form-control has-error" id="<% field %>" name="<% field %>" placeholder="<% label %>" value="<% modal['data'][field] %>" 
+                                    ng-model="modal['data'][field]" ng-required="true">
                                     <span class="help-inline" 
-                                    ng-show="data.name.$invalid && data.name.$touched">Item name field is required</span>
+                                    ng-show="modal['data'][field].$invalid && modal['data'][field].$touched"><% label %> field is required</span>
                                 </div>
                             </div>
-
-                            <div class="form-group error">
-                                <label for="description" class="col-sm-3 control-label">Description</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control has-error" id="description" name="description" placeholder="Description" value="<% data.description %>" 
-                                    ng-model="data.description" ng-required="true">
-                                    <span class="help-inline" 
-                                    ng-show="data.description.$invalid && data.description.$touched">Description is required</span>
-                                </div>
-                            </div>
-
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="btn-save" ng-click="update(type, data, index)" ng-disabled="frmItems.$invalid">Save changes</button>
+                        <button type="button" class="btn btn-primary" id="btn-save" ng-click="update(modal.action, modal.data, index)" ng-disabled="modal.data.$invalid"><% modal.button %></button>
                     </div>
                 </div>
             </div>
