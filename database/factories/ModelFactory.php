@@ -103,15 +103,13 @@ $factory->define(App\Item::class, function (Faker\Generator $faker) {
     return [
         'name'          => $faker->company,
         'description'   => $faker->realText($maxNbChars = 50, $indexSize = 2),
-        'category_id'   => 1,
     ];
 });
 
 $factory->define(App\ItemCode::class, function (Faker\Generator $faker) {
     return [
         'code'              => $faker->ean13,
-        'item_id'           => 1,
-        'item_code_type_id' => 1
+        'item_code_type_id' => 1,
     ];
 });
 
@@ -125,24 +123,25 @@ $factory->define(App\ItemStatus::class, function (Faker\Generator $faker) {
 $factory->define(App\ItemPrice::class, function (Faker\Generator $faker) {
     return [
         'market_price'      => $faker->numberBetween($min = 1000, $max = 9000),
-        'percent_discount'  => 20
+        'percent_discount'  => 20,
+        'item_id'           => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
 
 $factory->define(App\ItemImage::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->imageUrl($width = 640, $height = 480),
+        'name'      => $faker->imageUrl($width = 640, $height = 480),
+        'item_id'   => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
 
-$factory->define(App\Discount::class, function (Faker\Generator $faker) {
+$factory->define(App\ItemDiscount::class, function (Faker\Generator $faker) {
     return [
         'percent'       => $faker->numberBetween($min = 5, $max = 80),
         'remarks'       => $faker->realText($maxNbChars = 20, $indexSize = 2),
         'start_date'    => Carbon\Carbon::now(),
         'end_date'      => Carbon\Carbon::now()->addWeeks(1),
-        'user_id'       => 1,
-        'inventory_id'  => $faker->numberBetween($min = 1, $max = 30),
+        'user_id'       => 3,
     ];
 });
 
@@ -150,14 +149,8 @@ $factory->define(App\Inventory::class, function (Faker\Generator $faker) {
     return [
         'user_id'           => 3,
         'donor_id'          => $faker->numberBetween($min = 1, $max = 30),
-        'item_id'           => 1,
-        'item_price_id'     => function () {
-                                return factory(App\ItemPrice::class)->create()->id;
-                            },
+        'item_discount_id'  => $faker->numberBetween($min = 1, $max = 30),
         'item_status_id'    => $faker->numberBetween($min = 1, $max = 11),
-        'item_image_id'     => function () {
-                                return factory(App\ItemImage::class)->create()->id;
-                            },
         'transaction_id'    => $faker->numberBetween($min = 1, $max = 30),
         'remarks'           => $faker->realText($maxNbChars = 20, $indexSize = 2),
         'quantity'          => $faker->numberBetween($min = 1, $max = 30),
@@ -168,13 +161,12 @@ $factory->define(App\Transaction::class, function (Faker\Generator $faker) {
     return [
         'da_number'       => 'DA-'.$faker->randomNumber($nbDigits = NULL, $strict = false),
         'dt_number'       => 'DT-'.$faker->randomNumber($nbDigits = NULL, $strict = false),
-        'payment_type_id' => $faker->numberBetween($min = 1, $max = 4),
+        'payment_type_id' => $faker->numberBetween($min = 1, $max = 5),
     ];
 });
 
 $factory->define(App\PaymentType::class, function (Faker\Generator $faker) {
     return [
-        'name'          => 'Payment',
         'description'   => $faker->realText($maxNbChars = 50, $indexSize = 2),
     ];
 });

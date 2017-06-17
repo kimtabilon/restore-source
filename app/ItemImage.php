@@ -14,6 +14,6 @@ class ItemImage extends Model
     protected $fillable = [
         'name',
     ];
-
-    public function inventories() { return $this->hasMany('App\Inventory'); } 
+    
+    public function item() { return $this->belongsTo('App\Item'); }
 }
