@@ -19,17 +19,20 @@ class ItemController extends Controller
      */
     public function __construct()
     {
+
         $this->middleware('auth');
     }
 
     public function index($slug='for-review')
     {
-    	$inventories = ItemStatus::where('slug', $slug)->with([
+    	$inventories = ItemStatus::where('slug', $slug)
+                ->first()
+                ->with([
 					'inventories', 
 					'inventories.item', 
 					'inventories.itemPrice', 
 					'inventories.donor',
-				])->first()->inventories;  
+				])->inventories;  
 
         // Session::flash('message', [
         //             'title'=>'Alert',

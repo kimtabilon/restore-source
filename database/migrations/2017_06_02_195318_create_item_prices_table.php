@@ -17,7 +17,10 @@ class CreateItemPricesTable extends Migration
             $table->increments('id');
             $table->string('market_price', 10);
             $table->string('percent_discount', 10);
+            $table->integer('item_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('item_id')->references('id')->on('items');
         });
     }
 

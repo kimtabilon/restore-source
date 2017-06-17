@@ -29,12 +29,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
-    public function role() {        return $this->belongsTo('App\Role'); } 
-    public function userLogs() {    return $this->hasMany('App\UserLog'); } 
-    public function userPhotos() {  return $this->hasMany('App\UserPhoto'); } 
-    public function discounts() {   return $this->hasMany('App\Discount'); } 
-    public function inventories() { return $this->hasMany('App\Inventory'); } 
+    public function role() {            return $this->belongsTo('App\Role'); } 
+    public function userLogs() {        return $this->hasMany('App\UserLog'); } 
+    public function userPhotos() {      return $this->hasMany('App\UserPhoto'); } 
+    public function itemDiscounts() {   return $this->hasMany('App\ItemDiscount'); } 
+    public function inventories() {     return $this->hasMany('App\Inventory'); } 
 
     public function getNameAttribute() {
         return ucfirst($this->given_name) . ' ' . ucfirst($this->last_name);
@@ -43,4 +42,5 @@ class User extends Authenticatable
     public function getDateCreatedAttribute() {
         return Carbon::parse($this->created_at)->diffForHumans();
     }
+
 }

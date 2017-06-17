@@ -15,5 +15,5 @@ class ItemPrice extends Model
         'market_price', 'percent_discount',
     ];
 
-    public function inventories() { return $this->hasMany('App\Inventory'); } 
+    public function item() { return $this->belongsTo('App\Item'); }
 }

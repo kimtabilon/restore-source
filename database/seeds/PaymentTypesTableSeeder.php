@@ -14,7 +14,8 @@ class PaymentTypesTableSeeder extends Seeder
       $types = [
 				'Cash',
 				'Credit',
-				'Debit',
+                'Debit',
+				'Item Donation',
 				'Internal Transfer',
     	];
 

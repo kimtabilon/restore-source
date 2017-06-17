@@ -18,6 +18,7 @@ class CreateInventoriesTable extends Migration
             $table->integer('user_id')          ->unsigned();
             $table->integer('donor_id')         ->unsigned();
             $table->integer('item_id')          ->unsigned();
+            $table->integer('item_discount_id') ->unsigned();
             $table->integer('item_price_id')    ->unsigned();
             $table->integer('item_status_id')   ->unsigned();
             $table->integer('item_image_id')    ->unsigned();
@@ -29,6 +30,7 @@ class CreateInventoriesTable extends Migration
             $table->foreign('user_id')          ->references('id')->on('users');
             $table->foreign('donor_id')         ->references('id')->on('donors');
             $table->foreign('item_id')          ->references('id')->on('items');
+            $table->foreign('item_discount_id') ->references('id')->on('item_discounts');
             $table->foreign('item_price_id')    ->references('id')->on('item_prices');
             $table->foreign('item_status_id')   ->references('id')->on('item_status');
             $table->foreign('item_image_id')    ->references('id')->on('item_images');
