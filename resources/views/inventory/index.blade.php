@@ -31,13 +31,13 @@
                             <th>Barcode</th>
                             <th>Donor</th>
                         </thead>
-                            <tr ng-repeat="inventory in inventories | filter:search" ng-class="{active : inventory.selected}">
-                                <td><input type="checkbox" ng-model="inventory.selected" ng-change="checked(inventory)" /></td>
-                                <td ng-click="toggle('item', inventory, $index)"><% inventory.item.name %></td>
-                                <td><% inventory.quantity %></td>
-                                <td><% inventory.item_price.market_price %></td>
-                                <td><% code(inventory.item.item_codes, 'Barcode') %></td>
-                                <td><% inventory.donor.given_name %> <% inventory.donor.last_name %></td>
+                            <tr ng-repeat="(key, inventory) in inventories | groupBy:'item_id'" ng-class="{active : inventory.selected}">
+                                <td><input type="checkbox" ng-model="inventory[0].selected" ng-change="checked(inventory[0])" /></td>
+                                <td ng-click="toggle('item', inventory[0], $index)">(<%inventory.length%>) <% inventory[0].item.name %></td>
+                                <td><% sum(inventory, 'quantity') %></td>
+                                <td ng-click="toggle('item_price', inventory[0], $index)"><% inventory[0].item_price.market_price %></td>
+                                <td ng-click="toggle('item_code', inventory[0], $index)"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
+                                <td><% inventory[0].donor.given_name %> <% inventory[0].donor.last_name %></td>
                             </tr>
                     </table>
                 </div> 
@@ -74,10 +74,13 @@
                             <div class="form-group error" ng-repeat="(field, label) in modal.field">
                                 <label for="name" class="col-sm-3 control-label"><% label %></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control has-error" id="<% field %>" name="<% field %>" placeholder="<% label %>" value="<% modal['data'][field] %>" 
-                                    ng-model="modal['data'][field]" ng-required="true">
+                                    <input type="text" class="form-control has-error" id="<% field %>" 
+                                        name="<% field %>" placeholder="<% label %>" value="<% modal['data'][field] %>" 
+                                        ng-model="modal['data'][field]" 
+                                        ng-required="true">
                                     <span class="help-inline" 
-                                    ng-show="modal['data'][field].$invalid && modal['data'][field].$touched"><% label %> field is required</span>
+                                        ng-show="modal['data'][field].$invalid && modal['data'][field].$touched">
+                                        <% label %> field is required</span>
                                 </div>
                             </div>
                         </form>

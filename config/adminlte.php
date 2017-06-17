@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'inventories',
+    'dashboard_url' => 'inventories#good',
 
     'logout_url' => 'logout',
 

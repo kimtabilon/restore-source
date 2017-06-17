@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use \App\ItemStatus;
 use \App\ItemCodeType;
+use \App\ItemCode;
+use \App\ItemPrice;
 use \App\Inventory;
 use \App\Item;
 use \App\Category;
@@ -40,7 +42,6 @@ class InventoryController extends Controller
 
 	public function update(Request $request)
 	{
-		// return $request->input('id');
 		$data = $request->all();
 
 		switch ($data['type']) {
@@ -52,18 +53,43 @@ class InventoryController extends Controller
 
 				return $item;
 				break;
+
+			case 'item_code':
+				$foundCode = ItemCode::find($data['id']);
+				if($foundCode->code != $data['code']) {
+					
+					$itemCode = new ItemCode();
+					$itemCode->code 	= $data['code'];
+					$itemCode->item()			->associate($foundCode->item_id);
+					$itemCode->itemCodeType()	->associate($foundCode->item_code_type_id);
+					$itemCode->save();
+				}
+
+				return $itemCode;
+				break;	
+
+			case 'item_price':
+				$foundPrice = ItemPrice::find($data['id']);
+				if($foundPrice->market_price != $data['item_price']) {
+					
+					$itemPrice = new ItemPrice();
+					$itemPrice->market_price 	= $data['item_price'];
+					$itemPrice->item()			->associate($foundCode->item_id);
+					// $itemPrice->save();
+				}
+
+				return $itemPrice;
+				break;		
 			
 			default:
 				break;
 		}
-		// return $data;
 	}
 
 	public function transfer(Request $request, $status)
 	{
 		$items = $request->all();
 		$inv = [];
-		// return $items;
 		foreach ($items as $item) {
 			$inventory = Inventory::find($item['id']);
 			$inventory->item_status_id = $status;
@@ -71,8 +97,6 @@ class InventoryController extends Controller
 			$inv[] = $inventory;
 		}
 		return $inv;
-		// return $request->input('status');
-		// return $status;
 	}
 
 	public function transferOrCreate(Request $request)
@@ -99,6 +123,7 @@ class InventoryController extends Controller
 					$inventory->save();
 				} 
 				else {
+					$left=0;
 					$inventory           		= Inventory::find($data['inventory']['id']);
 					$inventory->item_status_id 	= $data['status'];
 					$inventory->save();
