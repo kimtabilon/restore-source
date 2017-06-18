@@ -62,6 +62,51 @@ app
 		return match.reverse()[0];
 	}
 
+	$scope.transfer = function(status) {
+		if(status!=null)
+		{
+			var active = $filter('filter')($scope.itemStatus,{ id: status });
+			if($scope.countSelectedItems==1) {
+				
+				$scope.modal = {
+					action: 'change-quantity',
+	            	title: "Transfer to '"+ active[0].name +"' Item - " + $scope.SelectedItems[0].item.name + " (" + $scope.SelectedItems[0].quantity + ")",
+	            	field: { quantity: 'Quantity (only)' },
+	            	data: {  status: status, action: 'change-quantity', quantity: $scope.SelectedItems[0].quantity, inventory: $scope.SelectedItems[0]},
+	            	button: 'Transfer'
+	            };
+
+	            $('#inventoryModal').modal('show');
+				// $scope.modal.title = 
+	            // $scope.data = { type: '', id: data.item.id ,name: data.item.name, description: data.item.description};
+			}
+			else {
+				if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active[0].name + "'. Continue?")) {
+			        $http({
+			            method: 'POST',
+			            url: API_URL + 'inventories/transfer/' + status,
+			            data: $scope.SelectedItems
+			        })
+		            .then(function (response) {
+						console.log(response.data);
+		            });
+
+			        angular.forEach($scope.SelectedItems, function(item){ 
+			        	var index = $scope.inventories.indexOf(item);
+						$scope.inventories.splice(index,1);
+					});
+					$scope.countSelectedItems = 0;
+			        $scope.SelectedItems = [];
+			    }
+			    else {
+
+			    }
+			}
+		}
+		$scope.selectedStatus = null;	
+			
+	}
+
 	$scope.toggle = function(type, data, index) {
         $scope.type = type;
         $scope.index = index;
@@ -94,7 +139,7 @@ app
                 	data: { type: type, market_price: $scope.code(data.item.item_prices).market_price, id: $scope.code(data.item.item_codes).id },
                 	button: 'Save changes'
                 };	
-                console.log(data);
+                // console.log(data);
             	break;			
             default:
                 break;
@@ -146,9 +191,10 @@ app
 	            .then(function (response) {
 					if(index !== -1){
 						var index = $scope.inventories.indexOf($scope.SelectedItems[0]);
-
+						console.log($scope.inventories[index]);
+						console.log(response.data);
 						if(response.data > 0) {
-							$scope.inventories[index].quantity = response.data;
+							$scope.inventories[index].quantity = parseInt(response.data);
 							$scope.inventories[index].selected = false;
 						}
 						else {
@@ -159,7 +205,7 @@ app
 						$scope.countSelectedItems = 0;
 
 						$('#inventoryModal').modal('hide');
-						console.log(response.data);
+						
 					}
 	            });
             	break;    
@@ -168,51 +214,6 @@ app
         }
 
     }
-
-    $scope.transfer = function(status) {
-		if(status!=null)
-		{
-			var active = $filter('filter')($scope.itemStatus,{ id: status });
-			if($scope.countSelectedItems==1) {
-				
-				$scope.modal = {
-					action: 'change-quantity',
-	            	title: "Transfer to '"+ active[0].name +"' Item - " + $scope.SelectedItems[0].item.name + " (" + $scope.SelectedItems[0].quantity + ")",
-	            	field: { quantity: 'Quantity (only)' },
-	            	data: {  status: status, action: 'change-quantity', quantity: $scope.SelectedItems[0].quantity, inventory: $scope.SelectedItems[0]},
-	            	button: 'Transfer'
-	            };
-
-	            $('#inventoryModal').modal('show');
-				// $scope.modal.title = 
-	            // $scope.data = { type: '', id: data.item.id ,name: data.item.name, description: data.item.description};
-			}
-			else {
-				if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active[0].name + "'. Continue?")) {
-			        $http({
-			            method: 'POST',
-			            url: API_URL + 'inventories/transfer/' + status,
-			            data: $scope.SelectedItems
-			        })
-		            .then(function (response) {
-						console.log(response.data);
-		            });
-
-			        angular.forEach($scope.SelectedItems, function(item){ 
-			        	var index = $scope.inventories.indexOf(item);
-						$scope.inventories.splice(index,1);
-					});
-					$scope.countSelectedItems = 0;
-			        $scope.SelectedItems = [];
-			    }
-			    else {
-
-			    }
-			}
-		}
-		$scope.selectedStatus = null;	
-			
-	}
 });
 
 

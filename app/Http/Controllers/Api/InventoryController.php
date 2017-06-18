@@ -116,6 +116,7 @@ class InventoryController extends Controller
 					$inventory->user()			->associate(Auth::user());
 					$inventory->donor()			->associate($data['inventory']['donor_id']);
 					$inventory->item()			->associate($data['inventory']['item_id']);
+					$inventory->itemDiscount()	->associate($data['inventory']['item_discount_id']);
 					$inventory->itemPrice()		->associate($data['inventory']['item_price_id']);
 					$inventory->itemStatus()	->associate((int)$data['status']);
 					$inventory->itemImage()		->associate($data['inventory']['item_image_id']);
