@@ -123,7 +123,6 @@ $factory->define(App\ItemStatus::class, function (Faker\Generator $faker) {
 $factory->define(App\ItemPrice::class, function (Faker\Generator $faker) {
     return [
         'market_price'      => $faker->numberBetween($min = 1000, $max = 9000),
-        'percent_discount'  => 20,
         'item_id'           => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
@@ -137,8 +136,8 @@ $factory->define(App\ItemImage::class, function (Faker\Generator $faker) {
 
 $factory->define(App\ItemDiscount::class, function (Faker\Generator $faker) {
     return [
-        'percent'       => $faker->numberBetween($min = 5, $max = 80),
-        'remarks'       => $faker->realText($maxNbChars = 20, $indexSize = 2),
+        'percent'       => 20,
+        'remarks'       => 'ReStore Discount',
         'start_date'    => Carbon\Carbon::now(),
         'end_date'      => Carbon\Carbon::now()->addWeeks(1),
         'user_id'       => 3,

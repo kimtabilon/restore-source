@@ -16,7 +16,6 @@ class CreateItemPricesTable extends Migration
         Schema::create('item_prices', function (Blueprint $table) {
             $table->increments('id');
             $table->string('market_price', 10);
-            $table->string('percent_discount', 10);
             $table->integer('item_id')->unsigned();
             $table->timestamps();
 
