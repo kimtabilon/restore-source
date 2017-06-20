@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use \App\Category;
+use \App\Inventory;
+use \App\Item;
 use \App\ItemStatus;
 use \App\ItemCodeType;
 use \App\ItemCode;
+use \App\ItemDiscount;
 use \App\ItemPrice;
-use \App\Inventory;
-use \App\Item;
-use \App\Category;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -34,6 +36,8 @@ class InventoryController extends Controller
 					'inventories.item.itemCodes', 
 					'inventories.item.itemCodes.itemCodeType', 
 					'inventories.itemPrice', 
+					'inventories.itemDiscount',
+					'inventories.item.itemDiscounts',
 					'inventories.donor',
 				])
 				->first()->inventories; 
@@ -112,6 +116,7 @@ class InventoryController extends Controller
 					$inventory->save();
 
 					$data['inventory']['quantity'] = (int)$data['quantity']; 
+					$data['inventory']['remarks']  = $data['remarks']; 
 					$inventory 					= new Inventory($data['inventory']);
 					$inventory->user()			->associate(Auth::user());
 					$inventory->donor()			->associate($data['inventory']['donor_id']);
@@ -127,9 +132,10 @@ class InventoryController extends Controller
 					$left=0;
 					$inventory           		= Inventory::find($data['inventory']['id']);
 					$inventory->item_status_id 	= $data['status'];
+					$inventory->remarks 		= $data['remarks'];
 					$inventory->save();
 				}
-				return $left;
+				return [ 'quantity' => $left, 'remarks' => $inventory->remarks];
 				// return $data;
 				break;
 

@@ -8,7 +8,6 @@ app
 		$scope.itemCodeTypes 	= response.data.code_types;
 	});	
 
-	// ITEMS
 	$scope.$on('$locationChangeSuccess', function(event, newUrl, oldUrl){
 	    var status = window.location.hash.substr(1);
 	    $http
@@ -21,6 +20,7 @@ app
 		$scope.status = status;	
 	});
 
+	$scope.check = [];
 	$scope.checkedAll = function() {
 		var toggleStatus = $scope.isAllSelected;
 		angular.forEach($scope.inventories, function(inv){ 
@@ -28,21 +28,42 @@ app
 				$scope.SelectedItems.push(inv);
 			else
 				$scope.SelectedItems = [];
-			inv.selected = toggleStatus; 
+			$scope.check[inv.id] = toggleStatus;
+			$scope.check[inv.id + '-' + inv.id] = toggleStatus;
 		});
 		$scope.countSelectedItems = $scope.SelectedItems.length;
-		
 	}
+	
+	$scope.checked = function(inventory, key) {
 
-	$scope.checked = function(inventory) {
-	    if (inventory.selected) {
-	        $scope.SelectedItems.push(inventory);
+		var count = inventory.length - 1;
+	    if ($scope.check[key]) {
+	    	if(count>=0) {
+	    		for(x=0; x<=count; x++) {
+		    		$scope.check[inventory[x].id + '-' + inventory[x].id] = true;
+		    		$scope.SelectedItems.push(inventory[x]);
+		    	}
+	    	}
+	    	else {
+	    		$scope.SelectedItems.push(inventory);
+	    	}
+
 	    }
 	    else {
-	      var index = $scope.SelectedItems.indexOf(inventory);
-	      if (index > -1) {
-	        $scope.SelectedItems.splice(index, 1);
-	      }
+	    	if(count>=0) {
+		    	for(x=0; x<=count; x++) {
+					var index = $scope.SelectedItems.indexOf(inventory[x]);
+					if (index > -1) {
+						$scope.SelectedItems.splice(index, 1);
+					}
+				}
+			}
+			else {
+				var index = $scope.SelectedItems.indexOf(inventory);
+				if (index > -1) {
+					$scope.SelectedItems.splice(index, 1);
+				}
+			}	
 	    }
 	    $scope.countSelectedItems = $scope.SelectedItems.length;
 	}
@@ -50,10 +71,10 @@ app
 	$scope.sum = function(data, field) {
 		var total = 0;
 		angular.forEach(data, function(data) {
-			total += data[field];
+			total += parseInt(data[field]);
 		});
 
-		return total;
+		return parseInt(total);
 	}
 
 	$scope.code = function(data, type) {
@@ -67,18 +88,20 @@ app
 		{
 			var active = $filter('filter')($scope.itemStatus,{ id: status });
 			if($scope.countSelectedItems==1) {
-				
 				$scope.modal = {
-					action: 'change-quantity',
-	            	title: "Transfer to '"+ active[0].name +"' Item - " + $scope.SelectedItems[0].item.name + " (" + $scope.SelectedItems[0].quantity + ")",
-	            	field: { quantity: 'Quantity (only)' },
-	            	data: {  status: status, action: 'change-quantity', quantity: $scope.SelectedItems[0].quantity, inventory: $scope.SelectedItems[0]},
-	            	button: 'Transfer'
+					action	: 'change-quantity',
+	            	title	: "Transfer to '"+ active[0].name +"' Item - " + $scope.SelectedItems[0].item.name + " (" + $scope.SelectedItems[0].quantity + ")",
+	            	field	: { quantity: 'Quantity (only)', remarks: 'Remarks (change)' },
+	            	data	: {  
+	            		status 		: status, 
+	            		action 		: 'change-quantity', 
+	            		quantity 	: $scope.SelectedItems[0].quantity, 
+	            		remarks 	: $scope.SelectedItems[0].remarks, 
+	            		inventory 	: $scope.SelectedItems[0]},
+	            	button	: 'Transfer'
 	            };
 
 	            $('#inventoryModal').modal('show');
-				// $scope.modal.title = 
-	            // $scope.data = { type: '', id: data.item.id ,name: data.item.name, description: data.item.description};
 			}
 			else {
 				if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active[0].name + "'. Continue?")) {
@@ -139,8 +162,8 @@ app
                 	data: { type: type, market_price: $scope.code(data.item.item_prices).market_price, id: $scope.code(data.item.item_codes).id },
                 	button: 'Save changes'
                 };	
-                // console.log(data);
-            	break;			
+            	break;
+
             default:
                 break;
         }
@@ -160,7 +183,6 @@ app
 					if(index !== -1){
 						$scope.inventories[index].item = response.data;
 						$('#inventoryModal').modal('hide');
-						console.log(response.data);
 					}
 	            });
                 break;
@@ -174,10 +196,8 @@ app
 	            .then(function (response) {
 					if(index !== -1){
 						var itemCodes = $scope.inventories[index].item.item_codes;
-						// console.log();
-						$scope.inventories[index].item.item_codes[itemCodes.length - 1].code = response.data.code;
+						$scope.code(itemCodes).code = response.data.code;
 						$('#inventoryModal').modal('hide');
-						// console.log(response.data);
 					}
 	            });
                 break;    
@@ -189,26 +209,27 @@ app
 		            data: data
 		        })
 	            .then(function (response) {
-					if(index !== -1){
-						var index = $scope.inventories.indexOf($scope.SelectedItems[0]);
-						console.log($scope.inventories[index]);
-						console.log(response.data);
-						if(response.data > 0) {
-							$scope.inventories[index].quantity = parseInt(response.data);
-							$scope.inventories[index].selected = false;
-						}
-						else {
-							$scope.inventories.splice(index,1);
-						}
-						
-						$scope.SelectedItems = [];
-						$scope.countSelectedItems = 0;
-
-						$('#inventoryModal').modal('hide');
-						
+					var index = $scope.inventories.indexOf($scope.SelectedItems[0]);
+					if(response.data.quantity > 0) {
+						$scope.inventories[index].quantity = parseInt(response.data.quantity);
+						// $scope.inventories[index].remarks = response.data.remarks;
+						$scope.check[$scope.inventories[index].id] = false;
 					}
+					else {
+						$scope.inventories.splice(index,1);
+					}
+
+					console.log($scope.inventories[index]);
+					
+					$scope.SelectedItems = [];
+					$scope.countSelectedItems = 0;
+
+					$('#inventoryModal').modal('hide');
+						
+					
 	            });
-            	break;    
+            	break;  
+
             default:
                 break;
         }

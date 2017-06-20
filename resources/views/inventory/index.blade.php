@@ -28,17 +28,47 @@
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Market Price</th>
+                            <th>Discount</th>
                             <th>Barcode</th>
                             <th>Donor</th>
+                            <th>Remarks</th>
+                            <th>Added</th>
                         </thead>
-                            <tr ng-repeat="(key, inventory) in inventories | groupBy:'item_id'" ng-class="{active : inventory.selected}">
-                                <td><input type="checkbox" ng-model="inventory[0].selected" ng-change="checked(inventory[0])" /></td>
-                                <td ng-click="toggle('item', inventory[0], $index)">(<%inventory.length%>) <% inventory[0].item.name %></td>
+                        <tbody ng-repeat="(key, inventory) in inventories | groupBy:'item_id'">
+                            <tr ng-class="{active : check[key]}">
+                                <td><input type="checkbox" ng-model="check[key]" ng-change="checked(inventory, key)" /></td>
+                                <td ng-click="toggle('item', inventory[0], $index)">
+                                    <span class="badge" ng-show="inventory.length>1"><%inventory.length%></span> &nbsp; 
+                                    <% inventory[0].item.name %></td>
                                 <td><% sum(inventory, 'quantity') %></td>
                                 <td ng-click="toggle('item_price', inventory[0], $index)"><% inventory[0].item_price.market_price %></td>
+                                <td>
+                                    <span ng-show="inventory.length==1">
+                                        <% (inventory[0].item.item_discounts | filter:{remarks:'default'})[0].percent %></span></td>
                                 <td ng-click="toggle('item_code', inventory[0], $index)"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
-                                <td><% inventory[0].donor.given_name %> <% inventory[0].donor.last_name %></td>
+                                <td>
+                                    <span ng-show="inventory.length==1"><% inventory[0].donor.given_name %> <% inventory[0].donor.last_name %></span></td>
+                                <td>
+                                    <span ng-show="inventory.length==1"><% inventory[0].remarks %></span></td>
+                                <td>
+                                    <span ng-show="inventory.length==1"><% inventory[0].created_at %></span></td>    
                             </tr>
+                            <tr ng-repeat="inv in inventory" ng-show="check[key] && inventory.length>1" ng-class="{active : check[inv.id + '-' + inv.id]}">
+                                <td></td>
+                                <td> &nbsp;
+                                    <input type="checkbox" ng-model="check[inv.id + '-' + inv.id]" ng-change="checked(inv, inv.id + '-' + inv.id)" /> &nbsp;
+                                    <span><% inv.item.name %> </span></td>
+                                <td><% inv.quantity %></td>
+                                <td ng-click="toggle('item_price', inv, $index)"><% inv.item_price.market_price %></td>
+                                <td>
+                                    <% (inv.item.item_discounts | filter:{remarks:'default'})[0].percent %></td>
+                                <td></td>
+                                <td><% inv.donor.given_name %> <% inv.donor.last_name %></td>
+                                <td><% inv.remarks %></td>
+                                <td><% inv.created_at %></td>
+                            </tr>
+                        </tbody>
+                            
                     </table>
                 </div> 
                 <div class="box-footer" ng-show="countSelectedItems">
@@ -102,6 +132,9 @@
     <!-- <link rel="stylesheet" href="/css/admin_custom.css"> -->
     <style>
         td { cursor:pointer; }
+        .table>tbody+tbody {
+            border-top: none; 
+        }
     </style>
 @stop
 

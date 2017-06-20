@@ -87,7 +87,7 @@ return [
     |
     */
 
-    'collapse_sidebar' => false,
+    'collapse_sidebar' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -132,7 +132,7 @@ return [
         ],
         [
             'text'        => 'Inventory',
-            'url'         => '#good',
+            'url'         => '#',
             'icon'        => 'th',
             // 'label'       => 4,
             // 'label_color' => 'success',
@@ -153,7 +153,7 @@ return [
                 [
                     'text' => 'For Approval',
                     'can'  => 'manager-access',
-                    'url'  => 'inventories#for-approval',
+                    'url'  => '#',
                     'icon_color' => 'aqua',
                     'submenu' => [
                         [
