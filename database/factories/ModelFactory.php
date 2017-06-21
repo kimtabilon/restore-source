@@ -123,23 +123,21 @@ $factory->define(App\ItemStatus::class, function (Faker\Generator $faker) {
 $factory->define(App\ItemPrice::class, function (Faker\Generator $faker) {
     return [
         'market_price'      => $faker->numberBetween($min = 1000, $max = 9000),
-        'item_id'           => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
 
 $factory->define(App\ItemImage::class, function (Faker\Generator $faker) {
     return [
         'name'      => $faker->imageUrl($width = 640, $height = 480),
-        'item_id'   => $faker->numberBetween($min = 1, $max = 100),
     ];
 });
 
 $factory->define(App\ItemDiscount::class, function (Faker\Generator $faker) {
     return [
         'percent'       => 20,
-        'remarks'       => 'ReStore Discount',
+        'remarks'       => 'default',
         'start_date'    => Carbon\Carbon::now(),
-        'end_date'      => Carbon\Carbon::now()->addWeeks(1),
+        'end_date'      => Carbon\Carbon::now()->addYears(5),
         'user_id'       => 3,
     ];
 });
@@ -148,7 +146,6 @@ $factory->define(App\Inventory::class, function (Faker\Generator $faker) {
     return [
         'user_id'           => 3,
         'donor_id'          => $faker->numberBetween($min = 1, $max = 30),
-        'item_discount_id'  => $faker->numberBetween($min = 1, $max = 30),
         'item_status_id'    => $faker->numberBetween($min = 1, $max = 11),
         'transaction_id'    => $faker->numberBetween($min = 1, $max = 30),
         'remarks'           => $faker->realText($maxNbChars = 20, $indexSize = 2),

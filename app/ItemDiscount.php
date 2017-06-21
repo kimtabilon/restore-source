@@ -15,6 +15,6 @@ class ItemDiscount extends Model
         'percent', 'remarks', 'start_date', 'end_date',
     ];
 
-    public function user() { return $this->belongsTo('App\User'); } 
-    public function item() { return $this->belongsTo('App\Item'); } 
+    public function user() {        return $this->belongsTo('App\User'); } 
+    public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
 }

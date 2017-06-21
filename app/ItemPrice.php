@@ -12,8 +12,8 @@ class ItemPrice extends Model
      * @var array
      */
     protected $fillable = [
-        'market_price', 'percent_discount',
+        'market_price',
     ];
 
-    public function item() { return $this->belongsTo('App\Item'); }
+    public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
 }

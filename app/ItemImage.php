@@ -15,5 +15,5 @@ class ItemImage extends Model
         'name',
     ];
     
-    public function item() { return $this->belongsTo('App\Item'); }
+    public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
 }

@@ -16,7 +16,7 @@ class ItemController extends Controller
     	$data = ItemStatus::with([
 					'inventories', 
 					'inventories.item', 
-					'inventories.itemPrice', 
+					'inventories.itemPrices', 
 					'inventories.donor',
 				])->get();  
 

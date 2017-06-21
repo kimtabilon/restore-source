@@ -16,10 +16,17 @@ class CreateItemPricesTable extends Migration
         Schema::create('item_prices', function (Blueprint $table) {
             $table->increments('id');
             $table->string('market_price', 10);
-            $table->integer('item_id')->unsigned();
             $table->timestamps();
+        });
 
-            $table->foreign('item_id')->references('id')->on('items');
+        Schema::create('inventory_item_price', function (Blueprint $table) {
+            $table->integer('inventory_id')  ->unsigned()        ->index();
+            $table->foreign('inventory_id')  ->references('id')  ->on('inventories')->onDelete('cascade');
+
+            $table->integer('item_price_id') ->unsigned()        ->index();
+            $table->foreign('item_price_id') ->references('id')  ->on('item_prices')->onDelete('cascade');
+            
+            $table->timestamps();
         });
     }
 
@@ -31,5 +38,6 @@ class CreateItemPricesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('item_prices');
+        Schema::dropIfExists('inventory_item_price');
     }
 }

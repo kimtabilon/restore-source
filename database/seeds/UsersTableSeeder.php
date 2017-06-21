@@ -24,5 +24,9 @@ class UsersTableSeeder extends Seeder
             });
         }
 
+        factory(App\ItemPrice::class, 5)->create();
+        factory(App\ItemImage::class, 5)->create();
+        factory(App\ItemDiscount::class)->create();
+
     }
 }

@@ -17,10 +17,10 @@ class CreateTransactionsTable extends Migration
             $table->increments('id');
             $table->string('da_number');
             $table->string('dt_number');
-            $table->integer('payment_type_id')->unsigned();
+            $table->integer('payment_type_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('payment_type_id')->references('id')->on('payment_types');
+            $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');
         });
     }
 
