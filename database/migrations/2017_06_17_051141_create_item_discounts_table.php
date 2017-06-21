@@ -19,12 +19,20 @@ class CreateItemDiscountsTable extends Migration
             $table->text('remarks');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->integer('user_id')->unsigned();
-            $table->integer('item_id')->unsigned();
+            $table->integer('user_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('inventory_item_discount', function (Blueprint $table) {
+            $table->integer('inventory_id')     ->unsigned()        ->index();
+            $table->foreign('inventory_id')     ->references('id')  ->on('inventories')->onDelete('cascade');
+
+            $table->integer('item_discount_id') ->unsigned()        ->index();
+            $table->foreign('item_discount_id') ->references('id')  ->on('item_discounts')->onDelete('cascade');
+            
+            $table->timestamps();
         });
     }
 
@@ -36,5 +44,6 @@ class CreateItemDiscountsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('item_discounts');
+        Schema::dropIfExists('inventory_item_discount');
     }
 }

@@ -17,10 +17,10 @@ class CreateProfilePhotosTable extends Migration
             $table->increments('id');
             $table->string('primary');
             $table->string('cover');
-            $table->integer('profile_id')->unsigned();
+            $table->integer('profile_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('profile_id')->references('id')->on('profiles');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

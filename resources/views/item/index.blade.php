@@ -27,8 +27,8 @@
                         @foreach($inventories as $inventory)
                             <tr>
                                 <td>{{$inventory->item->name}}</td>
-                                <td>{{$inventory->quantities->first()->number}}</td>
-                                <td>{{$inventory->itemPrice->market_price}}</td>
+                                <td>{{$inventory->quantity}}</td>
+                                <td>{{$inventory->itemPrices->first()->market_price}}</td>
                                 <td>{{$inventory->item->itemCodes->last()->code}}</td>
                                 <td>{{$inventory->donor->name}}</td>
                             </tr>

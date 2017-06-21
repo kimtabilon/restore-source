@@ -22,10 +22,10 @@ class CreateProfilesTable extends Migration
             $table->string('company');
             $table->string('job_title', 100);
             $table->string('catch_phrase');
-            $table->integer('donor_id')->unsigned();
+            $table->integer('donor_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('donor_id')->references('id')->on('donors');
+            $table->foreign('donor_id')->references('id')->on('donors')->onDelete('cascade');
         });        
     }
 

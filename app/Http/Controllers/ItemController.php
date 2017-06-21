@@ -30,7 +30,7 @@ class ItemController extends Controller
                 ->with([
 					'inventories', 
 					'inventories.item', 
-					'inventories.itemPrice', 
+					'inventories.itemPrices', 
 					'inventories.donor',
 				])->inventories;  
 

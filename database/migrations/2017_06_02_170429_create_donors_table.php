@@ -19,10 +19,10 @@ class CreateDonorsTable extends Migration
             $table->string('middle_name');
             $table->string('last_name');
             $table->string('email', 100)    ->unique();
-            $table->integer('donor_type_id')->unsigned();
+            $table->integer('donor_type_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('donor_type_id')->references('id')->on('donor_types');
+            $table->foreign('donor_type_id')->references('id')->on('donor_types')->onDelete('cascade');
         });
     }
 

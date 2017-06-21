@@ -17,10 +17,10 @@ class CreateUserLogsTable extends Migration
             $table->increments('id');
             $table->string('log');
             $table->text('remarks');
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

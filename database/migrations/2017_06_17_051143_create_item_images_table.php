@@ -16,10 +16,17 @@ class CreateItemImagesTable extends Migration
         Schema::create('item_images', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('item_id')->unsigned();
             $table->timestamps();
+        });
 
-            $table->foreign('item_id')->references('id')->on('items');
+        Schema::create('inventory_item_image', function (Blueprint $table) {
+            $table->integer('inventory_id')  ->unsigned()        ->index();
+            $table->foreign('inventory_id')  ->references('id')  ->on('inventories')->onDelete('cascade');
+
+            $table->integer('item_image_id') ->unsigned()        ->index();
+            $table->foreign('item_image_id') ->references('id')  ->on('item_images')->onDelete('cascade');
+            
+            $table->timestamps();
         });
     }
 
@@ -31,5 +38,6 @@ class CreateItemImagesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('item_images');
+        Schema::dropIfExists('inventory_item_image');
     }
 }

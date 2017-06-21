@@ -16,10 +16,10 @@ class CreateStoreCreditsTable extends Migration
         Schema::create('store_credits', function (Blueprint $table) {
             $table->increments('id');
             $table->string('amount', 10);
-            $table->integer('donor_id')->unsigned();
+            $table->integer('donor_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('donor_id')->references('id')->on('donors');
+            $table->foreign('donor_id')->references('id')->on('donors')->onDelete('cascade');
         });
     }
 
