@@ -11,9 +11,7 @@ class Inventory extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'quantity', 'remarks',
-    ];
+    protected $fillable = [];
 
     public function user() {            return $this->belongsTo('App\User'); } 
     public function donor() {           return $this->belongsTo('App\Donor'); } 
@@ -24,4 +22,5 @@ class Inventory extends Model
     public function itemDiscounts() {   return $this->belongsToMany('App\ItemDiscount')  ->withTimestamps(); } 
     public function itemPrices() {      return $this->belongsToMany('App\ItemPrice')     ->withTimestamps(); } 
     public function itemImages() {      return $this->belongsToMany('App\ItemImage')     ->withTimestamps(); }
+
 }

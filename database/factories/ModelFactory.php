@@ -148,8 +148,13 @@ $factory->define(App\Inventory::class, function (Faker\Generator $faker) {
         'donor_id'          => $faker->numberBetween($min = 1, $max = 30),
         'item_status_id'    => $faker->numberBetween($min = 1, $max = 11),
         'transaction_id'    => $faker->numberBetween($min = 1, $max = 30),
+    ];
+});
+
+$factory->define(App\ItemQuantity::class, function (Faker\Generator $faker) {
+    return [
         'remarks'           => $faker->realText($maxNbChars = 20, $indexSize = 2),
-        'quantity'          => $faker->numberBetween($min = 1, $max = 30),
+        'number'          => $faker->numberBetween($min = 1, $max = 30),
     ];
 });
 
