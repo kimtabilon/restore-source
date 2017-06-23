@@ -11,9 +11,8 @@ class Inventory extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'quantity', 'remarks'
-    ];
+    protected $fillable = ['quantity', 'remarks'];
+    protected $appends  = ['created', 'modified'];
 
     public function user() {            return $this->belongsTo('App\User'); } 
     public function donor() {           return $this->belongsTo('App\Donor'); } 
@@ -25,4 +24,14 @@ class Inventory extends Model
     public function itemPrices() {      return $this->belongsToMany('App\ItemPrice')     ->withTimestamps(); } 
     public function itemImages() {      return $this->belongsToMany('App\ItemImage')     ->withTimestamps(); }
 
+    
+    public function getCreatedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function getModifiedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->updated_at)->diffForHumans();
+    }
 }

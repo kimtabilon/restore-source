@@ -109,7 +109,6 @@ $factory->define(App\ItemCode::class, function (Faker\Generator $faker) {
     return [
         'code'              => $faker->ean13,
         'item_code_type_id' => 1,
-
     ];
 });
 

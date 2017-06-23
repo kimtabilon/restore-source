@@ -1,4 +1,4 @@
-var app = angular.module('inventory', ['angular.filter'], function($interpolateProvider, $locationProvider) {
+var app = angular.module('inventory', ['angular.filter', 'ngLoadingSpinner'], function($interpolateProvider, $locationProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
         $locationProvider.html5Mode({

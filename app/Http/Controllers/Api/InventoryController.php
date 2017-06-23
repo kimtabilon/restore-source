@@ -35,12 +35,12 @@ class InventoryController extends Controller
 					'inventories.item', 
 					'inventories.item.itemCodes', 
 					'inventories.item.itemCodes.itemCodeType', 
-					'inventories.itemPrice', 
-					'inventories.itemDiscount',
-					'inventories.item.itemDiscounts',
+					'inventories.itemPrices', 
+					'inventories.itemImages', 
+					'inventories.itemDiscounts',
 					'inventories.donor',
 				])
-				->first()->inventories; 
+				->first()->inventories; 		
 		
 	}
 
@@ -73,16 +73,16 @@ class InventoryController extends Controller
 				break;	
 
 			case 'item_price':
-				$foundPrice = ItemPrice::find($data['id']);
-				if($foundPrice->market_price != $data['item_price']) {
-					
-					$itemPrice = new ItemPrice();
-					$itemPrice->market_price 	= $data['item_price'];
-					$itemPrice->item()			->associate($foundCode->item_id);
-					// $itemPrice->save();
-				}
+				$price 		= ItemPrice::find($data['market_price_id']);
+				$inventory 	= Inventory::find($data['id']);
+				if($price->market_price != $data['market_price']) {
+					$newPrice = new ItemPrice();
+					$newPrice->market_price = $data['market_price'];
+					$newPrice->save();
 
-				return $itemPrice;
+					$inventory->itemPrices()->attach($newPrice);
+				}
+				return $inventory;
 				break;		
 			
 			default:
@@ -92,28 +92,34 @@ class InventoryController extends Controller
 
 	public function transfer(Request $request, $status)
 	{
-		$items = $request->all();
-		$inv = [];
+		$items 			= $request->all();
+		$inventories 	= [];
+
 		foreach ($items as $item) {
-			$inventory = Inventory::find($item['id']);
-			$inventory->item_status_id = $status;
-			$inventory->save();
-			$inv[] = $inventory;
+			$inventory 		= Inventory::find($item['id']);
+			$inventory 		->item_status_id = $status;
+			$inventory 		->save();
+
+			$inventories[] 	= $inventory;
 		}
-		return $inv;
+		return $inventories;
 	}
 
 	public function transferOrCreate(Request $request)
 	{
 		$data = $request->all();
 
-		switch ($data['action']) {
-			case 'change-quantity':
+		switch ($data['type']) {
+			case 'transfer_or_create':
 				$left = $data['inventory']['quantity'] - $data['quantity'];
 				if($left > 0) {
-					$inventory           = Inventory::find($data['inventory']['id']);
-					$inventory->quantity = $left;
-					$inventory->save();
+					$inv           = Inventory::find($data['inventory']['id']);
+					$inv->quantity = $left;
+					$inv->save();
+
+					$discounts 	= $inv->itemDiscounts;
+					$image 		= $inv->itemImages;
+					$price 		= $inv->itemPrices;
 
 					$data['inventory']['quantity'] = (int)$data['quantity']; 
 					$data['inventory']['remarks']  = $data['remarks']; 
@@ -121,12 +127,15 @@ class InventoryController extends Controller
 					$inventory->user()			->associate(Auth::user());
 					$inventory->donor()			->associate($data['inventory']['donor_id']);
 					$inventory->item()			->associate($data['inventory']['item_id']);
-					$inventory->itemDiscount()	->associate($data['inventory']['item_discount_id']);
-					$inventory->itemPrice()		->associate($data['inventory']['item_price_id']);
 					$inventory->itemStatus()	->associate((int)$data['status']);
-					$inventory->itemImage()		->associate($data['inventory']['item_image_id']);
 					$inventory->transaction()	->associate($data['inventory']['transaction_id']);
 					$inventory->save();
+
+					if($discounts->count()) {
+						foreach($discounts as $v) { $inventory->itemDiscounts()->attach($v); }
+					}
+					if($image->count()) { $inventory->itemImages()->attach($image->last()); }
+					if($price->count()) { $inventory->itemPrices()->attach($price->last()); }
 				} 
 				else {
 					$left=0;

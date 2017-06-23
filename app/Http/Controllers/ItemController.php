@@ -26,13 +26,14 @@ class ItemController extends Controller
     public function index($slug='for-review')
     {
     	$inventories = ItemStatus::where('slug', $slug)
-                ->first()
                 ->with([
 					'inventories', 
 					'inventories.item', 
 					'inventories.itemPrices', 
 					'inventories.donor',
-				])->inventories;  
+				])
+                ->first()
+                ->inventories;  
 
         // Session::flash('message', [
         //             'title'=>'Alert',
@@ -40,7 +41,7 @@ class ItemController extends Controller
         //             'type'=>'danger',
         //             'icon'=>'ban'
         //         ]); 
-        // dd($data);
+        // dd($inventories);
     	return view('item.index', ['inventories' => $inventories, 'slug' => $slug]);
     }
 

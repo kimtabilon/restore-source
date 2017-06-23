@@ -13,7 +13,27 @@ class CategoriesTableSeeder extends Seeder
     {
         factory(App\Category::class, 10)->create()->each(function ($c) {
         	factory(App\Item::class, 10)->create( [ 'category_id' => $c->id ] )->each(function ($i) {
-                factory(App\ItemCode::class)->create([ 'item_id' => $i->id ]);
+                factory(App\ItemCode::class)
+                    ->create([ 
+                            'item_id'           => $i->id, 
+                            'item_code_type_id' => 1, 
+                            'code'              => 'RS-'.str_random(5), 
+                        ]);
+
+
+                factory(App\ItemCode::class)
+                    ->create([ 
+                            'item_id'           => $i->id, 
+                            'item_code_type_id' => 2, 
+                            'code'              => 'RF-'.str_random(5), 
+                        ]);
+                    
+                factory(App\ItemCode::class)
+                    ->create([ 
+                            'item_id'           => $i->id, 
+                            'item_code_type_id' => 3, 
+                            'code'              => 'QR-'.str_random(5), 
+                        ]);
 
         		$inventoy = factory(App\Inventory::class)->create([ 'item_id' => $i->id ]);
                 $inventoy->itemDiscounts()  ->attach(1);
