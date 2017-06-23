@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('items/{slug?}', 'ItemController@index');
+Route::get('items', 'ItemController@index');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');

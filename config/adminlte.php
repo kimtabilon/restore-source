@@ -87,7 +87,7 @@ return [
     |
     */
 
-    'collapse_sidebar' => true,
+    'collapse_sidebar' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -126,17 +126,13 @@ return [
     'menu' => [
         'MAIN NAVIGATION',
         [
-            'text' => 'Blog',
-            'url'  => 'admin/blog',
-            'can'  => 'cashier-manager-access',
-        ],
-        [
-            'text'        => 'Inventory',
-            'url'         => '#',
-            'icon'        => 'th',
+            'text'    => 'Inventory',
+            'url'     => '#',
+            'icon'    => 'th',
+            'url'     => 'inventories', 
             // 'label'       => 4,
             // 'label_color' => 'success',
-            'can'         => 'manager-receiving-coordinator-access',
+            // 'can'     => 'manager-receiving-coordinator-access',
             'submenu' => [
                 [
                     'text' => 'For Review',
@@ -204,6 +200,19 @@ return [
                 ],
             ],    
         ],
+        [
+            'text' => 'Item',
+            'url'  => 'items',
+            'icon' => 'files-o',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
+        [
+            'text' => 'Discount',
+            'url'  => 'discounts',
+            'icon' => 'edit',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
+
         'ACCOUNT SETTINGS',
         [
             'text' => 'Profile',
@@ -254,18 +263,16 @@ return [
                 ],
             ],
         ],
-        'LABELS',
+        'QUICK ACCESS',
         [
-            'text'       => 'Important',
-            'icon_color' => 'red',
+            'text'       => 'Good Item',
+            'url'        => 'inventories#good',
+            'icon_color' => 'green',
         ],
         [
-            'text'       => 'Warning',
+            'text'       => 'Sold Item',
+            'url'        => 'inventories#sold',
             'icon_color' => 'yellow',
-        ],
-        [
-            'text'       => 'Information',
-            'icon_color' => 'aqua',
         ],
     ],
 

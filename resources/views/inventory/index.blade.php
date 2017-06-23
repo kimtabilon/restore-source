@@ -92,7 +92,7 @@
                         <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
                     </div>
                     <div class="modal-body">
-                        <form name="items" class="form-horizontal" novalidate="">
+                        <form name="items" class="form-horizontal" novalidate="" class="ng-textbox">
                             <div class="form-group error" ng-repeat="(field, label) in modal.field">
                                 <label for="name" class="col-sm-3 control-label"><% label %></label>
                                 <div class="col-sm-9">
