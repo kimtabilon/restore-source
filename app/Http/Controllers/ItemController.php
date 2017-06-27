@@ -30,7 +30,7 @@ class ItemController extends Controller
 					'inventories', 
 					'inventories.item', 
 					'inventories.itemPrices', 
-					'inventories.donor',
+					'inventories.donors',
 				])
                 ->first()
                 ->inventories;  
@@ -44,6 +44,7 @@ class ItemController extends Controller
         // dd($inventories);
     	return view('item.index', ['inventories' => $inventories, 'slug' => $slug]);
     }
+
 
     public function angular()
     {

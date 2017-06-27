@@ -17,7 +17,7 @@ class Donor extends Model
     protected $appends = array('name');
 
     public function profile() {     return $this->hasOne('App\Profile'); } 
-    public function inventories() { return $this->hasMany('App\Inventory'); } 
+    public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
     public function donorType() {   return $this->belongsTo('App\DonorType'); } 
     public function storeCredits() {return $this->hasMany('App\StoreCredit'); } 
 

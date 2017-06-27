@@ -24,6 +24,16 @@ class CreateDonorsTable extends Migration
 
             $table->foreign('donor_type_id')->references('id')->on('donor_types')->onDelete('cascade');
         });
+
+        Schema::create('donor_inventory', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('inventory_id') ->unsigned()->index();
+            $table->integer('donor_id')     ->unsigned()->index();
+            $table->timestamps();
+
+            $table->foreign('inventory_id') ->references('id')->on('inventories')   ->onDelete('cascade');
+            $table->foreign('donor_id')     ->references('id')->on('donors')        ->onDelete('cascade');
+        });
     }
 
     /**
@@ -34,5 +44,6 @@ class CreateDonorsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('donors');
+        Schema::dropIfExists('donor_inventory');
     }
 }
