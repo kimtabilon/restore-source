@@ -62,8 +62,8 @@ class InventoryController extends Controller
 				$foundCode = ItemCode::find($data['id']);
 				if($foundCode->code != $data['code']) {
 					
-					$itemCode = new ItemCode();
-					$itemCode->code 	= $data['code'];
+					$itemCode 					= new ItemCode();
+					$itemCode->code 			= $data['code'];
 					$itemCode->item()			->associate($foundCode->item_id);
 					$itemCode->itemCodeType()	->associate($foundCode->item_code_type_id);
 					$itemCode->save();
@@ -83,6 +83,44 @@ class InventoryController extends Controller
 					$inventory->itemPrices()->attach($newPrice);
 				}
 				return $inventory;
+				break;	
+
+			case 'modify_category':
+				$category               = Category::where('id', $data['id'])->first();
+				$category->name         = $data['name'];
+				$category->description  = $data['description'];
+				$category->save();
+
+				return $category;
+				break;	
+
+			case 'new_item':
+				$newCategory = false;
+
+				if($data['category_id']==0) {
+					$category 				= new Category();
+					$category->name 		= $data['category'];
+					$category->description	= 'Edit text';
+					$category->save();
+					$newCategory = true;
+				}
+				else {
+					$category = $data['category_id'];
+				}
+				
+				$item 				= new Item();
+				$item->name 		= $data['name'];
+				$item->description 	= $data['description'];
+				$item->category()	->associate($category);
+				$item->save();
+
+				$barcode 				= new ItemCode();
+				$barcode->code 			= $data['code'];
+				$barcode->item() 		->associate($item);
+				$barcode->itemCodeType()->associate($data['code_type']);
+				$barcode->save();
+
+				return [ 'item'=>$item, 'code'=>$barcode, 'new_category'=>$newCategory, 'category'=>$category ];
 				break;		
 			
 			default:

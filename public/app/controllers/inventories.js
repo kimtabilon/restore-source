@@ -13,11 +13,11 @@ app
 	    $http
 			.get(API_URL + 'inventories/' + status)
 			.then(function(response) {
-				$scope.inventories = response.data;
-				$scope.SelectedItems = [];
-				$scope.countSelectedItems = 0;
-				$scope.checkParent = [];
-				$scope.checkChild = [];
+				$scope.inventories 			= response.data;
+				$scope.SelectedItems 		= [];
+				$scope.countSelectedItems 	= 0;
+				$scope.checkParent 			= [];
+				$scope.checkChild 			= [];
 				
 			});
 		$scope.status = status;	
@@ -32,8 +32,8 @@ app
 			else {
 				$scope.SelectedItems = [];
 			}
-			$scope.checkParent[inv.id] = toggleStatus;
-			$scope.checkChild[inv.id] = toggleStatus;
+			$scope.checkParent[inv.id] 	= toggleStatus;
+			$scope.checkChild[inv.id] 	= toggleStatus;
 		});
 		$scope.countSelectedItems = $scope.SelectedItems.length;
 	}
@@ -46,17 +46,14 @@ app
 				var invID = inventory[x].id;
 
 				if ($scope.checkParent[inventory[0].id]) {
-					$scope.checkParent[invID] = true;
-					$scope.checkChild[invID] = true;
-					// console.log(inventory[x]);
+					$scope.checkParent[invID] 	= true;
+					$scope.checkChild[invID] 	= true;
 		    		$scope.SelectedItems.push(inventory[x]);
 		    	}
 		    	else {
-		    		// console.log(inventory[x]);
-		    		var foundIndex = $scope.SelectedItems.indexOf(inventory[x]);
-		    		$scope.checkParent[invID] = false;
-		    		$scope.checkChild[invID] = false;
-
+		    		var foundIndex 				= $scope.SelectedItems.indexOf(inventory[x]);
+		    		$scope.checkParent[invID] 	= false;
+		    		$scope.checkChild[invID] 	= false;
 
 					$scope.SelectedItems.splice(foundIndex, 1);
 		    	}	
@@ -65,8 +62,7 @@ app
 		}
 		else {
 			if(!$scope.checkChild[inventory.id]) {
-				// console.log(inventory);
-				var foundIndex = $scope.SelectedItems.indexOf(inventory);
+				var foundIndex 					= $scope.SelectedItems.indexOf(inventory);
 	    		$scope.checkChild[inventory.id] = false;
 				$scope.SelectedItems.splice(foundIndex, 1);
 			}
@@ -88,8 +84,8 @@ app
 	}
 
 	$scope.code = function(data, type) {
-		var codeType 	= $filter('filter')($scope.itemCodeTypes, { name: type });
-		var match 		= $filter('filter')(data, { item_code_type_id: codeType[0].id });
+		var codeType = $filter('filter')($scope.itemCodeTypes, { name: type }, true);
+		var match 	 = $filter('filter')(data, { item_code_type_id: codeType[0].id }, true);
 		return match.reverse()[0];
 	}
 
@@ -101,7 +97,7 @@ app
 		if(status!=null)
 		{
 			var data = $scope.SelectedItems[0];
-			var active = $filter('filter')($scope.itemStatus,{ id: status })[0];
+			var active = $filter('filter')($scope.itemStatus,{ id: status }, true)[0];
 			if($scope.countSelectedItems==1) {
 				$scope.modal = {
 					action	: 'change-quantity',
@@ -123,9 +119,9 @@ app
 			else {
 				if (confirm($scope.countSelectedItems + " item/s will be moved to status '" + active.name + "'. Continue?")) {
 			        $http({
-			            method: 'POST',
-			            url: API_URL + 'inventories/transfer/' + status,
-			            data: $scope.SelectedItems
+			            method 	: 'POST',
+			            url 	: API_URL + 'inventories/transfer/' + status,
+			            data 	: $scope.SelectedItems
 			        })
 		            .then(function (response) {
 						console.log(response.data);
@@ -135,8 +131,8 @@ app
 			        	var index = $scope.inventories.indexOf(item);
 						$scope.inventories.splice(index,1);
 					});
-					$scope.countSelectedItems = 0;
-			        $scope.SelectedItems = [];
+					$scope.countSelectedItems 	= 0;
+			        $scope.SelectedItems 		= [];
 			    }
 			    else {
 
@@ -156,26 +152,25 @@ app
                 	title: "Modify Item",
                 	field: { name: 'Name', description: 'Description' },
                 	data: { 
-                		type: type, 
-                		index: index,
-                		id: data.item.id, 
-                		name: data.item.name, 
-                		description: data.item.description
+                		type 		: type, 
+                		index 		: index,
+                		id 			: data.item.id, 
+                		name 		: data.item.name, 
+                		description : data.item.description
                 	},
                 	button: 'Save changes'
                 };	
             	break;
             case 'item_code':
-            	console.log(data);
             	var itemCode = $scope.code(data.item.item_codes, 'Barcode');
                 $scope.modal = {
                 	title: "Modify Item Code",
                 	field: { code: 'Barcode' },
                 	data: { 
-                		type: type, 
-                		index: index,
-                		code: itemCode.code, 
-                		id: itemCode.id 
+                		type 	: type, 
+                		index 	: index,
+                		code 	: itemCode.code, 
+                		id 		: itemCode.id 
                 	},
                 	button: 'Save changes'
                 };	
@@ -187,11 +182,11 @@ app
                 	title: "Modify Market Price",
                 	field: { market_price: 'Market Price' },
                 	data: { 
-                		type: type, 
-                		index: index,
-                		market_price: itemPrice.market_price, 
-                		market_price_id:itemPrice.id, 
-                		id: data.id 
+                		type 			: type, 
+                		index 			: index,
+                		market_price 	: itemPrice.market_price, 
+                		market_price_id :itemPrice.id, 
+                		id 				: data.id 
                 	},
                 	button: 'Save changes'
                 };	
@@ -208,15 +203,14 @@ app
         switch (data.type) {
             case 'item':
                 $http({
-		            method: 'POST',
-		            url: API_URL + 'inventories/update',
-		            data: data
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
 		        })
 	            .then(function (response) {
-	            	var findMatchItem = $filter('filter')($scope.inventories, { item_id: $scope.inventories[data.index].item_id });
+	            	var findMatchItem = $filter('filter')($scope.inventories, { item_id: $scope.inventories[data.index].item_id }, true);
 	            	angular.forEach(findMatchItem, function (inventory) {
 	            		var key = $scope.inventories.indexOf(inventory);
-	            		console.log(key);
 	            		$scope.inventories[key].item = response.data;
 	            	});
 	            	$('#inventoryModal').modal('hide');
@@ -225,12 +219,12 @@ app
 
             case 'item_code':
                 $http({
-		            method: 'POST',
-		            url: API_URL + 'inventories/update',
-		            data: data
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
 		        })
 	            .then(function (response) {
-					var itemCodes = $scope.inventories[data.index].item.item_codes;
+					var itemCodes 				= $scope.inventories[data.index].item.item_codes;
 					$scope.code(itemCodes).code = response.data.code;
 					$('#inventoryModal').modal('hide');
 	            });
@@ -238,51 +232,39 @@ app
 
             case 'item_price':
                 $http({
-		            method: 'POST',
-		            url: API_URL + 'inventories/update',
-		            data: data
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
 		        })
 	            .then(function (response) {
-	            	var inventory = $filter('filter')($scope.inventories, { id:response.data.id })[0];
-	            	var count = inventory.item_prices.length;
-	            	var index = $scope.inventories.indexOf(inventory);
-
-	            	// console.log($scope.inventories[index].item_prices[count-1].market_price);
-	            	
-	            	console.log(response.data);
+	            	var inventory 	= $filter('filter')($scope.inventories, { id:response.data.id }, true)[0];
+	            	var count 		= inventory.item_prices.length;
+	            	var index 		= $scope.inventories.indexOf(inventory);
 
 	            	$scope.inventories[index].item_prices[count-1].market_price = data.market_price;
-	            	
-	            	// inventory.item_prices[count-1].market_price = response.data.market_price;
-	            	// console.log();
-					// $scope.inventories[data.index].item.item_prices = response.data;
 					$('#inventoryModal').modal('hide');
 	            });
                 break;           
 
             case 'transfer_or_create':
-            	// console.log(data);
             	$http({
-		            method: 'POST',
-		            url: API_URL + 'inventories/transferOrCreate',
-		            data: data
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/transferOrCreate',
+		            data 	: data
 		        })
 	            .then(function (response) {
-	            	console.log(response.data)
 					var index = $scope.inventories.indexOf($scope.SelectedItems[0]);
 					if(response.data.quantity > 0) {
-						$scope.inventories[index].quantity = parseInt(response.data.quantity);
-						$scope.checkParent = [];
-						$scope.checkChild = [];
+						$scope.inventories[index].quantity 	= parseInt(response.data.quantity);
+						$scope.checkParent 					= [];
+						$scope.checkChild 					= [];
 					}
 					else {
 						$scope.inventories.splice(index,1);
 					}
-
-					console.log($scope.inventories[index]);
 					
-					$scope.SelectedItems = [];
-					$scope.countSelectedItems = 0;
+					$scope.SelectedItems 		= [];
+					$scope.countSelectedItems 	= 0;
 
 					$('#inventoryModal').modal('hide');
 						

@@ -4,83 +4,80 @@
 
 @section('content')
 <div ng-controller="inventoriesController">
-<section class="content-header">
-    <h1>Inventories 
-        <span class="label label-default"><% status.replace('-', ' ') | camelCase %> Items</span>
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Inventory</li>
-    </ol>
-</section>    
+    <section class="content-header">
+        <h1>Inventories 
+            <span class="label label-default"><% status.replace('-', ' ') | camelCase %> Items</span>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Inventory</li>
+        </ol>
+    </section>    
 
-@include('adminlte::partials.alert')
+    @include('adminlte::partials.alert')
 
-<!-- Main content -->
-<section class="content">
-    <span us-spinner="{radius:6, width:2, length:5}"></span>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-body">
-                    <table class="table">
-                        <thead>
-                            <th><input type="checkbox" ng-click="checkedAll()" ng-model="isAllSelected" ng-checked="countSelectedItems" style="width: 15px; height:15px;"/></th>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Market Price</th>
-                            <th>Discount</th>
-                            <th>Barcode</th>
-                            <th>Donor</th>
-                            <th>Remarks</th>
-                            <th>Added</th>
-                        </thead>
-                        <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName"">
-                            <tr ng-class="{active : checkParent[inventory[0].id]}">
-                                <td><input type="checkbox" ng-model="checkParent[inventory[0].id]" ng-change="checked(inventory)" style="width: 15px; height:15px;" /></td>
-                                <td ng-click="toggle('item', inventory[0])"><span class="badge" ng-show="inventory.length>1"><%inventory.length%></span> &nbsp;<% inventory[0].item.name %></td>
-                                <td><% sum(inventory, 'quantity') %></td>
-                                <td ng-click="toggle('item_price', inventory[0])"><span ng-show="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
-                                <td><span ng-show="inventory.length==1"><% (inventory[0].item_discounts | filter:{remarks:'default'})[0].percent %></span></td>
-                                <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
-                                <td><span ng-show="inventory.length==1"><% inventory[0].donor.name %></span></td>
-                                <td><span ng-show="inventory.length==1"><% inventory[0].remarks %></span></td>
-                                <td><span ng-show="inventory.length==1"><% inventory[0].created %></span></td>     
-                            </tr>
+    <!-- Main content -->
+    <section class="content">
+        <span us-spinner="{radius:6, width:2, length:5}"></span>
+        <div class="box">
+            <div class="box-body">
+                <table class="table">
+                    <thead>
+                        <th><input type="checkbox" ng-click="checkedAll()" ng-model="isAllSelected" ng-checked="countSelectedItems" style="width: 15px; height:15px;"/></th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Market Price</th>
+                        <th>Discount</th>
+                        <th>Barcode</th>
+                        <th>Donor</th>
+                        <th>Remarks</th>
+                        <th>Added</th>
+                    </thead>
+                    <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName">
+                        <tr ng-class="{active : checkParent[inventory[0].id]}">
+                            <td><input type="checkbox" ng-model="checkParent[inventory[0].id]" ng-change="checked(inventory)" style="width: 15px; height:15px;" /></td>
+                            <td ng-click="toggle('item', inventory[0])"><span class="badge" ng-show="inventory.length>1"><%inventory.length%></span> &nbsp;<% inventory[0].item.name %></td>
+                            <td><% sum(inventory, 'quantity') %></td>
+                            <td ng-click="toggle('item_price', inventory[0])"><span ng-show="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
+                            <td><span ng-show="inventory.length==1"><% (inventory[0].item_discounts | filter:{remarks:'default'})[0].percent %></span></td>
+                            <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
+                            <td><span ng-show="inventory.length==1"><% inventory[0].donor.name %></span></td>
+                            <td><span ng-show="inventory.length==1"><% inventory[0].remarks %></span></td>
+                            <td><span ng-show="inventory.length==1"><% inventory[0].created %></span></td>     
+                        </tr>
 
-                            <tr ng-repeat="inv in inventory" ng-show="checkParent[inventory[0].id] && inventory.length>1" ng-class="{active : checkChild[inv.id]}">
-                                <td></td>
-                                <td> &nbsp;<input type="checkbox" ng-model="checkChild[inv.id]" ng-change="checked(inv)" style="width: 15px; height:15px;"/> &nbsp; <span><% inv.item.name %> </span></td>
-                                <td><% inv.quantity %></td>
-                                <td ng-click="toggle('item_price', inv)"><% inv.item_prices[inv.item_prices.length - 1].market_price %></td>
-                                <td><% (inv.item_discounts | filter:{remarks:'default'})[0].percent %></td>
-                                <td></td>
-                                <td><% inv.donor.name %></td>
-                                <td><% inv.remarks %></td>
-                                <td><% inv.created %></td>  
-                            </tr>
-                        </tbody>
-                            
-                    </table>
-                </div> 
-                <div class="box-footer" ng-show="countSelectedItems">
-                    <select style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
-                        ng-model="selectedStatus" 
-                        ng-options="status.id as status.name for status in itemStatus"
-                        ng-change="transfer(selectedStatus)">
-                        <option 
-                            ng-click="transfer(selectedStatus)"
-                            ng-selected="countSelectedItems==0"
-                            ng-pluralize
-                            count="countSelectedItems"
-                            when="{'0': 'No selected item',
-                                   'one': 'Move item',
-                                   'other': 'Move {} items'}">
-                        </option>
-                    </select>
-                </div>   
+                        <tr ng-repeat="inv in inventory" ng-show="checkParent[inventory[0].id] && inventory.length>1" ng-class="{active : checkChild[inv.id]}">
+                            <td></td>
+                            <td> &nbsp;<input type="checkbox" ng-model="checkChild[inv.id]" ng-change="checked(inv)" style="width: 15px; height:15px;"/> &nbsp; <span><% inv.item.name %> </span></td>
+                            <td><% inv.quantity %></td>
+                            <td ng-click="toggle('item_price', inv)"><% inv.item_prices[inv.item_prices.length - 1].market_price %></td>
+                            <td><% (inv.item_discounts | filter:{remarks:'default'})[0].percent %></td>
+                            <td></td>
+                            <td><% inv.donor.name %></td>
+                            <td><% inv.remarks %></td>
+                            <td><% inv.created %></td>  
+                        </tr>
+                    </tbody>
+                        
+                </table>
+            </div> 
+            <div class="box-footer" ng-show="countSelectedItems">
+                <select style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
+                    ng-model="selectedStatus" 
+                    ng-options="status.id as status.name for status in itemStatus"
+                    ng-change="transfer(selectedStatus)">
+                    <option 
+                        ng-click="transfer(selectedStatus)"
+                        ng-selected="countSelectedItems==0"
+                        ng-pluralize
+                        count="countSelectedItems"
+                        when="{'0': 'No selected item',
+                               'one': 'Move item',
+                               'other': 'Move {} items'}">
+                    </option>
+                </select>
+            </div>   
 
-            </div>
         </div>
 
         <!-- Modal (Pop up when detail button clicked) -->
@@ -113,9 +110,8 @@
                 </div>
             </div>
         </div>
-    </div> 
-</section>
-<!-- /.content -->
+    </section>
+    <!-- /.content -->
 </div>    
 
 @stop

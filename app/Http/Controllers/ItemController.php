@@ -23,26 +23,16 @@ class ItemController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($slug='for-review')
+    public function index()
     {
-    	$inventories = ItemStatus::where('slug', $slug)
-                ->with([
-					'inventories', 
-					'inventories.item', 
-					'inventories.itemPrices', 
-					'inventories.donor',
-				])
-                ->first()
-                ->inventories;  
-
         // Session::flash('message', [
         //             'title'=>'Alert',
         //             'text'=>'This is a message!',
         //             'type'=>'danger',
         //             'icon'=>'ban'
         //         ]); 
-        // dd($inventories);
-    	return view('item.index', ['inventories' => $inventories, 'slug' => $slug]);
+        // dd($categories->first()->items->first()->itemCodes);
+    	return view('item.index');
     }
 
     public function angular()
