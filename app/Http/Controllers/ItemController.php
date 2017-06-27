@@ -17,7 +17,7 @@ class ItemController extends Controller
 					'inventories', 
 					'inventories.item', 
 					'inventories.itemPrices', 
-					'inventories.donor',
+					'inventories.donors',
 				])->get();  
 
     	return view('item.index', ['status' => $data, 'id' => $id]);

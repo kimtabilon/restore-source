@@ -15,6 +15,6 @@ class Transaction extends Model
         'da_number', 'dt_number',
     ];
 
-    public function inventories() {     return $this->hasMany('App\Inventory'); }
+    public function inventories() {     return $this->belongsToMany('App\Inventory')->withTimestamps(); }
     public function paymentType() {     return $this->belongsTo('App\PaymentType'); }
 }

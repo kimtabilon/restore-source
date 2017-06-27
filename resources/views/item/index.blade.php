@@ -116,7 +116,7 @@
                                 <td>{{$inventory->quantity}}</td>
                                 <td>{{$inventory->itemPrices->first()->market_price}}</td>
                                 <td>{{$inventory->item->itemCodes->last()->code}}</td>
-                                <td>{{$inventory->donor->name}}</td>
+                                <td>{{$inventory->donors->first()->name}}</td>
                             </tr>
                         @endforeach
                     </table>
