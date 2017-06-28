@@ -11,6 +11,7 @@ use \App\ItemCodeType;
 use \App\ItemCode;
 use \App\ItemDiscount;
 use \App\ItemPrice;
+use \App\Donor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class InventoryController extends Controller
 					'inventories.itemPrices', 
 					'inventories.itemImages', 
 					'inventories.itemDiscounts',
-					'inventories.donor',
+					'inventories.donors',
 				])
 				->first()->inventories; 		
 		
@@ -117,25 +118,27 @@ class InventoryController extends Controller
 					$inv->quantity = $left;
 					$inv->save();
 
-					$discounts 	= $inv->itemDiscounts;
-					$image 		= $inv->itemImages;
-					$price 		= $inv->itemPrices;
+					$discounts 		= $inv->itemDiscounts;
+					$images 		= $inv->itemImages;
+					$prices 		= $inv->itemPrices;
+					$donors 		= $inv->donors;
+					$transactions 	= $inv->transactions;
 
 					$data['inventory']['quantity'] = (int)$data['quantity']; 
 					$data['inventory']['remarks']  = $data['remarks']; 
 					$inventory 					= new Inventory($data['inventory']);
 					$inventory->user()			->associate(Auth::user());
-					$inventory->donor()			->associate($data['inventory']['donor_id']);
 					$inventory->item()			->associate($data['inventory']['item_id']);
 					$inventory->itemStatus()	->associate((int)$data['status']);
-					$inventory->transaction()	->associate($data['inventory']['transaction_id']);
 					$inventory->save();
 
 					if($discounts->count()) {
 						foreach($discounts as $v) { $inventory->itemDiscounts()->attach($v); }
 					}
-					if($image->count()) { $inventory->itemImages()->attach($image->last()); }
-					if($price->count()) { $inventory->itemPrices()->attach($price->last()); }
+					if($images->count()) 		{ $inventory->itemImages()	->attach($images->last()); }
+					if($prices->count()) 		{ $inventory->itemPrices()	->attach($prices->last()); }
+					if($donors->count()) 		{ $inventory->donors()		->attach($donors->last()); }
+					if($transactions->count()) 	{ $inventory->transactions()->attach($transactions->last()); }
 				} 
 				else {
 					$left=0;
