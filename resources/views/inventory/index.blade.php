@@ -33,7 +33,7 @@
                         <th>Remarks</th>
                         <th>Added</th>
                     </thead>
-                    <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName">
+                    <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName"">
                         <tr ng-class="{active : checkParent[inventory[0].id]}">
                             <td><input type="checkbox" ng-model="checkParent[inventory[0].id]" ng-change="checked(inventory)" style="width: 15px; height:15px;" /></td>
                             <td ng-click="toggle('item', inventory[0])"><span class="badge" ng-show="inventory.length>1"><%inventory.length%></span> &nbsp;<% inventory[0].item.name %></td>
@@ -41,7 +41,7 @@
                             <td ng-click="toggle('item_price', inventory[0])"><span ng-show="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
                             <td><span ng-show="inventory.length==1"><% (inventory[0].item_discounts | filter:{remarks:'default'})[0].percent %></span></td>
                             <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
-                            <td><span ng-show="inventory.length==1"><% inventory[0].donor.name %></span></td>
+                            <td><span ng-show="inventory.length==1"><% inventory[0].donors[inventory[0].donors - 1].name %></span></td>
                             <td><span ng-show="inventory.length==1"><% inventory[0].remarks %></span></td>
                             <td><span ng-show="inventory.length==1"><% inventory[0].created %></span></td>     
                         </tr>
@@ -53,7 +53,7 @@
                             <td ng-click="toggle('item_price', inv)"><% inv.item_prices[inv.item_prices.length - 1].market_price %></td>
                             <td><% (inv.item_discounts | filter:{remarks:'default'})[0].percent %></td>
                             <td></td>
-                            <td><% inv.donor.name %></td>
+                            <td><% inv.donors[inv.donors.length - 1].name %></td>
                             <td><% inv.remarks %></td>
                             <td><% inv.created %></td>  
                         </tr>
@@ -77,8 +77,7 @@
                     </option>
                 </select>
             </div>   
-
-        </div>
+        </div>   
 
         <!-- Modal (Pop up when detail button clicked) -->
         <div class="modal fade" id="inventoryModal" tabindex="-1" role="dialog" aria-labelledby="inventoryModalLabel" aria-hidden="true">

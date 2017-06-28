@@ -11,19 +11,20 @@ class Inventory extends Model
      *
      * @var array
      */
+
     protected $fillable = ['quantity', 'remarks'];
     protected $appends  = ['created', 'modified'];
 
+
     public function user() {            return $this->belongsTo('App\User'); } 
-    public function donor() {           return $this->belongsTo('App\Donor'); } 
     public function item() {            return $this->belongsTo('App\Item'); } 
-    public function itemStatus() {      return $this->belongsTo('App\ItemStatus'); } 
-    public function transaction() {     return $this->belongsTo('App\Transaction'); } 
+    public function itemStatus() {      return $this->belongsTo('App\ItemStatus'); }  
 
     public function itemDiscounts() {   return $this->belongsToMany('App\ItemDiscount')  ->withTimestamps(); } 
     public function itemPrices() {      return $this->belongsToMany('App\ItemPrice')     ->withTimestamps(); } 
     public function itemImages() {      return $this->belongsToMany('App\ItemImage')     ->withTimestamps(); }
-
+    public function donors() {          return $this->belongsToMany('App\Donor')         ->withTimestamps(); }
+    public function transactions() {    return $this->belongsToMany('App\Transaction')   ->withTimestamps(); }
     
     public function getCreatedAttribute()
     {

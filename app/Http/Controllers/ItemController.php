@@ -35,6 +35,7 @@ class ItemController extends Controller
     	return view('item.index');
     }
 
+
     public function angular()
     {
         return view('item.angular');
