@@ -41,7 +41,7 @@
                             <td ng-click="toggle('item_price', inventory[0])"><span ng-show="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
                             <td><span ng-show="inventory.length==1"><% (inventory[0].item_discounts | filter:{remarks:'default'})[0].percent %></span></td>
                             <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
-                            <td><span ng-show="inventory.length==1"><% inventory[0].donors[inventory[0].donors - 1].name %></span></td>
+                            <td><span ng-show="inventory.length==1"><% inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
                             <td><span ng-show="inventory.length==1"><% inventory[0].remarks %></span></td>
                             <td><span ng-show="inventory.length==1"><% inventory[0].created %></span></td>     
                         </tr>

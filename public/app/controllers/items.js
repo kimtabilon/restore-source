@@ -24,7 +24,8 @@ app
         var item_index 		= $scope.categories[category_index].items.indexOf(item);
 
         switch (type) {
-            case 'item':                
+            case 'item':     
+                console.log(item);           
                 $scope.modal = {
                 	title: "Modify Item",
                 	field: { name: 'Name', description: 'Description' },
@@ -161,6 +162,7 @@ app
 	            			name 		: category.name,
 	            			description : category.description,
 	            			items 		: [{ 
+                                            id          : item.id,
 	            							category_id	: item.category_id,
 	            							name 		: item.name,
 	            							description : item.description,
@@ -172,6 +174,7 @@ app
 	            		var item_count 	= $scope.categories[category_index].items.length;
 
 	            		$scope.categories[category_index].items.push({
+                            id          : item.id,
 	            			category_id : item.category_id,
 	            			name 		: item.name,
 	            			description : item.description,
