@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 
-<!-- @section('title', 'Dashboard') -->
+@section('title', 'Items')
 
 @section('content')
 <div ng-controller="itemsController">
     <section class="content-header">
-        <h1>Items &nbsp; <span><button ng-click="toggle('new_item', categories[0].items[0])" class="btn btn-xs btn-success btn-flat">new</button></span></h1>
+        <h1>Items &nbsp;<button ng-click="toggle('new_item', categories[0].items[0])" class="btn btn-xs btn-success btn-flat">new</button></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Items</li>
@@ -17,7 +17,7 @@
     <!-- Main content -->
     <section class="content">
         <span us-spinner="{radius:6, width:2, length:5}"></span>
-        <div class="box" ng-repeat="category in categories | orderBy:'name'">
+        <div class="box box-solid" ng-repeat="category in categories | orderBy:'name'">
             <div class="box-header with-border">
               <h3 class="box-title pointer">
                 <span class="badge"><% category.items.length %></span>

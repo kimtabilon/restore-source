@@ -121,7 +121,12 @@ class InventoryController extends Controller
 				$barcode->itemCodeType()->associate($data['code_type']);
 				$barcode->save();
 
-				return [ 'item'=>$item, 'code'=>$barcode, 'new_category'=>$newCategory, 'category'=>$category ];
+				return [ 
+					'item' 			=> $item, 
+					'code' 			=> $barcode, 
+					'new_category'	=> $newCategory, 
+					'category'		=> $category 
+					];
 				break;		
 			
 			default:

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use \App\Category;
+use \App\Item;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -25,4 +26,11 @@ class ItemController extends Controller
 		return Category::with(['items', 'items.itemCodes'])
 				->get(); 	
 	}	
+
+	public function destroy(Request $request) 
+	{
+		$item = $request->input('id');
+		Item::find($item)->delete();
+		return 'Removed!';
+	}
 }

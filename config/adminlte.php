@@ -130,6 +130,7 @@ return [
             'url'     => '#',
             'icon'    => 'th',
             'url'     => 'inventories', 
+            'can'  => 'manager-receiving-coordinator-access',
             // 'label'       => 4,
             // 'label_color' => 'success',
             // 'can'     => 'manager-receiving-coordinator-access',
@@ -201,6 +202,18 @@ return [
             ],    
         ],
         [
+            'text' => 'Transaction',
+            'url'  => 'transactions',
+            'icon' => 'share-alt',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
+        [
+            'text' => 'Transaction',
+            'url'  => 'cashier',
+            'icon' => 'share-alt',
+            'can'  => 'cashier-access',
+        ],
+        [
             'text' => 'Item',
             'url'  => 'items',
             'icon' => 'files-o',
@@ -268,11 +281,13 @@ return [
             'text'       => 'Good Item',
             'url'        => 'inventories#good',
             'icon_color' => 'green',
+            'can'  => 'manager-receiving-coordinator-access',
         ],
         [
             'text'       => 'Sold Item',
             'url'        => 'inventories#sold',
             'icon_color' => 'yellow',
+            'can'  => 'manager-receiving-coordinator-access',
         ],
     ],
 

@@ -16,11 +16,14 @@ Route::get('/', function () {
 });
 
 Route::get('items', 'ItemController@index');
+Route::get('inventories', 'InventoryController@index');
+Route::get('transactions', 'TransactionController@index');
+Route::get('cashier', 'TransactionController@cashier');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
 
-Route::get('inventories/{status?}', 'InventoryController@index');
+
 
 Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('inventories/{status?}', 'Api\InventoryController@index');
@@ -31,6 +34,15 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('item-status-and-code-types', 'Api\InventoryController@statusAndCodeTypes');
 
 	Route::get('items', 'Api\ItemController@index');
+	Route::post('items/destroy', 'Api\ItemController@destroy');
+
+	Route::get('transactions', 'Api\TransactionController@index');
+	Route::post('transactions/create', 'Api\TransactionController@create');
+	Route::get('transactions/data', 'Api\TransactionController@data');
+	Route::get('transactions/inventories/{id}', 'Api\TransactionController@inventories');
+
+	Route::post('donors/create', 'Api\DonorController@create');
+	Route::post('donors/destroy', 'Api\DonorController@destroy');
 });
 
 Auth::routes();

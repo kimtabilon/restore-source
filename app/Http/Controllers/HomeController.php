@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        switch(Auth::user()->role->name) {
+            case 'Cashier':
+                return redirect('/cashier');
+                break;
+            default:
+                return redirect('/inventories#good');
+                break;    
+        }
+        // if(Auth::user()->role->name == 'Cashier') {
+        //     redirect('/cashier');
+        // }
+        // dd(Auth::user()->role->name);
+        // return view('home');
     }
 }

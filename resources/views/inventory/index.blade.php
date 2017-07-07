@@ -19,7 +19,7 @@
     <!-- Main content -->
     <section class="content">
         <span us-spinner="{radius:6, width:2, length:5}"></span>
-        <div class="box">
+        <div class="box box-solid">
             <div class="box-body">
                 <table class="table">
                     <thead>

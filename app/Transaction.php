@@ -11,10 +11,19 @@ class Transaction extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'da_number', 'dt_number',
-    ];
+    protected $fillable = [ 'da_number', 'dt_number', ];
+    protected $appends  = ['created', 'modified'];
 
     public function inventories() {     return $this->belongsToMany('App\Inventory')->withTimestamps(); }
     public function paymentType() {     return $this->belongsTo('App\PaymentType'); }
+
+    public function getCreatedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function getModifiedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->updated_at)->diffForHumans();
+    }
 }

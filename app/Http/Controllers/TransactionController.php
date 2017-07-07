@@ -10,7 +10,7 @@ use Session;
 
 use Illuminate\Http\Request;
 
-class InventoryController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -24,9 +24,11 @@ class InventoryController extends Controller
 
     public function index()
     {
-    	return view('inventory.index');
+    	return view('transaction.index');
     }
 
-    
-
+    public function cashier() 
+    {
+        return view('transaction.cashier');
+    }
 }
