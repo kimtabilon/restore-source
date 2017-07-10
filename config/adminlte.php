@@ -225,6 +225,12 @@ return [
             'icon' => 'edit',
             'can'  => 'manager-receiving-coordinator-access',
         ],
+        [
+            'text' => 'Images',
+            'url'  => 'item-images',
+            'icon' => 'edit',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
 
         'ACCOUNT SETTINGS',
         [

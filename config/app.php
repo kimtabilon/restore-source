@@ -182,6 +182,7 @@ return [
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Folklore\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -232,6 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Image' => Folklore\Image\Facades\Image::class,
 
     ],
 

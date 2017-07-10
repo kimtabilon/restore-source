@@ -1,3 +1,9 @@
+
+
+// var app = angular.module('App', [], ['$httpProvider', function ($httpProvider) {
+//     $httpProvider.defaults.headers.post['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+// }]);
+
 var app = angular.module('inventory', ['angular.filter', 'ngLoadingSpinner'], function($interpolateProvider, $locationProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
@@ -5,6 +11,8 @@ var app = angular.module('inventory', ['angular.filter', 'ngLoadingSpinner'], fu
 		  enabled: true,
 		  requireBase: false
 		});
+
+
     })
 	.constant('API_URL', 'http://127.0.0.1:8000/api/v1/')
 	.filter( 'camelCase', function ()
