@@ -16,6 +16,9 @@ class CreateItemImagesTable extends Migration
         Schema::create('item_images', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->text('description');
+            $table->integer('size', 10);
+            $table->string('type', 10);
             $table->timestamps();
         });
 
