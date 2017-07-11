@@ -20,11 +20,10 @@ Route::get('item-images', 'ItemImageController@index');
 Route::get('inventories', 'InventoryController@index');
 Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
+Route::get('item-discounts', 'ItemDiscountController@index');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
-
-
 
 Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('inventories/{status?}', 'Api\InventoryController@index');
@@ -49,6 +48,10 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('item-images/', 'Api\ItemImageController@index');
 	Route::post('item-images/create', 'Api\ItemImageController@create');
 	Route::post('item-images/destroy', 'Api\ItemImageController@destroy');
+
+	Route::get('item-discounts', 'Api\ItemDiscountController@index');
+	Route::post('item-discounts/save', 'Api\ItemDiscountController@save');
+	Route::post('item-discounts/destroy', 'Api\ItemDiscountController@destroy');
 });
 
 Auth::routes();

@@ -221,7 +221,7 @@ return [
         ],
         [
             'text' => 'Discount',
-            'url'  => 'discounts',
+            'url'  => 'item-discounts',
             'icon' => 'edit',
             'can'  => 'manager-receiving-coordinator-access',
         ],
