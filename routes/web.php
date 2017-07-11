@@ -31,6 +31,7 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::post('inventories/update', 'Api\InventoryController@update');
 	Route::post('inventories/transferOrCreate', 'Api\InventoryController@transferOrCreate');
 	Route::post('inventories/transfer/{status}', 'Api\InventoryController@transfer');
+	Route::post('inventories/add-image', 'Api\InventoryController@addImage');
 
 	Route::get('item-status-and-code-types', 'Api\InventoryController@statusAndCodeTypes');
 

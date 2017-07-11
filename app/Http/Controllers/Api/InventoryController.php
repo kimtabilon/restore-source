@@ -11,6 +11,7 @@ use \App\ItemCodeType;
 use \App\ItemCode;
 use \App\ItemDiscount;
 use \App\ItemPrice;
+use \App\ItemImage;
 use \App\Donor;
 
 use App\Http\Controllers\Controller;
@@ -86,6 +87,14 @@ class InventoryController extends Controller
 				return $inventory;
 				break;	
 
+			case 'remarks':
+				$inventory 				= Inventory::where('id', $data['id'])->first();
+				$inventory->remarks  	= $data['remarks'];
+				$inventory->save();
+
+				return $inventory;
+				break;	
+
 			case 'modify_category':
 				$category               = Category::where('id', $data['id'])->first();
 				$category->name         = $data['name'];
@@ -93,7 +102,7 @@ class InventoryController extends Controller
 				$category->save();
 
 				return $category;
-				break;	
+				break;		
 
 			case 'new_item':
 				$newCategory = false;
@@ -201,8 +210,20 @@ class InventoryController extends Controller
 
 	public function statusAndCodeTypes() 
 	{
-		return [ 'status'=>ItemStatus::all(), 'code_types'=>ItemCodeType::all() ];
+		return [ 
+			'status'=>ItemStatus::orderBy('name')->get(), 
+			'code_types'=>ItemCodeType::orderBy('name')->get(), 
+			'item_images'=>ItemImage::orderBy('name')->get(), 
+			];
 	}
 
+	public function addImage(Request $request)
+	{
+		$data = $request->all();
+		$inventory = Inventory::find($data['inventory']);
+		$image = ItemImage::find($data['image']);
+
+		return $inventory->itemImages()->attach($image);
+	}
 	
 }

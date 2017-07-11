@@ -66,7 +66,7 @@
                         <tr ng-repeat="file in files | filter:search">
                             <td><% $index + 1 %></td>
                             <td>
-                                <img src="images/items/<% file.id + '_thumb.jpg' %>" ng-click="display_image(file.id+'.'+file.type, file.name, file.description)" class="img-responsive">
+                                <img src="images/items/<% file.id %>_thumb.jpg" ng-click="display_image(file)" class="img-responsive">
                             </td>
                             <td><% file.name %></td>
                             <td><% file.description %></td>

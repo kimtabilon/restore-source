@@ -6,6 +6,7 @@ app
 	.then(function(response) {
 		$scope.itemStatus 		= response.data.status;
 		$scope.itemCodeTypes 	= response.data.code_types;
+		$scope.itemImages 		= response.data.item_images;
 	});	
 
 	$scope.$on('$locationChangeSuccess', function(event, newUrl, oldUrl){
@@ -192,6 +193,20 @@ app
                 };	
             	break;
 
+            case 'remarks':
+                $scope.modal = {
+                	title: "Modify Remarks",
+                	field: { remarks: 'Edit Remarks' },
+                	data: { 
+                		type 			: type, 
+                		index 			: index,
+                		remarks 		: data.remarks, 
+                		id 				: data.id 
+                	},
+                	button: 'Save changes'
+                };	
+            	break;	
+
             default:
                 break;
         }
@@ -244,7 +259,22 @@ app
 	            	$scope.inventories[index].item_prices[count-1].market_price = data.market_price;
 					$('#inventoryModal').modal('hide');
 	            });
-                break;           
+                break;  
+
+            case 'remarks':
+                $http({
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
+		        })
+	            .then(function (response) {
+	            	var inventory 	= $filter('filter')($scope.inventories, { id:response.data.id }, true)[0];
+	            	var index 		= $scope.inventories.indexOf(inventory);
+
+	            	$scope.inventories[index].remarks = response.data.remarks;
+					$('#inventoryModal').modal('hide');
+	            });
+                break;               
 
             case 'transfer_or_create':
             	$http({
@@ -276,6 +306,45 @@ app
                 break;
         }
 
+    }
+
+    $scope.display_image = function(inventory){
+    	var images = inventory.item_images;
+
+    	if(images.length>0) {
+    		image = images[images.length-1];
+	        $scope.modal = {
+	        	inventory 	: inventory,
+	            image       : image.id+'.'+image.type,
+	            name        : inventory.item.name,
+	            remarks 	: inventory.remarks
+	        }
+    	}
+    	else {
+    		$scope.modal = {
+	        	inventory 	: inventory,
+	            image       : '',
+	            name        : inventory.item.name,
+	            remarks 	: inventory.remarks
+	        }
+    	}
+
+        $('#imageModal').modal('show');
+    }
+
+    $scope.set_image = function(image, inventory) {
+    	$http({
+            method 	: 'POST',
+            url 	: API_URL + 'inventories/add-image',
+            data 	: { image: image.id, inventory: inventory.id }
+        })
+        .then(function (response) {
+        	$scope.modal.image = image.id+'.'+image.type;
+        	var index = $scope.inventories.indexOf(inventory);
+        	var images = $scope.inventories[index].item_images;
+
+        	images[images.length] = image;
+        });
     }
 });
 

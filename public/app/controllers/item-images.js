@@ -93,11 +93,11 @@ app
         }
     };   
 
-    $scope.display_image = function(image, name, description){
+    $scope.display_image = function(image){
         $scope.modal = {
-            image       : image,
-            name        : name,
-            description : description
+            image       : image.id+'.'+image.type,
+            name        : image.name,
+            description : image.description
         }
 
         $('#imageModal').modal('show');
