@@ -224,7 +224,7 @@ class InventoryController extends Controller
 		$inventory = Inventory::find($data['inventory']);
 		$image = ItemImage::find($data['image']);
 
-		// return $inventory->itemImages()->attach($image);
+		return $inventory->itemImages()->attach($image);
 		return 1;
 	}
 	

@@ -126,6 +126,12 @@ return [
     'menu' => [
         'MAIN NAVIGATION',
         [
+            'text' => 'Dashboard',
+            'url'  => 'dashboard',
+            'icon' => 'dashboard',
+            'can'  => 'manager-access',
+        ],
+        [
             'text'    => 'Inventory',
             'url'     => '#',
             'icon'    => 'th',
@@ -196,7 +202,7 @@ return [
                 [
                     'text' => 'Returned',
                     'url'  => 'inventories#returned',
-                    'can'  => 'receiving-coordinator-access',
+                    'can'  => 'manager-receiving-coordinator-access',
                     'icon_color' => 'red',
                 ],
             ],    
@@ -214,22 +220,34 @@ return [
             'can'  => 'cashier-access',
         ],
         [
-            'text' => 'Item',
-            'url'  => 'items',
-            'icon' => 'files-o',
+            'text'    => 'Item',
+            'url'     => '#',
+            'icon'    => 'files-o',
+            'url'     => 'items', 
             'can'  => 'manager-receiving-coordinator-access',
-        ],
-        [
-            'text' => 'Discount',
-            'url'  => 'item-discounts',
-            'icon' => 'edit',
-            'can'  => 'manager-receiving-coordinator-access',
-        ],
-        [
-            'text' => 'Item Image',
-            'url'  => 'item-images',
-            'icon' => 'file-o',
-            'can'  => 'manager-receiving-coordinator-access',
+            // 'label'       => 4,
+            // 'label_color' => 'success',
+            // 'can'     => 'manager-receiving-coordinator-access',
+            'submenu' => [
+                [
+                    'text' => 'List',
+                    'url'  => 'items',
+                    'icon' => 'list',
+                    'icon_color' => 'green',
+                ],
+                [
+                    'text' => 'Image',
+                    'url'  => 'items/images',
+                    'icon' => 'file-o',
+                    'icon_color' => 'red',
+                ],
+                [
+                    'text' => 'Discount',
+                    'url'  => 'items/discounts',
+                    'icon' => 'edit',
+                    'icon_color' => 'blue',
+                ],
+            ],
         ],
 
         'ACCOUNT SETTINGS',

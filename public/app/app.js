@@ -1,9 +1,3 @@
-
-
-// var app = angular.module('App', [], ['$httpProvider', function ($httpProvider) {
-//     $httpProvider.defaults.headers.post['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
-// }]);
-
 var app = angular.module('inventory', ['angular.filter', 'ngLoadingSpinner'], function($interpolateProvider, $locationProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');

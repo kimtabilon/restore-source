@@ -14,7 +14,7 @@ class Donor extends Model
     protected $fillable = [
         'given_name', 'middle_name', 'last_name', 'email',
     ];
-    protected $appends = ['name'];
+    protected $appends = ['name', 'created', 'modified'];
 
     public function profile() {     return $this->hasOne('App\Profile'); } 
     public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
@@ -25,5 +25,15 @@ class Donor extends Model
     public function getNameAttribute()
     {
         return preg_replace('/\s+/', ' ',$this->given_name.' '.$this->middle_name.' '.$this->last_name);
+    }
+
+    public function getCreatedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function getModifiedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->updated_at)->diffForHumans();
     }
 }

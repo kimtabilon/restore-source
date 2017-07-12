@@ -15,12 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('dashboard', 'DashboardController@index');
+
 Route::get('items', 'ItemController@index');
-Route::get('item-images', 'ItemImageController@index');
+Route::get('items/images', 'ItemImageController@index');
+Route::get('items/discounts', 'ItemDiscountController@index');
 Route::get('inventories', 'InventoryController@index');
 Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
-Route::get('item-discounts', 'ItemDiscountController@index');
 Route::get('users', 'UserController@index');
 Route::get('profile', 'UserController@profile');
 
@@ -28,6 +30,9 @@ Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
 
 Route::group(['prefix' => 'api/v1'], function () {
+	Route::get('dashboard', 'Api\DashboardController@index');
+	Route::get('dashboard/status', 'Api\DashboardController@status');
+
 	Route::get('inventories/{status?}', 'Api\InventoryController@index');
 	Route::post('inventories/update', 'Api\InventoryController@update');
 	Route::post('inventories/transferOrCreate', 'Api\InventoryController@transferOrCreate');

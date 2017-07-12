@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 
-<!-- @section('title', 'Dashboard') -->
+@section('title', 'Inventory')
 
 @section('content')
 <div ng-controller="inventoriesController">
     <section class="content-header">
-        <h1>Inventories 
+        <h1>Inventory 
             <span class="label label-default"><% status.replace('-', ' ') | camelCase %> Items</span>
         </h1>
         <ol class="breadcrumb">

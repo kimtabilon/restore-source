@@ -19,7 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'given_name', 'middle_name', 'last_name', 'username', 'email', 'password',
     ];
-    protected $appends = ['name'];
+    protected $appends = ['name', 'created', 'modified'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -40,8 +40,14 @@ class User extends Authenticatable
         return ucfirst($this->given_name) . ' ' . ucfirst($this->last_name);
     }
 
-    public function getDateCreatedAttribute() {
-        return Carbon::parse($this->created_at)->diffForHumans();
+    public function getCreatedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function getModifiedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->updated_at)->diffForHumans();
     }
 
 }

@@ -6,7 +6,7 @@
 
 <div ng-controller="itemImagesController">
     <section class="content-header">
-        <h1>Manage Image</h1>
+        <h1>Item Image</h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Items</li>
@@ -66,7 +66,7 @@
                         <tr ng-repeat="file in files | filter:search">
                             <td><% $index + 1 %></td>
                             <td>
-                                <img src="images/items/<% file.id %>_thumb.jpg" ng-click="display_image(file)" class="img-responsive">
+                                <img src="{{asset('images/items/<% file.id %>_thumb.jpg')}}" ng-click="display_image(file)" class="img-responsive">
                             </td>
                             <td><% file.name %></td>
                             <td><% file.description %></td>
@@ -94,13 +94,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="imageModalLabel"><% modal.name %></h4>
+                    <h4 class="modal-title" id="imageModalLabel"><% modal.name %> <small> - <em><% modal.description %></em></small></h4>
                 </div>
                 <div class="modal-body">
-                    <img src="images/items/<% modal.image %>" class="img-responsive">
-                </div>
-                <div class="modal-footer">
-                    <em><% modal.description %></em>
+                    <img src="{{asset('images/items/<% modal.image %>')}}" class="img-responsive">
                 </div>
             </div>
         </div>
