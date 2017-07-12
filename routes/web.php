@@ -21,6 +21,8 @@ Route::get('inventories', 'InventoryController@index');
 Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
 Route::get('item-discounts', 'ItemDiscountController@index');
+Route::get('users', 'UserController@index');
+Route::get('profile', 'UserController@profile');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
@@ -54,6 +56,11 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::post('item-discounts/destroy', 'Api\ItemDiscountController@destroy');
 	Route::post('item-discounts/add', 'Api\ItemDiscountController@add');
 	Route::post('item-discounts/remove', 'Api\ItemDiscountController@remove');
+
+	Route::get('users', 'Api\UserController@index');
+	Route::get('users/profile', 'Api\UserController@profile');
+	Route::post('users/save', 'Api\UserController@save');
+	Route::post('users/destroy', 'Api\UserController@destroy');
 });
 
 Auth::routes();

@@ -87,7 +87,7 @@ return [
     |
     */
 
-    'collapse_sidebar' => true,
+    'collapse_sidebar' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -226,61 +226,22 @@ return [
             'can'  => 'manager-receiving-coordinator-access',
         ],
         [
-            'text' => 'Images',
+            'text' => 'Item Image',
             'url'  => 'item-images',
-            'icon' => 'edit',
+            'icon' => 'file-o',
             'can'  => 'manager-receiving-coordinator-access',
         ],
 
         'ACCOUNT SETTINGS',
         [
             'text' => 'Profile',
-            'url'  => 'admin/settings',
-            'icon' => 'user',
-        ],
-        [
-            'text' => 'Change Password',
-            'url'  => 'admin/settings',
+            'url'  => 'profile',
             'icon' => 'lock',
-            'can'  => 'receiving-coordinator-access',
         ],
         [
-            'text'    => 'Multilevel',
-            'icon'    => 'share',
-            'submenu' => [
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'Level One',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'Level Two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'Level Two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
-                ],
-            ],
+            'text' => 'User',
+            'url'  => 'users',
+            'icon' => 'user',
         ],
         'QUICK ACCESS',
         [

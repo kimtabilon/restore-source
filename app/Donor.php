@@ -14,7 +14,7 @@ class Donor extends Model
     protected $fillable = [
         'given_name', 'middle_name', 'last_name', 'email',
     ];
-    protected $appends = array('name');
+    protected $appends = ['name'];
 
     public function profile() {     return $this->hasOne('App\Profile'); } 
     public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 
