@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use \App\ItemDiscount;
+use \App\Inventory;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -63,5 +64,27 @@ class ItemDiscountController extends Controller
 		$discount->delete();
 
 		return $discount;
+	}
+
+	public function add(Request $request)
+	{
+		$discount 	= $request->input('discount');
+		$inventory 	= $request->input('inventory');
+
+		$match_inventory 	= Inventory::find($inventory['id']);
+		$match_discount 	= ItemDiscount::find($discount['id']);
+
+		return $match_inventory->itemDiscounts()->attach($match_discount);
+	}
+
+	public function remove(Request $request)
+	{
+		$discount 	= $request->input('discount');
+		$inventory 	= $request->input('inventory');
+
+		$match_inventory 	= Inventory::find($inventory['id']);
+		$match_discount 	= ItemDiscount::find($discount['id']);
+
+		return $match_inventory->itemDiscounts()->detach($match_discount);
 	}
 }

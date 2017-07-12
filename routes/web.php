@@ -52,6 +52,8 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('item-discounts', 'Api\ItemDiscountController@index');
 	Route::post('item-discounts/save', 'Api\ItemDiscountController@save');
 	Route::post('item-discounts/destroy', 'Api\ItemDiscountController@destroy');
+	Route::post('item-discounts/add', 'Api\ItemDiscountController@add');
+	Route::post('item-discounts/remove', 'Api\ItemDiscountController@remove');
 });
 
 Auth::routes();

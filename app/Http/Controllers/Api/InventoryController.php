@@ -214,6 +214,7 @@ class InventoryController extends Controller
 			'status'=>ItemStatus::orderBy('name')->get(), 
 			'code_types'=>ItemCodeType::orderBy('name')->get(), 
 			'item_images'=>ItemImage::orderBy('name')->get(), 
+			'item_discounts'=>ItemDiscount::with('inventories','inventories.item','inventories.itemStatus')->orderBy('type')->get(), 
 			];
 	}
 
@@ -223,7 +224,8 @@ class InventoryController extends Controller
 		$inventory = Inventory::find($data['inventory']);
 		$image = ItemImage::find($data['image']);
 
-		return $inventory->itemImages()->attach($image);
+		// return $inventory->itemImages()->attach($image);
+		return 1;
 	}
 	
 }

@@ -7,6 +7,7 @@ app
 		$scope.itemStatus 		= response.data.status;
 		$scope.itemCodeTypes 	= response.data.code_types;
 		$scope.itemImages 		= response.data.item_images;
+		$scope.itemDiscounts	= response.data.item_discounts;
 	});	
 
 	$scope.$on('$locationChangeSuccess', function(event, newUrl, oldUrl){
@@ -19,7 +20,6 @@ app
 				$scope.countSelectedItems 	= 0;
 				$scope.checkParent 			= [];
 				$scope.checkChild 			= [];
-				
 			});
 		$scope.status = status;	
 	});
@@ -40,7 +40,6 @@ app
 	}
 	
 	$scope.checked = function(inventory) {
-
 		var count = inventory.length - 1;
 		if(count>=0) {
 			for(x=0; x<=count; x++) {
@@ -58,7 +57,6 @@ app
 
 					$scope.SelectedItems.splice(foundIndex, 1);
 		    	}	
-
 	    	}
 		}
 		else {
@@ -345,6 +343,47 @@ app
 
         	images[images.length] = image;
         });
+    }
+
+    $scope.show_discounts = function(inventory) {
+    	$scope.modal = {
+    		inventory : inventory,
+        	discounts : inventory.item_discounts,
+        }
+
+        $('#discountModal').modal('show');
+    }
+
+    $scope.add_discount = function(discount, inventory) {
+		$http({
+            method 	: 'POST',
+            url 	: API_URL + 'item-discounts/add',
+            data 	: { discount: discount, inventory: inventory }
+        })
+        .then(function (response) {
+        	var index = $scope.inventories.indexOf(inventory);
+        	$scope.inventories[index].item_discounts.push(discount);
+        });
+    }
+
+    $scope.remove_discount = function(discount, inventory) {
+		$http({
+            method 	: 'POST',
+            url 	: API_URL + 'item-discounts/remove',
+            data 	: { discount: discount, inventory: inventory }
+        })
+        .then(function (response) {
+        	var i_index = $scope.inventories.indexOf(inventory);
+        	var d_index 	= $scope.inventories[i_index].item_discounts.indexOf(discount);
+        	$scope.inventories[i_index].item_discounts.splice(d_index, 1);
+        });
+    }
+
+    $scope.new_value = function(inventory) {
+    	var discount = $scope.sum(inventory.item_discounts, 'percent');
+    	var prices   = inventory.item_prices;
+    	var price    = parseFloat(prices[prices.length-1].market_price);
+    	return  price - (price*discount/100);
     }
 });
 
