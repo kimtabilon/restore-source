@@ -29,7 +29,7 @@ class HomeController extends Controller
                 return redirect('/cashier');
                 break;
             default:
-                return redirect('/inventories#good');
+                return redirect('/dashboard');
                 break;    
         }
         // if(Auth::user()->role->name == 'Cashier') {
