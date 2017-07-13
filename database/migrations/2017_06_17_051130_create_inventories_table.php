@@ -19,7 +19,7 @@ class CreateInventoriesTable extends Migration
             $table->integer('item_id')          ->unsigned()->index();
             $table->integer('item_status_id')   ->unsigned()->index();
             $table->integer('quantity');
-            $table->text('remarks');
+            $table->text('remarks')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')          ->references('id')->on('users')         ->onDelete('cascade');

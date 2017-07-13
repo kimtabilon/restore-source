@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use \App\Transaction;
 use \App\Donor;
+use \App\DonorType;
 use \App\PaymentType;
 use \App\ItemStatus;
+use \App\ItemPrice;
 use \App\Item;
 use \App\Inventory;
 use \App\ItemCodeType;
@@ -54,12 +56,13 @@ class TransactionController extends Controller
 
 	public function data() 
 	{
-		$item_status = ItemStatus::orderBy('name')->get();
+		$item_status = ItemStatus::with(['inventories'])->orderBy('name')->get();
 		$good_item 	 = $item_status->where('name', 'Good')->first()->id;
 		return [
 			'categories'	=> Category::orderBy('name')->get(),
 			'code_types'	=> ItemCodeType::orderBy('name')->get(),
 			'donors' 		=> Donor::with(['profile', 'donorType'])->orderBy('given_name')->get(),
+			'donor_types'	=> DonorType::orderBy('name')->get(),
 			'payment_types'	=> Auth::user()->role->name=='Cashier' ? PaymentType::whereIn('name', ['Cash','Debit','Credit'])->orderBy('name')->get() : PaymentType::orderBy('name')->get(),
 			'item_status' 	=> $item_status,
 			'items' 		=> Item::with(['category', 'itemCodes'])->orderBy('name')->get(),
@@ -151,26 +154,34 @@ class TransactionController extends Controller
 			foreach ($inventories as $inventory) {
 				$match = Inventory::where('item_id', $inventory['item_id'])->get()->last();
 
-				$discounts 		= $match->itemDiscounts;
-				$images 		= $match->itemImages;
-				$prices 		= $match->itemPrices;
-
 				$new_inv 				= new Inventory();
 				$new_inv->quantity 		= $inventory['quantity'];
 				$new_inv->remarks   	= $inventory['remarks'];
-				$new_inv->itemStatus()  ->associate($for_review);
+				$new_inv->itemStatus()  ->associate($inventory['item_status_id']);
 				$new_inv->item() 		->associate($inventory['item_id']);
 				$new_inv->user() 		->associate(Auth::user());
 				$new_inv->save();
 
-				if($discounts->count()) {
-					foreach($discounts as $v) { $new_inv->itemDiscounts()->attach($v); }
-				}
-				if($images->count()){ $new_inv->itemImages()->attach($images->last()); }
-				if($prices->count()){ $new_inv->itemPrices()->attach($prices->last()); }
-
+				$new_price = new ItemPrice();
+				$new_price->market_price = $inventory['market_price'];
+				$new_price->save();
+				
+				$new_inv->itemPrices()  ->attach($new_price);
 				$new_inv->donors()		->attach($found_donor);
 				$new_inv->transactions()->attach($new_transaction);
+				
+				if($match) {
+
+					$discounts 		= $match->itemDiscounts;
+					$images 		= $match->itemImages;
+					// $prices 		= $match->itemPrices;
+
+					if($discounts->count()) {
+						foreach($discounts as $v) { $new_inv->itemDiscounts()->attach($v); }
+					}
+					if($images->count()){ $new_inv->itemImages()->attach($images->last()); }
+					// if($prices->count()){ $new_inv->itemPrices()->attach($prices->last()); }
+				}				
 			}	 
 		}
 

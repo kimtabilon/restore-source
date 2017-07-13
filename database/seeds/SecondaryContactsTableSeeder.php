@@ -11,9 +11,9 @@ class SecondaryContactsTableSeeder extends Seeder
      */
     public function run()
     {
-        for($x=1; $x<=10; $x++)
-        {
-        	factory(App\SecondaryContact::class)->create(['profile_id'=>$x]);
-        }
+        // for($x=1; $x<=10; $x++)
+        // {
+        // 	factory(App\SecondaryContact::class)->create(['profile_id'=>$x]);
+        // }
     }
 }

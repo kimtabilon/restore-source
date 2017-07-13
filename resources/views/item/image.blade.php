@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', 'Items')
+@section('title', 'Images')
 
 @section('content')
 
 <div ng-controller="itemImagesController">
     <section class="content-header">
-        <h1>Item Image</h1>
+        <h1>Images</h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Items</li>
+            <li class="active">Images</li>
         </ol>
     </section>    
 
@@ -24,17 +24,20 @@
                 <div class="col-md-12 form-horizontal">
                     <div class="form-group">
                       <label class="col-sm-1 control-label">Name</label>
-                      <div class="col-sm-2">
-                        <input ng-model="image.name" type="text" class="form-control" placeholder="Name">
+                      <div class="col-sm-3">
+                        <input ng-model="image.name" list="items" type="text" class="form-control" placeholder="Name">
                       </div>
+                      <datalist id="items">
+                          <option ng-repeat="item in items" value="<% item.name %>"><% item.description %></option>
+                      </datalist>
 
                       <label class="col-sm-1 control-label">Description</label>
                       <div class="col-sm-3">
                         <input ng-model="image.description" type="text" class="form-control" placeholder="Description">
                       </div>
 
-                      <div class="col-sm-3">
-                        <input type="file" ng-files="setTheFiles($files)" id="image_file"  class="form-control">
+                      <div class="col-sm-2">
+                        <input type="file" ng-files="setTheFiles($files)" id="image_file" class="form-control">
                       </div>
 
                       <div class="col-sm-2">

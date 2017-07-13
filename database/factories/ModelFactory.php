@@ -23,12 +23,23 @@ $factory->define(App\Role::class, function (Faker\Generator $faker) {
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
+    // return [
+    //     'given_name'        => $faker->firstName,
+    //     'middle_name'       => $faker->lastName,
+    //     'last_name'         => $faker->lastName,
+    //     'username'          => $faker->userName,
+    //     'email'             => $faker->safeEmail,
+    //     'password'          => $password ?: $password = bcrypt('secret'),
+    //     'role_id'           => 1,
+    //     'remember_token'    => str_random(10),
+    // ];
+
     return [
-        'given_name'        => $faker->firstName,
-        'middle_name'       => $faker->lastName,
-        'last_name'         => $faker->lastName,
-        'username'          => $faker->userName,
-        'email'             => $faker->safeEmail,
+        'given_name'        => 'Vicente',
+        'middle_name'       => 'O',
+        'last_name'         => 'Abana',
+        'username'          => 'Vic',
+        'email'             => 'vic@kiakaha.co',
         'password'          => $password ?: $password = bcrypt('secret'),
         'role_id'           => 1,
         'remember_token'    => str_random(10),

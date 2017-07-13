@@ -25,7 +25,7 @@ class DonorController extends Controller
 	public function create(Request $request) 
 	{
 		$donor = $request->input('donor');
-		$donor_type = DonorType::where('name', 'Customer')->get()->first();
+		$donor_type = DonorType::where('name', $donor['donor_type'])->get()->first();
 
 		$new_donor = new Donor();
 

@@ -10,6 +10,7 @@ app
     .get(API_URL + 'transactions/data')
     .then(function (response) {
         $scope.donors           = response.data.donors;
+        $scope.donor_types      = response.data.donor_types;
         $scope.items            = response.data.items;
         $scope.payment_types    = response.data.payment_types;
         $scope.item_status      = response.data.item_status;
@@ -88,6 +89,17 @@ app
     $scope.payment_type = [];
     $scope.choose_payment_type = function(id) {
         $scope.payment_type = $filter('filter')($scope.payment_types, {id:id}, true)[0];
+        var paytype = $scope.payment_type.name;
+        if(paytype == 'Cash'||paytype == 'Debit'||paytype == 'Credit') {
+            $scope.acknowledgement_no = 'C-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
+                        return self.indexOf(value) === index;
+                    }).join('').substr(2,8);
+        }
+        else {
+            $scope.acknowledgement_no = 'DA-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
+                        return self.indexOf(value) === index;
+                    }).join('').substr(2,8);
+        }
         // console.log(selected_payment_type);
     }
     $scope.donor = [];
@@ -104,11 +116,16 @@ app
     }
 
     $scope.choose_item_from_item = function(id) {
-        var item = $filter('filter')($scope.items, { id: id})[0];
-        selected = angular.copy($scope.inventories[0]);
-        selected.id      = 0;
+        var item = $filter('filter')($scope.items, { id: id}, true)[0];
+        // selected = angular.copy($scope.inventories[0]);
+        selected = {
+            id      : 0,
+            item    : item,
+            item_id : item.id
+        };
+        /*selected.id      = 0;
         selected.item    = item;
-        selected.item_id = item.id;
+        selected.item_id = item.id;*/
     }
 
     $scope.choose_item_from_inv = function(id) {
@@ -121,6 +138,7 @@ app
             selected.item_status     = $scope.active_status;
             selected.item_status_id  = $scope.active_status.id;
             selected.quantity        = $scope.new_inv_qty;
+            selected.market_price    = $scope.new_inv_price;
             selected.remarks         = $scope.new_inv_remarks;
         }
 
@@ -194,12 +212,13 @@ app
     }
 
     $scope.new_item_btn = function(new_item) {
-        var match_category      = $filter('filter')($scope.categories, { name: new_item.category.name }, true);
+        var match_category      = $filter('filter')($scope.categories, { name: new_item.category_name }, true);
         var category_index      = $scope.categories.indexOf(match_category[0]);
 
         new_item.category_id    = match_category.length==0 ? 0 : match_category[0].id;
+        new_item.category       = match_category.length==0 ? new_item.category_name : match_category[0].name;
         new_item.type           = 'new_item'; 
-        new_item.code_type      = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' })[0].id; 
+        new_item.code_type      = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' }, true)[0].id; 
         
         $http({
             method  : 'POST',
@@ -212,25 +231,29 @@ app
             var code        = response.data.code;
             var new_cat     = response.data.new_category;
             var category    = response.data.category;
-
+            
             if(new_cat) {
                 $scope.categories.push({
                     id          : category.id,
                     name        : category.name,
                     description : category.description,
-                    items       : [{ 
-                                    id          : item.id,
-                                    category_id : item.category_id,
-                                    name        : item.name,
-                                    description : item.description,
-                                    item_codes  : [ code ]
-                                }]
                 });
-            }
-            else {
+
                 $scope.items.push({
                     id          : item.id,
                     category_id : item.category_id,
+                    category    : category,
+                    name        : item.name,
+                    description : item.description,
+                    item_codes  : [ code ]
+                });
+            }
+            else {
+                console.log(category);
+                $scope.items.push({
+                    id          : item.id,
+                    category_id : item.category_id,
+                    category    : match_category[0],
                     name        : item.name,
                     description : item.description,
                     item_codes  : [ code ]

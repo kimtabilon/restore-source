@@ -23,14 +23,24 @@ class ItemController extends Controller
 
 	public function index()
 	{
-		return Category::with(['items', 'items.itemCodes'])
-				->get(); 	
+		return [
+			'categories' => Category::with(['items', 'items.itemCodes'])->get(),
+		];
 	}	
 
 	public function destroy(Request $request) 
 	{
 		$item = $request->input('id');
-		Item::find($item)->delete();
-		return 'Removed!';
+		$match = Item::find($item);
+		$match->delete();
+		return $match;
+	}
+
+	public function destroyCategory(Request $request)
+	{
+		$category = $request->all();
+		$match = Category::find($category['id']);
+		$match->delete();
+		return $match;
 	}
 }

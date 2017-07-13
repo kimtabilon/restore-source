@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'inventories#good',
+    'dashboard_url' => 'dashboard',
 
     'logout_url' => 'logout',
 
@@ -146,6 +146,7 @@ return [
                     'url'  => 'inventories#for-review',
                     'can'  => 'receiving-coordinator-access',
                     'icon_color' => 'green',
+                    'icon' => 'flag-checkered',
                 ],
                 [
                     'text' => 'Under Repair',
@@ -158,51 +159,61 @@ return [
                     'can'  => 'manager-access',
                     'url'  => '#',
                     'icon_color' => 'aqua',
+                    'icon' => 'flag-checkered',
                     'submenu' => [
                         [
-                            'text' => 'Floor Item',
+                            'text' => 'For Floor Item',
                             'url'  => 'inventories#for-approval',
+                            'icon' => 'plus',
                         ],
                         [
-                            'text' => 'Transfer',
+                            'text' => 'For Transfer',
                             'url'  => 'inventories#for-transfer',
+                            'icon' => 'share-square-o',
                         ],
                         [
-                            'text' => 'Disposal',
+                            'text' => 'For Disposal',
                             'url'  => 'inventories#for-disposal',
+                            'icon' => 'trash',
                         ],
                     ],    
                 ],
                 [
                     'text' => 'Good',
                     'url'  => 'inventories#good',
+                    'icon' => 'check-square-o',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Sold',
                     'url'  => 'inventories#sold',
                     'can'  => 'manager-access',
+                    'icon' => 'shopping-cart',
                     'icon_color' => 'yellow',
                 ],
                 [
                     'text' => 'Transferred',
                     'can'  => 'manager-access',
+                    'icon' => 'share-square-o',
                     'url'  => 'inventories#transferred',
                 ],
                 [
                     'text' => 'Disposed',
                     'can'  => 'manager-access',
+                    'icon' => 'trash',
                     'url'  => 'inventories#disposed',
                 ],
                 [
                     'text' => 'Refunded',
                     'url'  => 'inventories#refunded',
                     'can'  => 'manager-access',
+                    'icon' => 'arrow-circle-right',
                 ],
                 [
                     'text' => 'Returned',
                     'url'  => 'inventories#returned',
                     'can'  => 'manager-receiving-coordinator-access',
+                    'icon' => 'exchange',
                     'icon_color' => 'red',
                 ],
             ],    

@@ -16,7 +16,7 @@ class CreateUserLogsTable extends Migration
         Schema::create('user_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('log');
-            $table->text('remarks');
+            $table->text('remarks')->nullable();
             $table->integer('user_id')->unsigned()->index();
             $table->timestamps();
 

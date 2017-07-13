@@ -43,6 +43,7 @@ Route::group(['prefix' => 'api/v1'], function () {
 
 	Route::get('items', 'Api\ItemController@index');
 	Route::post('items/destroy', 'Api\ItemController@destroy');
+	Route::post('items/category/destroy', 'Api\ItemController@destroyCategory');
 
 	Route::get('transactions', 'Api\TransactionController@index');
 	Route::post('transactions/create', 'Api\TransactionController@create');

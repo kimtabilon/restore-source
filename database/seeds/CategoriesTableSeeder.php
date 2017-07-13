@@ -11,7 +11,7 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Category::class, 10)->create()->each(function ($c) {
+        /*factory(App\Category::class, 10)->create()->each(function ($c) {
         	factory(App\Item::class, 10)->create( [ 'category_id' => $c->id ] )->each(function ($i) {
 
                 factory(App\ItemCode::class)
@@ -44,6 +44,6 @@ class CategoriesTableSeeder extends Seeder
                 $inventoy->donors()         ->attach(rand(1, 30));
                 $inventoy->transactions()   ->attach(rand(1, 30));
         	});
-        });
+        });*/
     }
 }

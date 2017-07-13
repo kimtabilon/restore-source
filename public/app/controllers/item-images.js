@@ -1,11 +1,12 @@
 app
 .controller('itemImagesController', function ($scope, $http, $location, $filter, API_URL) {
 
-	$http
+	/*$http
     .get(API_URL + 'item-images/')
     .then(function (response) {
-    	$scope.images = response.data;
-    });
+    	$scope.images = response.data.images;
+        console.log($scope.images);
+    });*/
 
     $scope.errors = [];
 
@@ -22,8 +23,9 @@ app
 
         $http(request)
             .then(function success(e) {
-                $scope.files = e.data;
-
+                $scope.files = e.data.images;
+                $scope.items = e.data.items;
+                console.log($scope.items);
             }, function error(e) {
 
             });

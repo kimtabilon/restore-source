@@ -146,21 +146,28 @@
                                 </div>
 
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Company</label>
-                                  <div class="col-sm-4">
+                                  <label class="col-sm-1 control-label">Company</label>
+                                  <div class="col-sm-6">
                                     <input ng-model="new_customer.profile.company" type="text" class="form-control" placeholder="Company">
                                   </div>
                                   <label class="col-sm-2 control-label">Job Title</label>
-                                  <div class="col-sm-4">
+                                  <div class="col-sm-3">
                                     <input ng-model="new_customer.profile.job_title" type="text" class="form-control" placeholder="Job Title">
                                   </div>
                                 </div>  
 
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Full Address</label>
-                                  <div class="col-sm-10">
+                                  <label class="col-sm-1 control-label">Address</label>
+                                  <div class="col-sm-6">
                                     <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address">
                                   </div>
+                                  <label class="col-sm-2 control-label">Donor Type</label>
+                                  <div class="col-sm-3">
+                                    <input ng-model="new_customer.donor_type" list="donor_types" type="text" class="form-control" placeholder="Donor Type">
+                                  </div>
+                                  <datalist id="donor_types">
+                                    <option ng-repeat="type in donor_types" value="<% type.name %>"><% type.description %></option>
+                                  </datalist>
                                 </div>  
 
                                   
@@ -173,12 +180,11 @@
                             <div class="table-responsive">
                             <table class="table">
                                 <tr>
-                                    <th>Title</th>
-                                    <th>Given Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
                                     <th>Type</th>
+                                    <th>Given Name</th>
+                                    <th>Last Name</th>
+                                    <th>Company</th>
+                                    <th>Email</th>
                                     <th>Phone#</th>
                                     <!-- <th>Tel#</th>
                                     <th>Address</th>
@@ -187,12 +193,11 @@
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="donor in donors | filter:search_donor">
-                                    <td><% donor.profile.title %></td>
-                                    <td><% donor.given_name!=''?donor.given_name:donor.profile.company %></td>
-                                    <td><% donor.middle_name %></td>
-                                    <td><% donor.last_name %></td>
-                                    <td><% donor.email %></td>
                                     <td><% donor.donor_type.name %></td>
+                                    <td><% donor.given_name %></td>
+                                    <td><% donor.last_name %></td>
+                                    <td><% donor.profile.company %></td>
+                                    <td><% donor.email %></td>
                                     <td><% donor.profile.phone %></td>
                                     <!-- <td><% donor.profile.tel %></td>
                                     <td><% donor.profile.address %></td>
@@ -211,7 +216,7 @@
                                 <div class="form-group">
                                   <label class="col-sm-1 control-label">Category</label>
                                   <div class="col-sm-3">
-                                    <input ng-model="new_item.category.name" list="categories" type="text" class="form-control" placeholder="Category">
+                                    <input ng-model="new_item.category_name" list="categories" type="text" class="form-control" placeholder="Category">
                                     <datalist id="categories">
                                         <option ng-repeat="category in categories" value="<% category.name %>"><% category.description %></option>
                                     </datalist>
@@ -278,7 +283,7 @@
                                     <select 
                                         class="form-control select2" 
                                         ng-model="selected_donor"
-                                        ng-options="donor.id as donor.name for donor in donors | orderBy:'name'"
+                                        ng-options="donor.id as (donor.donor_type.name=='Company' ? donor.profile.company : donor.name) + ' - ' + donor.donor_type.name for donor in donors | orderBy:'name'"
                                         ng-change="choose_donor(selected_donor)"
                                         style="width: 100%;">
                                     </select>
@@ -298,6 +303,7 @@
                                     <tr>
                                         <th class="text-center">Item</th>
                                         <th class="text-center">Quantity</th>
+                                        <th class="text-center">Market Price</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Remarks</th>
                                         <th class="text-center">Inventory</th>
@@ -312,6 +318,7 @@
                                             style="text-align:center; width: 40px;"
                                             >
                                         </td>
+                                        <td><% inventory.market_price!='' ? inventory.market_price : inventory.item_prices[inventory.item_prices.length - 1].market_price %></td>
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
                                         <td><% inventory.id>0 ? 'exist' : 'new' %></td>
@@ -341,6 +348,12 @@
                                   <div class="col-sm-4">
                                     <input type="text" ng-model="new_inv_qty" class="form-control input-sm" placeholder="Quantity">
                                   </div>
+                                  <label class="col-sm-2 control-label">Market Price</label>
+                                  <div class="col-sm-4">
+                                    <input type="text" ng-model="new_inv_price" class="form-control input-sm" placeholder="Market Price">
+                                  </div>
+                                </div>
+                                <div class="form-group">
                                   <label class="col-sm-2 control-label">Status</label>
                                   <div class="col-sm-4">
                                     <select 
@@ -351,10 +364,8 @@
                                         style="width: 100%;">
                                     </select>
                                   </div>
-                                </div>
-                                <div class="form-group">
                                   <label class="col-sm-2 control-label">Remarks</label>
-                                  <div class="col-sm-10">
+                                  <div class="col-sm-4">
                                     <input ng-model="new_inv_remarks" type="text" class="form-control input-sm" placeholder="Remarks">
                                   </div>
                                 </div>
@@ -369,7 +380,7 @@
                                   <div class="col-sm-2">
                                     <select class="form-control input-sm" 
                                         ng-model="selected_status" 
-                                        ng-options="status.id as status.name for status in item_status"
+                                        ng-options="status.id as status.name + ' (' + status.inventories.length + ')' for status in item_status"
                                         ng-selected="status.id == selected_status"
                                         ng-change="inventory_status_change()">
                                     </select>

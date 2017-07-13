@@ -15,13 +15,13 @@ class CreateProfilesTable extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 10);
-            $table->text('address');
-            $table->string('phone', 30);
-            $table->string('tel', 30);
-            $table->string('company');
-            $table->string('job_title', 100);
-            $table->string('catch_phrase');
+            $table->string('title', 10)->nullable();
+            $table->text('address')->nullable();
+            $table->string('phone', 30)->nullable();
+            $table->string('tel', 30)->nullable();
+            $table->string('company')->nullable();
+            $table->string('job_title', 100)->nullable();
+            $table->string('catch_phrase')->nullable();
             $table->integer('donor_id')->unsigned()->index();
             $table->timestamps();
 

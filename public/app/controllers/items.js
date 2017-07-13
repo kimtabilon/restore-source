@@ -9,7 +9,7 @@ app
     $http
     .get(API_URL + 'items')
     .then(function (response) {
-    	$scope.categories = response.data;
+        $scope.categories  = response.data.categories;
     });
 
     $scope.code = function(codes, type) {
@@ -19,13 +19,13 @@ app
 	}
 
 	$scope.toggle = function(type, item) {
-		var found_category 	= $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
-        var category_index 	= $scope.categories.indexOf(found_category);
-        var item_index 		= $scope.categories[category_index].items.indexOf(item);
 
         switch (type) {
-            case 'item':     
-                console.log(item);           
+            case 'item':   
+                var found_category  = $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
+                var category_index  = $scope.categories.indexOf(found_category);
+                var item_index      = $scope.categories[category_index].items.indexOf(item);
+        
                 $scope.modal = {
                 	title: "Modify Item",
                 	field: { name: 'Name', description: 'Description' },
@@ -41,6 +41,10 @@ app
                 };	
             	break;
             case 'item_code':
+                var found_category  = $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
+                var category_index  = $scope.categories.indexOf(found_category);
+                var item_index      = $scope.categories[category_index].items.indexOf(item);
+
             	var item_code = $scope.code(item.item_codes, 'Barcode');
                 $scope.modal = {
                 	title: "Modify Item Code",
@@ -57,6 +61,10 @@ app
             	break;
 			
 			case 'modify_category':
+                var found_category  = $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
+                var category_index  = $scope.categories.indexOf(found_category);
+                var item_index      = $scope.categories[category_index].items.indexOf(item);
+
             	$scope.modal = {
                 	title: "Modify Category",
                 	field: { name: 'Name', description: 'Description' },
@@ -84,7 +92,7 @@ app
                 		name 		: '', 
                 		description : '',
                 		code 		: '',
-                		code_type 	: $scope.code(item.item_codes, 'Barcode').item_code_type_id,
+                		code_type 	: $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' }, true)[0].id,
                 	},
                 	button: 'Create'
                 };	
@@ -150,6 +158,7 @@ app
 		            data 	: item
 		        })
 	            .then(function (response) {
+                    // console.log(response.data);
 	            	var cat_count 	= $scope.categories.length;
 	            	var item 		= response.data.item;
 	            	var code 		= response.data.code;
@@ -190,6 +199,42 @@ app
                 break;
         }
 
+    }
+
+    $scope.delete_category = function(category) {
+        if(confirm('Items belong in this category will be lost. Continue?'))
+        {
+            $http({
+                method  : 'POST',
+                url     : API_URL + 'items/category/destroy',
+                data    : category
+            })
+            .then(function (response) {
+                var index = $scope.categories.indexOf(category);
+                $scope.categories.splice(index, 1);
+                
+                $('#inventoryModal').modal('hide');
+            });
+        }
+    }
+
+    $scope.delete_item = function(item, category) {
+        console.log(item);
+        if(confirm('Data will be lost, please make sure this ITEM is new and no transaction created.'))
+        {
+            $http({
+                method  : 'POST',
+                url     : API_URL + 'items/destroy',
+                data    : {  
+                            id  : item.id,
+                        }
+            })
+            .then(function (response) {
+                var cat_index = $scope.categories.indexOf(category);
+                var item_index = $scope.categories[cat_index].items.indexOf(item);
+                $scope.categories[cat_index].items.splice(item_index, 1);
+            });
+        }
     }
 });
 

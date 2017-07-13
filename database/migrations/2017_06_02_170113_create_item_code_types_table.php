@@ -16,7 +16,7 @@ class CreateItemCodeTypesTable extends Migration
         Schema::create('item_code_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

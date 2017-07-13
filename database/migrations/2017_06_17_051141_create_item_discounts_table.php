@@ -15,11 +15,11 @@ class CreateItemDiscountsTable extends Migration
     {
         Schema::create('item_discounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('percent', 10);
-            $table->string('type');
-            $table->text('remarks');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->string('percent', 10);
+            $table->string('type', 100);
+            $table->text('remarks')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->integer('user_id')->unsigned()->index();
             $table->timestamps();
 

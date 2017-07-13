@@ -20,7 +20,12 @@
     <section class="content">
         <span us-spinner="{radius:6, width:2, length:5}"></span>
         <div class="box box-solid">
-            <div class="box-body">
+            <div class="box-body" id="printThis">
+                <div id="printSection">
+                    <div class="pull-right">Date: {{ date('Y-m-d H:i:s') }}</div>
+                    <img src="{{ asset('images/logos/habitat-for-humanity.png') }}">
+                    <h3 style="margin-top: -3px;"><% status.replace('-', ' ') | camelCase %> Items</h3>
+                </div>
                 <table class="table">
                     <thead>
                         <th><input type="checkbox" ng-click="checkedAll()" ng-model="isAllSelected" ng-checked="countSelectedItems" style="width: 15px; height:15px;"/></th>
@@ -46,7 +51,7 @@
                             <td><% sum(inventory, 'quantity') %></td>
                             <td ng-click="toggle('item_price', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
                             <td ng-click="show_discounts(inventory[0])"><span ng-if="inventory.length==1"><% sum(inventory[0].item_discounts, 'percent') %></span></td>
-                            <td><% new_value(inventory[0]) %></td>
+                            <td><span ng-if="inventory.length==1"><% new_value(inventory[0]) %></span></td>
                             <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
                             <td><span ng-if="inventory.length==1"><% inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
                             <td ng-click="toggle('remarks', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].remarks %></span></td>
@@ -73,8 +78,8 @@
                         
                 </table>
             </div> 
-            <div class="box-footer" ng-if="countSelectedItems">
-                <select style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
+            <div class="box-footer">
+                <select ng-if="countSelectedItems" style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
                     ng-model="selectedStatus" 
                     ng-options="status.id as status.name for status in itemStatus"
                     ng-change="transfer(selectedStatus)">
@@ -88,6 +93,7 @@
                                'other': 'Move {} items'}">
                     </option>
                 </select>
+                <button id="Print" class="btn btn-flat btn-default pull-right" style="margin:0 0 6px 6px;"><i class="fa fa-print"></i> Print</button>
             </div>   
         </div>   
 
@@ -209,7 +215,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>           
+
     </section>
     <!-- /.content -->
 </div>    
@@ -223,10 +230,43 @@
         .table>tbody+tbody {
             border-top: none; 
         }
+
+        @media screen {
+            #printSection {
+                display: none;
+            }
+        }
+        @media print {
+            body * {
+                visibility:hidden;
+            }
+            #printThis {
+                margin-top: 10px;
+            }
+            #printSection, #printSection * {
+                visibility:visible;
+            }
+
+            #printSection {
+                position:absolute;
+                left:0;
+                top:0;
+                width: 100%;
+            }
+        }
+
     </style>
 @stop
 
 @section('js')
     <script src="{{ asset('app/controllers/inventories.js') }}"></script>
+    <script src="{{ asset('js/printThis.js') }}"></script>
+    <script type="text/javascript">
+        document.getElementById("Print").onclick = function () {
+            // printElement(document.getElementById("printThis"));
+            $('#printThis').printThis();
+        };
+    </script>
+
 @stop
 

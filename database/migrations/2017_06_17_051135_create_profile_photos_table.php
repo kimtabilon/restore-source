@@ -15,8 +15,7 @@ class CreateProfilePhotosTable extends Migration
     {
         Schema::create('profile_photos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('primary');
-            $table->string('cover');
+            $table->string('type');
             $table->integer('profile_id')->unsigned()->index();
             $table->timestamps();
 

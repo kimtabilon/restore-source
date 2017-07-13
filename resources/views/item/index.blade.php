@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="itemsController">
     <section class="content-header">
-        <h1>Items &nbsp;<button ng-click="toggle('new_item', categories[0].items[0])" class="btn btn-xs btn-success btn-flat">new</button></h1>
+        <h1>Items &nbsp;<button ng-click="toggle('new_item', '')" class="btn btn-xs btn-success btn-flat">new</button></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Items</li>
@@ -25,6 +25,7 @@
               </h3>
               <div class="box-tools pull-right">
                 <button class="btn btn-box-tool" ng-click="toggle('modify_category', category.items[0])"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-box-tool" ng-click="delete_category(category)"><i class="fa fa-times"></i></button>
                 <!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
               </div>
             </div>
@@ -40,6 +41,7 @@
                             <td ng-click="toggle('item', item)"><% item.name %></td>
                             <td ng-click="toggle('item', item)"><% item.description %></td>
                             <td ng-click="toggle('item_code', item)"><% code(item.item_codes, 'Barcode').code %></td>
+                            <td><i ng-click="delete_item(item, category)" class="fa fa-times"></i></td>
                         </tr>
                     </tbody>
                         

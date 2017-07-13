@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use Image;
 use \App\ItemImage;
+use \App\Item;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +25,10 @@ class ItemImageController extends Controller
 
 	public function index()
 	{
-		return ItemImage::all(); 	
+		return [
+			'images' => ItemImage::orderBy('name')->get(),
+			'items'  => Item::orderBy('name')->get(),
+		]; 	
 	}	
 
 	public function create(Request $request)
