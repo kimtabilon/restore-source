@@ -31,6 +31,16 @@ class CreateItemImagesTable extends Migration
             
             $table->timestamps();
         });
+
+        Schema::create('inventory_item_ref_image', function (Blueprint $table) {
+            $table->integer('inventory_id')  ->unsigned()        ->index();
+            $table->foreign('inventory_id')  ->references('id')  ->on('inventories')->onDelete('cascade');
+
+            $table->integer('item_ref_image_id') ->unsigned()        ->index();
+            $table->foreign('item_ref_image_id') ->references('id')  ->on('item_images')->onDelete('cascade');
+            
+            $table->timestamps();
+        });
     }
 
     /**

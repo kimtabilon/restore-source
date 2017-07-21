@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'skin' => 'green',
+    'skin' => 'purple',
 
     /*
     |--------------------------------------------------------------------------
@@ -132,10 +132,10 @@ return [
             'can'  => 'manager-access',
         ],
         [
-            'text'    => 'Inventory',
-            'url'     => '#',
-            'icon'    => 'th',
-            'url'     => 'inventories', 
+            'text' => 'Inventory',
+            'url'  => 'inventories',
+            'icon' => 'th',
+            'url'  => 'inventories', 
             'can'  => 'manager-receiving-coordinator-access',
             // 'label'       => 4,
             // 'label_color' => 'success',
@@ -243,34 +243,35 @@ return [
                 [
                     'text' => 'List',
                     'url'  => 'items',
-                    'icon' => 'list',
+                    'icon' => 'list-alt',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Image',
                     'url'  => 'items/images',
                     'icon' => 'file-o',
-                    'icon_color' => 'red',
+                    'icon_color' => 'yellow',
                 ],
                 [
                     'text' => 'Discount',
                     'url'  => 'items/discounts',
                     'icon' => 'edit',
-                    'icon_color' => 'blue',
+                    'icon_color' => 'aqua',
                 ],
             ],
         ],
 
         'ACCOUNT SETTINGS',
-        [
+        /*[
             'text' => 'Profile',
             'url'  => 'profile',
             'icon' => 'lock',
-        ],
+        ],*/
         [
             'text' => 'User',
             'url'  => 'users',
             'icon' => 'user',
+            'can'  => 'manager-access',
         ],
         'QUICK ACCESS',
         [

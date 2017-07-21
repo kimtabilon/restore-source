@@ -29,13 +29,18 @@
                 <table class="table">
                     <thead>
                         <th><input type="checkbox" ng-click="checkedAll()" ng-model="isAllSelected" ng-checked="countSelectedItems" style="width: 15px; height:15px;"/></th>
-                        <th>Image</th>
+                        
                         <th>Item</th>
-                        <th>Quantity</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
                         <th>Market Price</th>
-                        <th>Discount</th>
-                        <th>New Value</th>
-                        <th>Barcode</th>
+                        <th>Selling Price</th>
+                        <th>Dscnt</th>
+                        <th>ReStore Value</th>
+                        <th>Ref Image</th>
+                        <th>Ref Details</th>
+                        <th>ReStore Image</th>
+                        <th>Code</th>
                         <th>Donor</th>
                         <th>Remarks</th>
                         <th>Added</th>
@@ -43,16 +48,32 @@
                     <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName"">
                         <tr ng-class="{active : checkParent[inventory[0].id]}">
                             <td><input type="checkbox" ng-model="checkParent[inventory[0].id]" ng-change="checked(inventory)" style="width: 15px; height:15px;" /></td>
-                            <td class="text-center">
-                                <i ng-if="inventory[0].item_images.length==0&&inventory.length==1" ng-click="display_image(inventory[0])" class="fa fa-plus"></i>
-                                <img ng-if="inventory.length==1" ng-click="display_image(inventory[0])"  src="images/items/<% inventory[0].item_images[inventory[0].item_images.length-1].id %>_thumb.jpg" class="img-responsive">
-                                <span class="badge" ng-if="inventory.length>1"><%inventory.length%></span></td>
-                            <td ng-click="toggle('item', inventory[0])"><% inventory[0].item.name %></td>
+                            
+                            <td ng-click="toggle('item', inventory[0])">
+                                <span class="badge" ng-if="inventory.length>1"><%inventory.length%></span>
+                                <% inventory[0].item.name %>
+                            </td>
                             <td><% sum(inventory, 'quantity') %></td>
+                            <td ng-click="toggle('unit', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].unit %></span></td>
                             <td ng-click="toggle('item_price', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
+                            <td ng-click="toggle('item_selling_price', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].item_selling_prices[inventory[0].item_selling_prices.length - 1].market_price %></span></td>
                             <td ng-click="show_discounts(inventory[0])"><span ng-if="inventory.length==1"><% sum(inventory[0].item_discounts, 'percent') %></span></td>
                             <td><span ng-if="inventory.length==1"><% new_value(inventory[0]) %></span></td>
-                            <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item.item_codes, 'Barcode').code %></td>
+                            
+                            <td class="text-center">
+                                <i ng-if="inventory[0].item_ref_images.length==0&&inventory.length==1" ng-click="display_image(inventory[0], 'ref')" class="fa fa-plus"></i>
+                                <img ng-if="inventory.length==1" ng-click="display_image(inventory[0], 'ref')"  src="images/items/<% inventory[0].item_ref_images[inventory[0].item_ref_images.length-1].id %>_thumb.jpg" class="img-responsive">
+                            </td>
+                            <td><span ng-if="inventory.length==1"><% inventory[0].item_ref_images[inventory[0].item_ref_images.length-1].description %></span></td>
+                            <td class="text-center">
+                                <i ng-if="inventory[0].item_images.length==0&&inventory.length==1" ng-click="display_image(inventory[0], 'restore')" class="fa fa-plus"></i>
+                                <img ng-if="inventory.length==1" ng-click="display_image(inventory[0], 'restore')"  src="images/items/<% inventory[0].item_images[inventory[0].item_images.length-1].id %>_thumb.jpg" class="img-responsive">
+                            </td>
+
+                            
+                            <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item_codes, 'Barcode').code %></td>
+                            
+
                             <td><span ng-if="inventory.length==1"><% inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
                             <td ng-click="toggle('remarks', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].remarks %></span></td>
                             <td><span ng-if="inventory.length==1"><% inventory[0].created %></span></td>     
@@ -60,16 +81,27 @@
 
                         <tr ng-repeat="inv in inventory" ng-if="checkParent[inventory[0].id] && inventory.length>1" ng-class="{active : checkChild[inv.id]}">
                             <td></td>
-                            <td class="text-center">
-                                <i ng-if="inv.item_images.length==0" ng-click="display_image(inv)" class="fa fa-plus"></i>
-                                <img ng-if="inv.item_images.length>0" ng-click="display_image(inv)"  src="images/items/<% inv.item_images[inv.item_images.length-1].id %>_thumb.jpg" class="img-responsive">
-                            </td>
                             <td> &nbsp;<input type="checkbox" ng-model="checkChild[inv.id]" ng-change="checked(inv)" style="width: 15px; height:15px;"/> &nbsp; <span><% inv.item.name %> </span></td>
                             <td><% inv.quantity %></td>
+                            <td ng-click="toggle('unit', inv)"><% inv.unit %></td>
                             <td ng-click="toggle('item_price', inv)"><% inv.item_prices[inv.item_prices.length - 1].market_price %></td>
+                            <td ng-click="toggle('item_selling_price', inv)"><% inv.item_selling_prices[inv.item_selling_prices.length - 1].market_price %></td>
                             <td ng-click="show_discounts(inv)"><% sum(inv.item_discounts, 'percent') %></td>
                             <td><% new_value(inv) %></td>
-                            <td></td>
+                            <td class="text-center">
+                                <i ng-if="inv.item_images.length==0" ng-click="display_image(inv, 'ref')" class="fa fa-plus"></i>
+                                <img ng-if="inv.item_ref_images.length>0" ng-click="display_image(inv, 'ref')" src="images/items/<% inv.item_ref_images[inv.item_ref_images.length-1].id %>_thumb.jpg" class="img-responsive">
+                            </td>
+                            <td><% inv.item_ref_images[inv.item_ref_images.length-1].description %></td>
+                            <td class="text-center">
+                                <i ng-if="inv.item_images.length==0" ng-click="display_image(inv, 'restore')" class="fa fa-plus"></i>
+                                <img ng-if="inv.item_images.length>0" ng-click="display_image(inv, 'restore')" src="images/items/<% inv.item_images[inv.item_images.length-1].id %>_thumb.jpg" class="img-responsive">
+                            </td>
+                            
+
+                            <td ng-click="toggle('item_code', inv)"><% code(inv.item_codes, 'Barcode').code %></td>
+                            
+
                             <td><% inv.donors[inv.donors.length - 1].name %></td>
                             <td ng-click="toggle('remarks', inv)"><% inv.remarks %></td>
                             <td><% inv.created %></td>  
@@ -144,7 +176,7 @@
                         <div class="col-xs-6 col-md-3" ng-repeat="image in itemImages | filter:searh_image | orderBy:'-name'">
                             <div class="thumbnail" title="<% image.name + ' - ' +image.description %>">
                               <img src="images/items/<% image.id %>_thumb.jpg" class="pull-left" style="height: 50px !important; margin-right: 10px;"> 
-                              <button ng-click="set_image(image, modal.inventory)" class="btn btn-success btn-xs pull-right" style="margin-right: 10px;">Select</button>
+                              <button ng-click="set_image(image, modal.inventory, modal.type)" class="btn btn-success btn-xs pull-right" style="margin-right: 10px;">Select</button>
                               <div class="clearfix"></div>
                               <div><% image.name | limitTo: 31 %></div>
                             </div>

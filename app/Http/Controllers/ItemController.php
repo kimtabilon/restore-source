@@ -25,13 +25,6 @@ class ItemController extends Controller
 
     public function index()
     {
-        // Session::flash('message', [
-        //             'title'=>'Alert',
-        //             'text'=>'This is a message!',
-        //             'type'=>'danger',
-        //             'icon'=>'ban'
-        //         ]); 
-        // dd($categories->first()->items->first()->itemCodes);
     	return view('item.index');
     }
 

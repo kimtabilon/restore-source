@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="usersController">
     <section class="content-header">
-        <h1>Users &nbsp; <button ng-click="toggle('', 'new')" class="btn btn-info btn-xs">new</button></h1>
+        <h1>Users <span class="badge" style="cursor: pointer;" ng-click="toggle('', 'new')" >create</span></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Users</li>
@@ -32,14 +32,17 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="user in users | orderBy:'role_id' | filter:search">
-                            <td ng-click="toggle(user, 'edit')"><% user.given_name %></td>
+                            <td><% user.given_name %></td>
                             <td><% user.middle_name %></td>
                             <td><% user.last_name %></td>
                             <td><% user.username %></td>
                             <td><% user.email %></td>
                             <td><% user.role.name %></td>
-                            <td><% user.created_at %></td>
-                            <td><i ng-click="remove(user)" class="fa fa-times"></i></td>
+                            <td><% user.created %></td>
+                            <td>
+                                <i ng-click="toggle(user, 'edit')" class="fa fa-edit"></i>
+                                <i ng-click="remove(user)" class="fa fa-times"></i>
+                            </td>
                         </tr>
                     </tbody>
                         
@@ -109,10 +112,10 @@
 @section('css')
     <!-- <link rel="stylesheet" href="/css/admin_custom.css"> -->
     <style>
-        .pointer, td { cursor:pointer; }
+        /*.pointer, td { cursor:pointer; }
         .table>tbody+tbody {
             border-top: none; 
-        }
+        }*/
     </style>
 @stop
 

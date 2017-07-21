@@ -3,7 +3,7 @@ app
 	$http
     .get(API_URL + 'transactions')
     .then(function (response) {
-        $scope.transactions = response.data;
+        $scope.types = response.data;
     });
 
     $http
@@ -12,7 +12,6 @@ app
         $scope.donors           = response.data.donors;
         $scope.donor_types      = response.data.donor_types;
         $scope.items            = response.data.items;
-        $scope.payment_types    = response.data.payment_types;
         $scope.item_status      = response.data.item_status;
         $scope.inventories      = response.data.inventories;
         $scope.itemCodeTypes    = response.data.code_types;
@@ -26,20 +25,19 @@ app
             },
             name        : '',
             description : '',
-            code        : ''
         }
         $scope.new_customer = $scope.donors[0];
         $scope.new_customer = { 
-                given_name: '',
-                middle_name: '',
-                last_name: '',
-                email: '',
-                profile : {
-                    title: '',
-                    address: '',
-                    phone: '',
-                    tel: '',
-                    company: '',
+                given_name  : '',
+                middle_name : '',
+                last_name   : '',
+                email       : '',
+                profile     : {
+                    title   : '',
+                    address : '',
+                    phone   : '',
+                    tel     : '',
+                    company : '',
                     job_title: '',
                 }                
             }
@@ -52,23 +50,18 @@ app
     }
 
     $scope.toggle = function(transaction) {
+        var donors = transaction.inventories[0].donors;
         $scope.modal = {
-            title       : 'Items for transaction# ' + transaction.dt_number,
+            title       : transaction.da_number + ' - ' + donors[donors.length - 1].name,
             inventories : transaction.inventories,
         }
         $('#inventoryModal').modal('show');
     }
 
     $scope.new_transaction = function () {
-        $scope.transaction_no = 'DT-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
-                        return self.indexOf(value) === index;
-                    }).join('').substr(2,8);
+        $scope.acknowledgement_no = $scope.generate_code('DA');
+        $scope.remarks = '';
 
-        $scope.acknowledgement_no = 'DA-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
-                        return self.indexOf(value) === index;
-                    }).join('').substr(2,8);
-
-        // $scope.acknowledgement_no   = 'DA-' + rand;
         $scope.good_status      = $filter('filter')($scope.item_status, { name: 'Good'}, true);
         $scope.selected_status  = $scope.selected_status || $scope.good_status[0].id;
 
@@ -78,37 +71,50 @@ app
         $('#transactionModal').modal('show');
     }
 
-    $scope.inventory_status_change = function() {
+    $scope.generate_code = function(begin_with) {
+        return begin_with + '-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
+                        return self.indexOf(value) === index;
+                    }).join('').substr(2,8);
+    }
+
+    $scope.inventory_status_change = function(selected_status) {
         $http
-        .get(API_URL + 'transactions/inventories/' + $scope.selected_status)
+        .get(API_URL + 'transactions/inventories/' + selected_status)
         .then(function (response) {
-            console.log(response.data);
             $scope.inventories = response.data;
         });
     }
+
     $scope.payment_type = [];
+    $scope.new_inv = {
+        code            : '',
+        market_price    : 0,
+        selling_price   : 0,
+    };
+
     $scope.choose_payment_type = function(id) {
-        $scope.payment_type = $filter('filter')($scope.payment_types, {id:id}, true)[0];
+        $scope.payment_type = $filter('filter')($scope.types, {id:id}, true)[0];
+        $scope.remarks = $scope.payment_type.name;
         var paytype = $scope.payment_type.name;
         if(paytype == 'Cash'||paytype == 'Debit'||paytype == 'Credit') {
-            $scope.acknowledgement_no = 'C-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
-                        return self.indexOf(value) === index;
-                    }).join('').substr(2,8);
+            $scope.acknowledgement_no = $scope.generate_code('C');
         }
         else {
-            $scope.acknowledgement_no = 'DA-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
-                        return self.indexOf(value) === index;
-                    }).join('').substr(2,8);
+            $scope.acknowledgement_no = $scope.generate_code('DA');
+            $scope.new_inv ={ 
+                code            : $scope.generate_code('RS'),
+                market_price    : 0,
+                selling_price   : 0,
+            };
         }
-        // console.log(selected_payment_type);
+        // console.log($scope.new_inv.code);
     }
     $scope.donor = [];
     $scope.choose_donor = function(id) {
         $scope.donor = $filter('filter')($scope.donors, {id:id}, true)[0];
-        // console.log(selected_donor);
     }
 
-    var selected     = [];
+    var selected        = [];
     $scope.added_items  = [];
 
     $scope.new_inv_status_selected = function(id) {
@@ -117,15 +123,11 @@ app
 
     $scope.choose_item_from_item = function(id) {
         var item = $filter('filter')($scope.items, { id: id}, true)[0];
-        // selected = angular.copy($scope.inventories[0]);
         selected = {
-            id      : 0,
-            item    : item,
-            item_id : item.id
+            id              : 0,
+            item            : item,
+            item_id         : item.id
         };
-        /*selected.id      = 0;
-        selected.item    = item;
-        selected.item_id = item.id;*/
     }
 
     $scope.choose_item_from_inv = function(id) {
@@ -135,11 +137,22 @@ app
 
     $scope.add_item_to_transaction = function() {
         if(selected.id==0) {
-            selected.item_status     = $scope.active_status;
-            selected.item_status_id  = $scope.active_status.id;
-            selected.quantity        = $scope.new_inv_qty;
-            selected.market_price    = $scope.new_inv_price;
-            selected.remarks         = $scope.new_inv_remarks;
+            var codeType    = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' });
+            selected = {
+                item            : selected.item,
+                item_id         : selected.item.id,
+                item_status     : $scope.active_status,
+                item_status_id  : $scope.active_status.id,
+                quantity        : $scope.new_inv.quantity,
+                unit            : $scope.new_inv.unit,
+                item_codes      : [{ 
+                            code: $scope.new_inv.code,
+                            item_code_type_id: codeType[0].id 
+                        }],
+                item_prices     : [{ market_price: $scope.new_inv.market_price }],
+                item_selling_prices : [{ market_price: $scope.new_inv.selling_price }],
+                remarks         : $scope.new_inv.remarks,
+            };
         }
 
         var copy_selected = angular.copy(selected);
@@ -148,6 +161,14 @@ app
             .push(
                 copy_selected 
             ); 
+
+        /* SET EMPTY AGAIN */    
+        selected = [];  
+        $scope.new_inv ={ 
+            code            : $scope.generate_code('RS'),
+            market_price    : 0,
+            selling_price   : 0,
+        };  
     }
 
     $scope.cashier_add_item = function(inventory) {
@@ -166,11 +187,6 @@ app
 
         if($scope.acknowledgement_no == '') {
             alert('Please reload page and open again. Auto generate of Acknowledgement Number not working. Or contact your admin.');
-            continue_transaction = false;
-        }
-
-        if($scope.transaction_no == '') {
-            alert('Please reload page and open again. Auto generate of Transaction Number not working. Or contact your admin.');
             continue_transaction = false;
         }
 
@@ -198,12 +214,14 @@ app
                             payment: $scope.payment_type,
                             items  : $scope.added_items,
                             da_no  : $scope.acknowledgement_no,
-                            dt_no  : $scope.transaction_no
+                            remarks: $scope.remarks
                         }
             })
             .then(function (response) {
-                console.log(response.data);
-                $scope.transactions.push(response.data);
+                var new_trans = response.data;
+                var match = $filter('filter')($scope.types, { id: new_trans.payment_type.id }, true)[0];
+                var index = $scope.types.indexOf(match);
+                $scope.types[index].transactions.push(new_trans);
                 $scope.added_items = [];
             });
 
@@ -218,7 +236,7 @@ app
         new_item.category_id    = match_category.length==0 ? 0 : match_category[0].id;
         new_item.category       = match_category.length==0 ? new_item.category_name : match_category[0].name;
         new_item.type           = 'new_item'; 
-        new_item.code_type      = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' }, true)[0].id; 
+        // new_item.code_type      = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' }, true)[0].id; 
         
         $http({
             method  : 'POST',
@@ -228,7 +246,7 @@ app
         .then(function (response) {
             var cat_count   = $scope.categories.length;
             var item        = response.data.item;
-            var code        = response.data.code;
+            // var code        = response.data.code;
             var new_cat     = response.data.new_category;
             var category    = response.data.category;
             
@@ -245,7 +263,7 @@ app
                     category    : category,
                     name        : item.name,
                     description : item.description,
-                    item_codes  : [ code ]
+                    // item_codes  : [ code ]
                 });
             }
             else {
@@ -256,8 +274,17 @@ app
                     category    : match_category[0],
                     name        : item.name,
                     description : item.description,
-                    item_codes  : [ code ]
+                    // item_codes  : [ code ]
                 });
+            }
+
+            $scope.new_item = {
+                category    : {
+                    name        : '',
+                    description : '',
+                },
+                name        : '',
+                description : '',
             }
             
         });
@@ -293,6 +320,21 @@ app
             $scope.donors.push(
                 response.data
             );
+
+            $scope.new_customer = { 
+                given_name: '',
+                middle_name: '',
+                last_name: '',
+                email: '',
+                profile : {
+                    title: '',
+                    address: '',
+                    phone: '',
+                    tel: '',
+                    company: '',
+                    job_title: '',
+                }                
+            }
         });
     }
 

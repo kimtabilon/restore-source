@@ -16,7 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('da_number');
-            $table->string('dt_number');
+            $table->string('remarks');
             $table->integer('payment_type_id')->unsigned()->index();
             $table->timestamps();
 

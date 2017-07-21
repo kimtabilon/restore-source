@@ -15,6 +15,6 @@ class ItemCode extends Model
         'code',
     ];
 
-    public function item() { return $this->belongsTo('App\Item'); } 
+    public function inventories() { return $this->belongsTo('App\Inventory'); } 
     public function itemCodeType() { return $this->belongsTo('App\ItemCodeType'); } 
 }

@@ -100,7 +100,8 @@ app
                     data    : user
                 })
                 .then(function (response) {
-                    var index = $scope.users.indexOf(user);
+                    var match = $filter('filter')($scope.users, {id: user.id}, true)[0];
+                    var index = $scope.users.indexOf(match);
                     $scope.users[index] = response.data;
                 });
                 break;    
