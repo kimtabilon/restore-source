@@ -321,7 +321,8 @@ app
                 response.data
             );
 
-            $scope.new_customer = { 
+            $scope.new_customer = {
+                id: 0, 
                 given_name: '',
                 middle_name: '',
                 last_name: '',
@@ -338,18 +339,19 @@ app
         });
     }
 
-    $scope.remove_donor = function(id, index) {
+    $scope.remove_donor = function(donor) {
         if(confirm('Data will be lost, please make sure this donor is new and no transaction created.'))
         {
             $http({
                 method  : 'POST',
                 url     : API_URL + 'donors/destroy',
                 data    : {  
-                            id  : id,
+                            id  : donor.id,
                         }
             })
             .then(function (response) {
-                // console.log(response.data);
+                var match = $filter('filter')($scope.donors, { id: donor.id }, true)[0];
+                var index = $scope.donors.indexOf(match);
                 $scope.donors.splice(index, 1);
             });
         }

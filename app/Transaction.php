@@ -11,7 +11,7 @@ class Transaction extends Model
      *
      * @var array
      */
-    protected $fillable = [ 'da_number', 'dt_number', ];
+    protected $fillable = [ 'da_number', 'remarks' ];
     protected $appends  = ['created', 'modified'];
 
     public function inventories() {     return $this->belongsToMany('App\Inventory')->withTimestamps(); }

@@ -25,6 +25,7 @@ Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
 Route::get('users', 'UserController@index');
 Route::get('profile', 'UserController@profile');
+Route::get('donors', 'DonorController@index');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
@@ -50,6 +51,7 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::get('transactions/data', 'Api\TransactionController@data');
 	Route::get('transactions/inventories/{id}', 'Api\TransactionController@inventories');
 
+	Route::get('donors', 'Api\DonorController@index');
 	Route::post('donors/create', 'Api\DonorController@create');
 	Route::post('donors/destroy', 'Api\DonorController@destroy');
 

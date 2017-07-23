@@ -260,6 +260,12 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Donor',
+            'url'  => 'donors',
+            'icon' => 'users',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
 
         'ACCOUNT SETTINGS',
         /*[

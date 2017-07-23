@@ -18,33 +18,33 @@
     <section class="content">
         <span us-spinner="{radius:6, width:2, length:5}"></span>
         <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs pull-right">
-                          <li ng-repeat="type in types" class="<% type.name=='Item Donation' ? 'active' : '' %>"><a href="#<% type.name.replace(' ', '_') %>" data-toggle="tab" aria-expanded="false"><% type.name %></a></li>
-                        </ul>
-                        <div class="tab-content">
-                          <div ng-repeat="type in types" class="tab-pane <% type.name=='Item Donation' ? 'active' : '' %>" id="<% type.name.replace(' ', '_') %>">
-                            <table class="table">
-                              <thead>
-                                  <th>DA</th>
-                                  <th>Donor</th>
-                                  <th>No. of Items</th>
-                                  <th>Remarks</th>
-                                  <th>Created</th>
-                              </thead>
-                              <tbody>
-                                  <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
-                                      <td ng-click="toggle(transaction)"><% transaction.da_number %></td>
-                                      <td><% transaction.inventories[0].donors[0].name %></td>
-                                      <td><% transaction.inventories.length %></td>
-                                      <td><% transaction.remarks %></td>
-                                      <td><% transaction.created %></td>
-                                  </tr>
-                              </tbody>
-                                  
-                          </table>
-                          </div><!-- /.tab-pane -->
-                        </div><!-- /.tab-content -->
-                      </div>
+            <ul class="nav nav-tabs pull-right">
+              <li ng-repeat="type in types" class="<% type.name=='Item Donation' ? 'active' : '' %>"><a href="#<% type.name.replace(' ', '_') %>" data-toggle="tab" aria-expanded="false"><% type.name %></a></li>
+            </ul>
+            <div class="tab-content">
+              <div ng-repeat="type in types" class="tab-pane <% type.name=='Item Donation' ? 'active' : '' %>" id="<% type.name.replace(' ', '_') %>">
+                <table class="table">
+                  <thead>
+                      <th>DA</th>
+                      <th>Donor</th>
+                      <th>No. of Items</th>
+                      <th>Remarks</th>
+                      <th>Created</th>
+                  </thead>
+                  <tbody>
+                      <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
+                          <td ng-click="toggle(transaction)"><% transaction.da_number %></td>
+                          <td><% transaction.inventories[0].donors[0].name %></td>
+                          <td><% transaction.inventories.length %></td>
+                          <td><% transaction.remarks %></td>
+                          <td><% transaction.created %></td>
+                      </tr>
+                  </tbody>
+                      
+              </table>
+              </div><!-- /.tab-pane -->
+            </div><!-- /.tab-content -->
+          </div>
         <!-- <div class="box box-solid">
             <div class="box-body">
                 
@@ -195,8 +195,9 @@
                             <table class="table">
                                 <tr>
                                     <th>Type</th>
-                                    <th>Given Name</th>
-                                    <th>Last Name</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Items</th>
                                     <th>Company</th>
                                     <th>Email</th>
                                     <th>Phone#</th>
@@ -206,10 +207,11 @@
                                     <th>Job Title</th> -->
                                     <th></th>
                                 </tr>
-                                <tr ng-repeat="donor in donors | filter:search_donor">
+                                <tr ng-repeat="donor in donors | orderBy:'name' | filter:search_donor">
                                     <td><% donor.donor_type.name %></td>
-                                    <td><% donor.given_name %></td>
-                                    <td><% donor.last_name %></td>
+                                    <td><% '00'+donor.id %></td>
+                                    <td><% donor.name %></td>
+                                    <td><% donor.inventories.length %></td>
                                     <td><% donor.profile.company %></td>
                                     <td><% donor.email %></td>
                                     <td><% donor.profile.phone %></td>
@@ -217,9 +219,9 @@
                                     <td><% donor.profile.address %></td>
                                     <td><% donor.profile.company %></td>
                                     <td><% donor.profile.job_title %></td> -->
-                                    <td><i ng-click="remove_donor(donor.id, $index)" class="fa fa-times"></i></td>
+                                    <td><i ng-click="remove_donor(donor)" class="fa fa-times"></i></td>
                                 </tr>
-                            </table>
+                              </table>
                             </div>
                           </div><!-- /.tab-pane -->
                           <div class="tab-pane" id="tab_2-2">

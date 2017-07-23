@@ -63,7 +63,7 @@ class TransactionController extends Controller
 		return [
 			'categories'	=> Category::orderBy('name')->get(),
 			'code_types'	=> ItemCodeType::orderBy('name')->get(),
-			'donors' 		=> Donor::with(['profile', 'donorType'])->orderBy('given_name')->get(),
+			'donors' 		=> Donor::with(['profile', 'donorType', 'inventories'])->orderBy('given_name')->get(),
 			'donor_types'	=> DonorType::orderBy('name')->get(),
 			'item_status' 	=> $item_status,
 			'items' 		=> Item::with(['category'])->orderBy('name')->get(),

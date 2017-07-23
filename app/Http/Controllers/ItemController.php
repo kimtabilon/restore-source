@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use \App\ItemStatus;
-use \App\Inventory;
 use \App\Item;
-use \App\Category;
 use Session;
 
 use Illuminate\Http\Request;
