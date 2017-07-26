@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="discountsController">
     <section class="content-header">
-        <h1>Item Discounts &nbsp; <button ng-click="toggle('', 'new')" class="btn btn-info btn-xs">new</button></h1>
+        <h1>Item Discounts <span class="badge" style="cursor: pointer;" ng-click="toggle('', 'new')" >create</span></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Discounts</li>

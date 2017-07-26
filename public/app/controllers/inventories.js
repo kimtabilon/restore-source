@@ -108,6 +108,7 @@ app
 	            		index 		: $scope.inventories.indexOf(data), 
 	            		quantity 	: data.quantity, 
 	            		remarks 	: data.remarks, 
+	            		unit 		: data.unit, 
 	            		inventory 	: data
 	            	},
 	            	button	: 'Transfer'
@@ -123,7 +124,7 @@ app
 			            data 	: $scope.SelectedItems
 			        })
 		            .then(function (response) {
-						console.log(response.data);
+						// console.log(response.data);
 		            });
 
 			        angular.forEach($scope.SelectedItems, function(item){ 
@@ -161,15 +162,16 @@ app
                 };	
             	break;
             case 'item_code':
-            	var itemCode = $scope.code(data.item.item_codes, 'Barcode');
+            	var itemCode = $scope.code(data.item_codes, 'Barcode');
                 $scope.modal = {
                 	title: "Modify Item Code",
                 	field: { code: 'Barcode' },
                 	data: { 
-                		type 	: type, 
-                		index 	: index,
-                		code 	: itemCode.code, 
-                		id 		: itemCode.id 
+                		inventory: data,
+                		type 	 : type, 
+                		index 	 : index,
+                		code 	 : itemCode.code, 
+                		id 		 : itemCode.id 
                 	},
                 	button: 'Save changes'
                 };	
@@ -191,6 +193,22 @@ app
                 };	
             	break;
 
+            case 'item_selling_price':
+            	var itemSellingPrice = data.item_selling_prices[data.item_selling_prices.length - 1];
+                $scope.modal = {
+                	title: "Modify Selling Price",
+                	field: { market_price: 'Selling Price' },
+                	data: { 
+                		type 			: type, 
+                		index 			: index,
+                		market_price 	: itemSellingPrice.market_price, 
+                		market_price_id : itemSellingPrice.id, 
+                		id 				: data.id 
+                	},
+                	button: 'Save changes'
+                };	
+            	break;	
+
             case 'remarks':
                 $scope.modal = {
                 	title: "Modify Remarks",
@@ -199,6 +217,20 @@ app
                 		type 			: type, 
                 		index 			: index,
                 		remarks 		: data.remarks, 
+                		id 				: data.id 
+                	},
+                	button: 'Save changes'
+                };	
+            	break;	
+
+            case 'unit':
+                $scope.modal = {
+                	title: "Modify Unit",
+                	field: { unit: 'Edit Unit' },
+                	data: { 
+                		type 			: type, 
+                		index 			: index,
+                		unit 			: data.unit, 
                 		id 				: data.id 
                 	},
                 	button: 'Save changes'
@@ -231,14 +263,16 @@ app
                 break;
 
             case 'item_code':
+            	// console.log(data);
                 $http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/update',
 		            data 	: data
 		        })
 	            .then(function (response) {
-					var itemCodes 				= $scope.inventories[data.index].item.item_codes;
+					var itemCodes 				= $scope.inventories[data.index].item_codes;
 					$scope.code(itemCodes).code = response.data.code;
+					$scope.code(itemCodes).barcode = response.data.barcode;
 					$('#inventoryModal').modal('hide');
 	            });
                 break; 
@@ -257,7 +291,23 @@ app
 	            	$scope.inventories[index].item_prices[count-1].market_price = data.market_price;
 					$('#inventoryModal').modal('hide');
 	            });
-                break;  
+                break; 
+
+            case 'item_selling_price':
+                $http({
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
+		        })
+	            .then(function (response) {
+	            	var inventory 	= $filter('filter')($scope.inventories, { id:response.data.id }, true)[0];
+	            	var count 		= inventory.item_selling_prices.length;
+	            	var index 		= $scope.inventories.indexOf(inventory);
+
+	            	$scope.inventories[index].item_selling_prices[count-1].market_price = data.market_price;
+					$('#inventoryModal').modal('hide');
+	            });
+                break;       
 
             case 'remarks':
                 $http({
@@ -272,9 +322,25 @@ app
 	            	$scope.inventories[index].remarks = response.data.remarks;
 					$('#inventoryModal').modal('hide');
 	            });
-                break;               
+                break;
+
+            case 'unit':
+                $http({
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
+		        })
+	            .then(function (response) {
+	            	var inventory 	= $filter('filter')($scope.inventories, { id:response.data.id }, true)[0];
+	            	var index 		= $scope.inventories.indexOf(inventory);
+	            	
+	            	$scope.inventories[index].unit = response.data.unit;
+					$('#inventoryModal').modal('hide');
+	            });
+                break;                     
 
             case 'transfer_or_create':
+            	console.log(data);
             	$http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/transferOrCreate',
@@ -306,12 +372,13 @@ app
 
     }
 
-    $scope.display_image = function(inventory){
-    	var images = inventory.item_images;
+    $scope.display_image = function(inventory, type){
+    	var images = type=='ref' ? inventory.item_ref_images : inventory.item_images;
 
     	if(images.length>0) {
     		image = images[images.length-1];
 	        $scope.modal = {
+	        	type 		: type,
 	        	inventory 	: inventory,
 	            image       : image.id+'.'+image.type,
 	            name        : inventory.item.name,
@@ -320,6 +387,7 @@ app
     	}
     	else {
     		$scope.modal = {
+    			type 		: type,
 	        	inventory 	: inventory,
 	            image       : '',
 	            name        : inventory.item.name,
@@ -330,16 +398,16 @@ app
         $('#imageModal').modal('show');
     }
 
-    $scope.set_image = function(image, inventory) {
+    $scope.set_image = function(image, inventory, type) {
     	$http({
             method 	: 'POST',
             url 	: API_URL + 'inventories/add-image',
-            data 	: { image: image.id, inventory: inventory.id }
+            data 	: { image: image.id, inventory: inventory.id, type: type }
         })
         .then(function (response) {
         	$scope.modal.image = image.id+'.'+image.type;
         	var index = $scope.inventories.indexOf(inventory);
-        	var images = $scope.inventories[index].item_images;
+        	var images = type=="ref" ? $scope.inventories[index].item_ref_images : $scope.inventories[index].item_images;
 
         	images[images.length] = image;
         });
@@ -381,7 +449,7 @@ app
 
     $scope.new_value = function(inventory) {
     	var discount = $scope.sum(inventory.item_discounts, 'percent');
-    	var prices   = inventory.item_prices;
+    	var prices   = inventory.item_selling_prices;
     	var price    = parseFloat(prices[prices.length-1].market_price);
     	return  price - (price*discount/100);
     }

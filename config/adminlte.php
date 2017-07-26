@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'skin' => 'green',
+    'skin' => 'purple',
 
     /*
     |--------------------------------------------------------------------------
@@ -70,9 +70,9 @@ return [
     */
 
     'widget' => [
-        'message'       => true,
-        'notification'  => true,
-        'task'          => true,
+        'message'       => false,
+        'notification'  => false,
+        'task'          => false,
         'user'          => true,
     ],
 
@@ -132,10 +132,10 @@ return [
             'can'  => 'manager-access',
         ],
         [
-            'text'    => 'Inventory',
-            'url'     => '#',
-            'icon'    => 'th',
-            'url'     => 'inventories', 
+            'text' => 'Inventory',
+            'url'  => 'inventories',
+            'icon' => 'th',
+            'url'  => 'inventories', 
             'can'  => 'manager-receiving-coordinator-access',
             // 'label'       => 4,
             // 'label_color' => 'success',
@@ -183,6 +183,7 @@ return [
                     'url'  => 'inventories#good',
                     'icon' => 'check-square-o',
                     'icon_color' => 'green',
+                    'can'  => 'manager-access',
                 ],
                 [
                     'text' => 'Sold',
@@ -212,7 +213,7 @@ return [
                 [
                     'text' => 'Returned',
                     'url'  => 'inventories#returned',
-                    'can'  => 'manager-receiving-coordinator-access',
+                    'can'  => 'manager-access',
                     'icon' => 'exchange',
                     'icon_color' => 'red',
                 ],
@@ -243,47 +244,54 @@ return [
                 [
                     'text' => 'List',
                     'url'  => 'items',
-                    'icon' => 'list',
+                    'icon' => 'list-alt',
                     'icon_color' => 'green',
                 ],
                 [
                     'text' => 'Image',
                     'url'  => 'items/images',
                     'icon' => 'file-o',
-                    'icon_color' => 'red',
+                    'icon_color' => 'yellow',
                 ],
                 [
                     'text' => 'Discount',
                     'url'  => 'items/discounts',
                     'icon' => 'edit',
-                    'icon_color' => 'blue',
+                    'icon_color' => 'aqua',
                 ],
             ],
         ],
-
-        'ACCOUNT SETTINGS',
         [
+            'text' => 'Donor',
+            'url'  => 'donors',
+            'icon' => 'users',
+            'can'  => 'manager-receiving-coordinator-access',
+        ],
+
+        'ACCOUNTS',
+        /*[
             'text' => 'Profile',
             'url'  => 'profile',
             'icon' => 'lock',
-        ],
+        ],*/
         [
             'text' => 'User',
             'url'  => 'users',
             'icon' => 'user',
+            'can'  => 'manager-access',
         ],
         'QUICK ACCESS',
         [
             'text'       => 'Good Item',
             'url'        => 'inventories#good',
             'icon_color' => 'green',
-            'can'  => 'manager-receiving-coordinator-access',
+            'can'  => 'manager-access',
         ],
         [
             'text'       => 'Sold Item',
             'url'        => 'inventories#sold',
             'icon_color' => 'yellow',
-            'can'  => 'manager-receiving-coordinator-access',
+            'can'  => 'manager-access',
         ],
     ],
 

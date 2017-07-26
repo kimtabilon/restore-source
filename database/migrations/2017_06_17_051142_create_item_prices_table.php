@@ -28,6 +28,16 @@ class CreateItemPricesTable extends Migration
             
             $table->timestamps();
         });
+
+        Schema::create('inventory_item_selling_price', function (Blueprint $table) {
+            $table->integer('inventory_id')  ->unsigned()        ->index();
+            $table->foreign('inventory_id')  ->references('id')  ->on('inventories')->onDelete('cascade');
+
+            $table->integer('item_selling_price_id') ->unsigned()        ->index();
+            $table->foreign('item_selling_price_id') ->references('id')  ->on('item_prices')->onDelete('cascade');
+            
+            $table->timestamps();
+        });
     }
 
     /**

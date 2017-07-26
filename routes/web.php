@@ -25,19 +25,21 @@ Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
 Route::get('users', 'UserController@index');
 Route::get('profile', 'UserController@profile');
+Route::get('donors', 'DonorController@index');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
 
 Route::group(['prefix' => 'api/v1'], function () {
-	Route::get('dashboard', 'Api\DashboardController@index');
 	Route::get('dashboard/status', 'Api\DashboardController@status');
+	Route::get('dashboard/{from?}/{to?}', 'Api\DashboardController@index');
 
 	Route::get('inventories/{status?}', 'Api\InventoryController@index');
 	Route::post('inventories/update', 'Api\InventoryController@update');
 	Route::post('inventories/transferOrCreate', 'Api\InventoryController@transferOrCreate');
 	Route::post('inventories/transfer/{status}', 'Api\InventoryController@transfer');
 	Route::post('inventories/add-image', 'Api\InventoryController@addImage');
+	
 
 	Route::get('item-status-and-code-types', 'Api\InventoryController@statusAndCodeTypes');
 
@@ -49,7 +51,9 @@ Route::group(['prefix' => 'api/v1'], function () {
 	Route::post('transactions/create', 'Api\TransactionController@create');
 	Route::get('transactions/data', 'Api\TransactionController@data');
 	Route::get('transactions/inventories/{id}', 'Api\TransactionController@inventories');
+	Route::get('transactions/check_code/{type}/{code}', 'Api\TransactionController@checkCode');
 
+	Route::get('donors', 'Api\DonorController@index');
 	Route::post('donors/create', 'Api\DonorController@create');
 	Route::post('donors/destroy', 'Api\DonorController@destroy');
 

@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use \App\ItemStatus;
-use \App\Inventory;
 use \App\Item;
-use \App\Category;
 use Session;
 
 use Illuminate\Http\Request;
@@ -25,13 +22,6 @@ class ItemController extends Controller
 
     public function index()
     {
-        // Session::flash('message', [
-        //             'title'=>'Alert',
-        //             'text'=>'This is a message!',
-        //             'type'=>'danger',
-        //             'icon'=>'ban'
-        //         ]); 
-        // dd($categories->first()->items->first()->itemCodes);
     	return view('item.index');
     }
 

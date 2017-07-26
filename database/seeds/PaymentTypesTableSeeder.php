@@ -16,7 +16,8 @@ class PaymentTypesTableSeeder extends Seeder
 				'Credit',
                 'Debit',
 				'Item Donation',
-				'Internal Transfer',
+                'Internal Transfer',
+				'Warehouse Transfer',
     	];
 
     	foreach($types as $t)

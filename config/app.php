@@ -183,6 +183,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Folklore\Image\ImageServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
     ],
 
     /*
@@ -234,6 +235,8 @@ return [
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Folklore\Image\Facades\Image::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 
     ],
 

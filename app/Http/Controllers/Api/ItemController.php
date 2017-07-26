@@ -24,7 +24,7 @@ class ItemController extends Controller
 	public function index()
 	{
 		return [
-			'categories' => Category::with(['items', 'items.itemCodes'])->get(),
+			'categories' => Category::with(['items'])->get(),
 		];
 	}	
 

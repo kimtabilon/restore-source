@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \Milon\Barcode\DNS1D;
 
 class ItemCode extends Model
 {
@@ -11,10 +12,14 @@ class ItemCode extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'code',
-    ];
+    protected $fillable = ['code',];
+    protected $appends  = ['barcode'];
 
-    public function item() { return $this->belongsTo('App\Item'); } 
+    public function inventories() { return $this->belongsTo('App\Inventory'); } 
     public function itemCodeType() { return $this->belongsTo('App\ItemCodeType'); } 
+
+    public function getBarcodeAttribute()
+    {
+        return DNS1D::getBarcodePNG($this->code, "C39+", 1, 33);
+    }
 }

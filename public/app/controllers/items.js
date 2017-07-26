@@ -40,7 +40,7 @@ app
                 	button: 'Save changes'
                 };	
             	break;
-            case 'item_code':
+            /*case 'item_code':
                 var found_category  = $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
                 var category_index  = $scope.categories.indexOf(found_category);
                 var item_index      = $scope.categories[category_index].items.indexOf(item);
@@ -58,7 +58,7 @@ app
                 	},
                 	button: 'Save changes'
                 };	
-            	break;
+            	break;*/
 			
 			case 'modify_category':
                 var found_category  = $filter('filter')($scope.categories, {'id':item.category_id}, true)[0]
@@ -80,19 +80,17 @@ app
                 };	
             	break;
 
-            	case 'new_item':
+            case 'new_item':
             	$scope.modal = {
                 	title: "Create New Item",
-                	field: { category: 'Category', name: 'Name', description: 'Description', code: 'Barcode' },
+                	field: { category: 'Category', name: 'Name', description: 'Description' },
                 	array : { category: $scope.categories, },
                 	data: { 
                 		type 		: type,  
                 		category 	: '',
                 		category_id : 0,
                 		name 		: '', 
-                		description : '',
-                		code 		: '',
-                		code_type 	: $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' }, true)[0].id,
+                		description : ''
                 	},
                 	button: 'Create'
                 };	
@@ -120,7 +118,7 @@ app
 	            });
                 break;
 
-            case 'item_code':
+            /*case 'item_code':
                 $http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/update',
@@ -131,7 +129,7 @@ app
 					$scope.code(item_codes).code 	= response.data.code;
 					$('#inventoryModal').modal('hide');
 	            });
-                break; 
+                break; */
 
             case 'modify_category':
             	$http({
@@ -161,7 +159,7 @@ app
                     // console.log(response.data);
 	            	var cat_count 	= $scope.categories.length;
 	            	var item 		= response.data.item;
-	            	var code 		= response.data.code;
+	            	// var code 		= response.data.code;
 	            	var new_cat 	= response.data.new_category;
 	            	var category 	= response.data.category;
 
@@ -175,7 +173,7 @@ app
 	            							category_id	: item.category_id,
 	            							name 		: item.name,
 	            							description : item.description,
-	            							item_codes 	: [ code ]
+	            							// item_codes 	: [ code ]
             							}]
 	            		});
 	            	}
@@ -187,7 +185,7 @@ app
 	            			category_id : item.category_id,
 	            			name 		: item.name,
 	            			description : item.description,
-	            			item_codes 	: [ code ]
+	            			// item_codes 	: [ code ]
 	            		});
 	            	}
 	            	

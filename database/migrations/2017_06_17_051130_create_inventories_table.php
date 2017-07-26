@@ -19,6 +19,7 @@ class CreateInventoriesTable extends Migration
             $table->integer('item_id')          ->unsigned()->index();
             $table->integer('item_status_id')   ->unsigned()->index();
             $table->integer('quantity');
+            $table->string('unit', 20);
             $table->text('remarks')->nullable();
             $table->timestamps();
 

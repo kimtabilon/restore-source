@@ -15,12 +15,13 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('da_number');
-            $table->string('dt_number');
-            $table->integer('payment_type_id')->unsigned()->index();
+            $table->string('da_number', 30)         ->unique();
+            $table->string('special_discount', 10)  ->nullable();
+            $table->string('remarks')               ->nullable();
+            $table->integer('payment_type_id')      ->unsigned()        ->index();
             $table->timestamps();
 
-            $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');
+            $table->foreign('payment_type_id')      ->references('id')  ->on('payment_types')->onDelete('cascade');
         });
 
         Schema::create('inventory_transaction', function (Blueprint $table) {
