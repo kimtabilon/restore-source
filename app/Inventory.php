@@ -12,7 +12,7 @@ class Inventory extends Model
      * @var array
      */
 
-    protected $fillable = ['quantity', 'remarks'];
+    protected $fillable = ['quantity', 'remarks', 'unit'];
     protected $appends  = ['created', 'modified'];
 
     public function user() {                return $this->belongsTo('App\User'); } 

@@ -70,9 +70,9 @@ return [
     */
 
     'widget' => [
-        'message'       => true,
-        'notification'  => true,
-        'task'          => true,
+        'message'       => false,
+        'notification'  => false,
+        'task'          => false,
         'user'          => true,
     ],
 
@@ -183,6 +183,7 @@ return [
                     'url'  => 'inventories#good',
                     'icon' => 'check-square-o',
                     'icon_color' => 'green',
+                    'can'  => 'manager-access',
                 ],
                 [
                     'text' => 'Sold',
@@ -212,7 +213,7 @@ return [
                 [
                     'text' => 'Returned',
                     'url'  => 'inventories#returned',
-                    'can'  => 'manager-receiving-coordinator-access',
+                    'can'  => 'manager-access',
                     'icon' => 'exchange',
                     'icon_color' => 'red',
                 ],
@@ -267,7 +268,7 @@ return [
             'can'  => 'manager-receiving-coordinator-access',
         ],
 
-        'ACCOUNT SETTINGS',
+        'ACCOUNTS',
         /*[
             'text' => 'Profile',
             'url'  => 'profile',
@@ -284,13 +285,13 @@ return [
             'text'       => 'Good Item',
             'url'        => 'inventories#good',
             'icon_color' => 'green',
-            'can'  => 'manager-receiving-coordinator-access',
+            'can'  => 'manager-access',
         ],
         [
             'text'       => 'Sold Item',
             'url'        => 'inventories#sold',
             'icon_color' => 'yellow',
-            'can'  => 'manager-receiving-coordinator-access',
+            'can'  => 'manager-access',
         ],
     ],
 

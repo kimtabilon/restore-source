@@ -80,6 +80,24 @@ class TransactionController extends Controller
 						->get();
 	}
 
+	public function checkCode($type, $code)
+	{
+		switch ($type) {
+			case 'RS':
+				return ItemCode::where('code',$code)->get();
+				break;
+
+			case 'DA':
+			case 'C' :
+				return Transaction::where('da_number', $code)->get();
+				break;	
+			
+			default:
+				# code...
+				break;
+		}
+	}
+
 	public function create(Request $request)
 	{
 		$payment 		= $request->input('payment');
@@ -87,6 +105,7 @@ class TransactionController extends Controller
 		$found_donor	= Donor::find($donor['id']);
 		$inventories 	= $request->input('items');
 		$da_no   		= $request->input('da_no');
+		$special_discount= $request->input('special_discount');
 		$remarks   		= $request->input('remarks');
 
 		$status = ItemStatus::all();
@@ -95,8 +114,9 @@ class TransactionController extends Controller
 		}
 
 		$new_transaction = new Transaction();
-		$new_transaction->da_number = $da_no;
-		$new_transaction->remarks 	= $remarks;
+		$new_transaction->da_number 		= $da_no;
+		$new_transaction->special_discount 	= $special_discount;
+		$new_transaction->remarks 			= $remarks;
 		$new_transaction->paymentType()->associate($payment['id']);
 		$new_transaction->save();
 
@@ -140,19 +160,30 @@ class TransactionController extends Controller
 				$new_inv->itemPrices()  		->attach($new_price);
 				$new_inv->itemSellingPrices()  	->attach($selling_price);
 				/* end of ITEM PRICE */
-
-				$new_inv->donors()				->attach($found_donor);
-				$new_inv->transactions()		->attach($new_transaction);
 				
 				if($match) {
 					$discounts 		= $match->itemDiscounts;
+					$codes 			= $match->itemCodes;
 					$images 		= $match->itemImages;
+					$refImages 		= $match->itemRefImages;
+					$prices 		= $match->itemPrices;
+					$sellingPrices 	= $match->itemSellingPrices;
+					$donors 		= $match->donors;
+					$transactions 	= $match->transactions;
 
-					if($discounts->count()) {
-						foreach($discounts as $v) { $new_inv->itemDiscounts()->attach($v); }
-					}
-					if($images->count()){ $new_inv->itemImages()->attach($images->last()); }
-				}	
+					if($discounts 	->count()) { foreach($discounts  	as $v) { $new_inv->itemDiscounts()	->attach($v); } }
+					if($transactions->count()) { foreach($transactions  as $v) { $new_inv->transactions()	->attach($v); } }
+					if($donors 		->count()) { foreach($donors        as $v) { $new_inv->donors()			->attach($v); } }
+					
+					if($codes 			->count()){ $new_inv->itemCodes()			->attach($codes 		->last()); }
+					if($images 			->count()){ $new_inv->itemImages()			->attach($images 		->last()); }
+					if($refImages 		->count()){ $new_inv->itemRefImages()		->attach($refImages 	->last()); }
+					if($prices 			->count()){ $new_inv->itemPrices()			->attach($prices 		->last()); }
+					if($sellingPrices 	->count()){ $new_inv->itemSellingPrices()	->attach($sellingPrices ->last()); }
+				}
+
+				$new_inv->donors()				->attach($found_donor);
+				$new_inv->transactions()		->attach($new_transaction);	
 
 				/* ITEM CODE */
 				$new_code  				= $inventory['item_codes'][0]['code'];
@@ -175,11 +206,20 @@ class TransactionController extends Controller
 					$match = Inventory::find($id);
 					$left  = $match->quantity - $inventory['quantity'];
 
-					$discounts 		= $match->itemDiscounts;
+					/*$discounts 		= $match->itemDiscounts;
 					$images 		= $match->itemImages;
 					$codes 			= $match->itemCodes;
 					$prices 		= $match->itemPrices;
-					$selling_prices = $match->itemSellingPrices;
+					$selling_prices = $match->itemSellingPrices;*/
+
+					$discounts 		= $match->itemDiscounts;
+					$codes 			= $match->itemCodes;
+					$images 		= $match->itemImages;
+					$refImages 		= $match->itemRefImages;
+					$prices 		= $match->itemPrices;
+					$sellingPrices 	= $match->itemSellingPrices;
+					$donors 		= $match->donors;
+					$transactions 	= $match->transactions;
 					
 					if($left > 0) {
 						$match->quantity = $left;
@@ -194,13 +234,15 @@ class TransactionController extends Controller
 						$new_inv->user() 		->associate(Auth::user());
 						$new_inv->save();
 
-						if($discounts->count()) {
-							foreach($discounts as $v) { $new_inv->itemDiscounts()->attach($v); }
-						}
-						if($images 			->count()) 	{ $new_inv->itemImages()		->attach($images 	 	->last()); }
-						if($codes 			->count()) 	{ $new_inv->itemCodes()			->attach($codes 		->last()); }
-						if($prices 			->count()) 	{ $new_inv->itemPrices()		->attach($prices 		->last()); }
-						if($selling_prices 	->count()) 	{ $new_inv->itemSellingPrices()	->attach($selling_prices->last()); }
+						if($discounts 	->count()) { foreach($discounts  	as $v) { $new_inv->itemDiscounts()	->attach($v); } }
+						if($transactions->count()) { foreach($transactions  as $v) { $new_inv->transactions()	->attach($v); } }
+						if($donors 		->count()) { foreach($donors        as $v) { $new_inv->donors()			->attach($v); } }
+						
+						if($codes 			->count()){ $new_inv->itemCodes()			->attach($codes 		->last()); }
+						if($images 			->count()){ $new_inv->itemImages()			->attach($images 		->last()); }
+						if($refImages 		->count()){ $new_inv->itemRefImages()		->attach($refImages 	->last()); }
+						if($prices 			->count()){ $new_inv->itemPrices()			->attach($prices 		->last()); }
+						if($sellingPrices 	->count()){ $new_inv->itemSellingPrices()	->attach($sellingPrices ->last()); }
 						
 						$new_inv->donors()		->attach($found_donor);
 						$new_inv->transactions()->attach($new_transaction); 
@@ -229,4 +271,6 @@ class TransactionController extends Controller
 							])
 							->get()->first();
 	}
+
+	
 }

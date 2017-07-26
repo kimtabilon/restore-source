@@ -17,6 +17,9 @@ app
         $scope.itemCodeTypes    = response.data.code_types;
         $scope.categories       = response.data.categories;
 
+        $scope.special_discount = 0;
+        $scope.remarks          = '';
+
         $scope.new_item     = $scope.items[0];
         $scope.new_item     = {
             category    : {
@@ -28,6 +31,8 @@ app
         }
         $scope.new_customer = $scope.donors[0];
         $scope.new_customer = { 
+                id          : 0,
+                donor_type  : '',
                 given_name  : '',
                 middle_name : '',
                 last_name   : '',
@@ -60,7 +65,6 @@ app
 
     $scope.new_transaction = function () {
         $scope.acknowledgement_no = $scope.generate_code('DA');
-        $scope.remarks = '';
 
         $scope.good_status      = $filter('filter')($scope.item_status, { name: 'Good'}, true);
         $scope.selected_status  = $scope.selected_status || $scope.good_status[0].id;
@@ -72,9 +76,22 @@ app
     }
 
     $scope.generate_code = function(begin_with) {
-        return begin_with + '-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
+        auto_gen_code = begin_with + '-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
                         return self.indexOf(value) === index;
                     }).join('').substr(2,8);
+        /*$http
+        .get(API_URL + 'transactions/check_code/' + begin_with + '/' + auto_gen_code)
+        .then(function (response) {
+            // $scope.inventories = response.data;
+            if(response.data.length == 0) {
+                $scope.auto_gen_code = auto_gen_code;
+            }
+            else {
+                $scope.auto_gen_code = $scope.generate_code(begin_with);
+            }
+            console.log($scope.auto_gen_code);
+        });*/
+        return auto_gen_code;
     }
 
     $scope.inventory_status_change = function(selected_status) {
@@ -90,6 +107,7 @@ app
         code            : '',
         market_price    : 0,
         selling_price   : 0,
+        remarks         : '',
     };
 
     $scope.choose_payment_type = function(id) {
@@ -105,6 +123,7 @@ app
                 code            : $scope.generate_code('RS'),
                 market_price    : 0,
                 selling_price   : 0,
+                remarks         : '',
             };
         }
         // console.log($scope.new_inv.code);
@@ -146,8 +165,8 @@ app
                 quantity        : $scope.new_inv.quantity,
                 unit            : $scope.new_inv.unit,
                 item_codes      : [{ 
-                            code: $scope.new_inv.code,
-                            item_code_type_id: codeType[0].id 
+                            code                : $scope.new_inv.code,
+                            item_code_type_id   : codeType[0].id, 
                         }],
                 item_prices     : [{ market_price: $scope.new_inv.market_price }],
                 item_selling_prices : [{ market_price: $scope.new_inv.selling_price }],
@@ -160,7 +179,7 @@ app
         $scope.added_items
             .push(
                 copy_selected 
-            ); 
+            );  
 
         /* SET EMPTY AGAIN */    
         selected = [];  
@@ -168,6 +187,7 @@ app
             code            : $scope.generate_code('RS'),
             market_price    : 0,
             selling_price   : 0,
+            remarks         : '',
         };  
     }
 
@@ -214,7 +234,8 @@ app
                             payment: $scope.payment_type,
                             items  : $scope.added_items,
                             da_no  : $scope.acknowledgement_no,
-                            remarks: $scope.remarks
+                            remarks: $scope.remarks,
+                            special_discount: $scope.special_discount,
                         }
             })
             .then(function (response) {
@@ -308,35 +329,41 @@ app
     }
 
     $scope.new_customer_btn = function(new_customer) {
-        $http({
-            method  : 'POST',
-            url     : API_URL + 'donors/create',
-            data    : {  
-                        donor  : new_customer,
-                    }
-        })
-        .then(function (response) {
-            console.log(response.data);
-            $scope.donors.push(
-                response.data
-            );
+        console.log(new_customer);
+        if(new_customer.donor_type != "") {
+            $http({
+                method  : 'POST',
+                url     : API_URL + 'donors/create',
+                data    : {  
+                            donor  : new_customer,
+                        }
+            })
+            .then(function (response) {
+                console.log(response.data);
+                $scope.donors.push(
+                    response.data
+                );
 
-            $scope.new_customer = {
-                id: 0, 
-                given_name: '',
-                middle_name: '',
-                last_name: '',
-                email: '',
-                profile : {
-                    title: '',
-                    address: '',
-                    phone: '',
-                    tel: '',
-                    company: '',
-                    job_title: '',
-                }                
-            }
-        });
+                $scope.new_customer = {
+                    id: 0, 
+                    given_name: '',
+                    middle_name: '',
+                    last_name: '',
+                    email: '',
+                    profile : {
+                        title: '',
+                        address: '',
+                        phone: '',
+                        tel: '',
+                        company: '',
+                        job_title: '',
+                    }                
+                }
+            });
+        }   
+        else {
+            alert("Please select type of donor.");
+        }     
     }
 
     $scope.remove_donor = function(donor) {

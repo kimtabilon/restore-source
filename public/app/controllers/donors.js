@@ -34,18 +34,19 @@ app
                 }
                 else {
                     $scope.new_customer = { 
-                        given_name: '',
-                        middle_name: '',
-                        last_name: '',
-                        email: '',
-                        donor_type: '',
-                        profile : {
-                            title: '',
-                            address: '',
-                            phone: '',
-                            tel: '',
-                            company: '',
-                            job_title: '',
+                        id          : 0,
+                        given_name  : '',
+                        middle_name : '',
+                        last_name   : '',
+                        email       : '',
+                        donor_type  : '',
+                        profile     : {
+                            title       : '',
+                            address     : '',
+                            phone       : '',
+                            tel         : '',
+                            company     : '',
+                            job_title   : '',
                         }                
                     }
 
@@ -61,53 +62,61 @@ app
     }
 
     $scope.new_customer_btn = function(donor, action) {
-        $http({
-            method  : 'POST',
-            url     : API_URL + 'donors/create',
-            data    : {  
-                        donor  : donor,
-                    }
-        })
-        .then(function (response) {
+        console.log(donor);
+        if(donor.donor_type != '')
+        {
+            $http({
+                method  : 'POST',
+                url     : API_URL + 'donors/create',
+                data    : {  
+                            donor  : donor,
+                        }
+            })
+            .then(function (response) {
+                
+                var new_donor   = response.data;
+                var type        = $filter('filter')($scope.types, { id: new_donor.donor_type_id }, true)[0];
+                var old_type    = $filter('filter')($scope.types, { id: donor.donor_type_id }, true)[0];
+                var index       = $scope.types.indexOf(type);
+                var old_index   = $scope.types.indexOf(old_type);
+                
+
+                if(action=="New Donor") {
+                    $scope.types[index].donors.push(new_donor);
+                }
+                else {
+                    var match_donor     = $filter('filter')($scope.types[index].donors, { id: new_donor.id }, true)[0];
+                    var old_match_donor = $filter('filter')($scope.types[old_index].donors, { id: donor.id }, true)[0];
+                    var donor_index     = $scope.types[index].donors.indexOf(match_donor);
+                    var old_donor_index = $scope.types[old_index].donors.indexOf(old_match_donor);
+
+                    $scope.types[old_index].donors.splice(old_donor_index, 1);
+                    $scope.types[index].donors.push(new_donor);
+                }
+
+                $scope.new_customer = { 
+                    id          : 0,
+                    given_name  : '',
+                    middle_name : '',
+                    last_name   : '',
+                    email       : '',
+                    profile     : {
+                        title       : '',
+                        address     : '',
+                        phone       : '',
+                        tel         : '',
+                        company     : '',
+                        job_title   : '',
+                    }                
+                }
+            });
+
+            $('#inventoryModal').modal('hide');
+        }
+        else {
+            alert('Please select type of donor.');
+        }
             
-            var new_donor   = response.data;
-            var type        = $filter('filter')($scope.types, { id: new_donor.donor_type_id }, true)[0];
-            var old_type    = $filter('filter')($scope.types, { id: donor.donor_type_id }, true)[0];
-            var index       = $scope.types.indexOf(type);
-            var old_index   = $scope.types.indexOf(old_type);
-            
-
-            if(action=="New Donor") {
-                $scope.types[index].donors.push(new_donor);
-            }
-            else {
-                var match_donor     = $filter('filter')($scope.types[index].donors, { id: new_donor.id }, true)[0];
-                var old_match_donor = $filter('filter')($scope.types[old_index].donors, { id: donor.id }, true)[0];
-                var donor_index     = $scope.types[index].donors.indexOf(match_donor);
-                var old_donor_index = $scope.types[old_index].donors.indexOf(old_match_donor);
-
-                $scope.types[old_index].donors.splice(old_donor_index, 1);
-                $scope.types[index].donors.push(new_donor);
-            }
-
-            $scope.new_customer = { 
-                id          : 0,
-                given_name  : '',
-                middle_name : '',
-                last_name   : '',
-                email       : '',
-                profile     : {
-                    title       : '',
-                    address     : '',
-                    phone       : '',
-                    tel         : '',
-                    company     : '',
-                    job_title   : '',
-                }                
-            }
-        });
-
-        $('#inventoryModal').modal('hide');
     }
 
     $scope.remove_donor = function(donor) {

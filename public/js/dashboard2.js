@@ -16,6 +16,39 @@ $(function () {
   // This will get the first returned node in the jQuery collection.
   var salesChart = new Chart(salesChartCanvas);
 
+  /*$.ajax({url: "api/v1/dashboard/status", success: function(result){
+    //console.log(result);
+    var x = 0;
+    var loop = 1;
+    var count = result.length;
+    $.each(result, function(key, value){
+      
+      PieData2 += JSON.stringify({
+        value: value.inventories.length,
+        label: value.name,
+        color: color[x],
+        highlight: color[x]
+      });
+      if(loop<count) {
+        PieData2 += ',';
+      }
+      loop++;
+      
+      if(x==color.length) {
+        x = 2;
+      }
+      else {
+        x++;
+      }
+    });
+  var PieData3 = JSON.parse('['+PieData2+']');
+  console.log(PieData3);
+  //console.log('['+PieData2+']');
+  //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    pieChart.Doughnut(PieData3, pieOptions);
+  }});*/
+
   var salesChartData = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -46,7 +79,7 @@ $(function () {
     //Boolean - If we should show the scale at all
     showScale: true,
     //Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines: false,
+    scaleShowGridLines: true,
     //String - Colour of the grid lines
     scaleGridLineColor: "rgba(0,0,0,.05)",
     //Number - Width of the grid lines
@@ -60,7 +93,7 @@ $(function () {
     //Number - Tension of the bezier curve between points
     bezierCurveTension: 0.3,
     //Boolean - Whether to show a dot for each point
-    pointDot: false,
+    pointDot: true,
     //Number - Radius of each point dot in pixels
     pointDotRadius: 4,
     //Number - Pixel width of point dot stroke
@@ -103,15 +136,15 @@ $(function () {
 				"#3c8dbc",
 				"#d2d6de",
 				"#4661EE",
-				 "#EC5657",
-				 "#1BCDD1",
-				 "#8FAABB",
-				 "#B08BEB",
-				 "#3EA0DD",
-				 "#F5A52A",
-				 "#23BFAA",
-				 "#FAA586",
-				 "#EB8CC6",
+				"#EC5657",
+				"#1BCDD1",
+				"#8FAABB",
+				"#B08BEB",
+				"#3EA0DD",
+				"#F5A52A",
+				"#23BFAA",
+				"#FAA586",
+				"#EB8CC6",
 			];
   var pieOptions = {
     //Boolean - Whether we should show a stroke on each segment
@@ -142,29 +175,29 @@ $(function () {
   		
   $.ajax({url: "api/v1/dashboard/status", success: function(result){
     //console.log(result);
-	var x = 0;
-	var loop = 1;
-	var count = result.length;
-	$.each(result, function(key, value){
-		
-		PieData2 += JSON.stringify({
-			value: value.inventories.length,
-			label: value.name,
-			color: color[x],
-			highlight: color[x]
-		});
-		if(loop<count) {
-			PieData2 += ',';
-		}
-		loop++;
-		
-		if(x==color.length) {
-			x = 2;
-		}
-		else {
-			x++;
-		}
-	});
+  	var x = 0;
+  	var loop = 1;
+  	var count = result.length;
+  	$.each(result, function(key, value){
+  		
+  		PieData2 += JSON.stringify({
+  			value: value.inventories.length,
+  			label: value.name,
+  			color: color[x],
+  			highlight: color[x]
+  		});
+  		if(loop<count) {
+  			PieData2 += ',';
+  		}
+  		loop++;
+  		
+  		if(x==color.length) {
+  			x = 2;
+  		}
+  		else {
+  			x++;
+  		}
+	  });
 	var PieData3 = JSON.parse('['+PieData2+']');
 	console.log(PieData3);
 	//console.log('['+PieData2+']');

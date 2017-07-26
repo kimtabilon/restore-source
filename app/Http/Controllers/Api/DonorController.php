@@ -51,7 +51,7 @@ class DonorController extends Controller
 		if($donor['id'] != 0) {
 			$match_donor = Donor::find($donor['id']);
 			$match_donor->given_name 	= $donor['given_name'];
-			$match_donor->middle_name = $donor['middle_name'];
+			$match_donor->middle_name 	= $donor['middle_name'];
 			$match_donor->last_name 	= $donor['last_name'];
 			$match_donor->email 		= $donor['email'];
 			$match_donor->donorType()->associate($donor_type->id);

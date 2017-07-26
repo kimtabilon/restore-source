@@ -20,8 +20,6 @@ app
 				$scope.countSelectedItems 	= 0;
 				$scope.checkParent 			= [];
 				$scope.checkChild 			= [];
-
-				console.log($scope.inventories);
 			});
 		$scope.status = status;	
 	});
@@ -110,6 +108,7 @@ app
 	            		index 		: $scope.inventories.indexOf(data), 
 	            		quantity 	: data.quantity, 
 	            		remarks 	: data.remarks, 
+	            		unit 		: data.unit, 
 	            		inventory 	: data
 	            	},
 	            	button	: 'Transfer'
@@ -125,7 +124,7 @@ app
 			            data 	: $scope.SelectedItems
 			        })
 		            .then(function (response) {
-						console.log(response.data);
+						// console.log(response.data);
 		            });
 
 			        angular.forEach($scope.SelectedItems, function(item){ 
@@ -264,7 +263,7 @@ app
                 break;
 
             case 'item_code':
-            	console.log(data);
+            	// console.log(data);
                 $http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/update',
@@ -273,6 +272,7 @@ app
 	            .then(function (response) {
 					var itemCodes 				= $scope.inventories[data.index].item_codes;
 					$scope.code(itemCodes).code = response.data.code;
+					$scope.code(itemCodes).barcode = response.data.barcode;
 					$('#inventoryModal').modal('hide');
 	            });
                 break; 
@@ -340,6 +340,7 @@ app
                 break;                     
 
             case 'transfer_or_create':
+            	console.log(data);
             	$http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/transferOrCreate',

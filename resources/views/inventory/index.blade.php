@@ -30,6 +30,7 @@
                     <thead>
                         <th><input type="checkbox" ng-click="checkedAll()" ng-model="isAllSelected" ng-checked="countSelectedItems" style="width: 15px; height:15px;"/></th>
                         
+                        <th></th>
                         <th>Item</th>
                         <th>Qty</th>
                         <th>Unit</th>
@@ -44,15 +45,13 @@
                         <th>Donor</th>
                         <th>Remarks</th>
                         <th>Added</th>
+                        <th>Barcode</th>
                     </thead>
                     <tbody ng-repeat="(key, inventory) in inventories | filter:search | groupBy:'item_id' | toArray:true | orderBy: orderByName"">
                         <tr ng-class="{active : checkParent[inventory[0].id]}">
                             <td><input type="checkbox" ng-model="checkParent[inventory[0].id]" ng-change="checked(inventory)" style="width: 15px; height:15px;" /></td>
-                            
-                            <td ng-click="toggle('item', inventory[0])">
-                                <span class="badge" ng-if="inventory.length>1"><%inventory.length%></span>
-                                <% inventory[0].item.name %>
-                            </td>
+                            <td><span class="badge" ng-if="inventory.length>1"><%inventory.length%></span></td>
+                            <td ng-click="toggle('item', inventory[0])"><% inventory[0].item.name %></td>
                             <td><% sum(inventory, 'quantity') %></td>
                             <td ng-click="toggle('unit', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].unit %></span></td>
                             <td ng-click="toggle('item_price', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].item_prices[inventory[0].item_prices.length - 1].market_price %></span></td>
@@ -71,17 +70,19 @@
                             </td>
 
                             
-                            <td ng-click="toggle('item_code', inventory[0])"><% code(inventory[0].item_codes, 'Barcode').code %></td>
+                            <td><span ng-click="toggle('item_code', inventory[0])" ng-if="inventory.length==1"><% code(inventory[0].item_codes, 'Barcode').code %></span></td>
                             
 
-                            <td><span ng-if="inventory.length==1"><% inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
+                            <td><span ng-if="inventory.length==1"><% '00' + inventory[0].donors[inventory[0].donors.length - 1].id + ' - ' + inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
                             <td ng-click="toggle('remarks', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].remarks %></span></td>
                             <td><span ng-if="inventory.length==1"><% inventory[0].created %></span></td>     
+                            <td><span ng-if="inventory.length==1"><img src="data:image/png;base64,<% code(inventory[0].item_codes, 'Barcode').barcode %>" alt="barcode" /></span></td>
                         </tr>
 
                         <tr ng-repeat="inv in inventory" ng-if="checkParent[inventory[0].id] && inventory.length>1" ng-class="{active : checkChild[inv.id]}">
                             <td></td>
-                            <td> &nbsp;<input type="checkbox" ng-model="checkChild[inv.id]" ng-change="checked(inv)" style="width: 15px; height:15px;"/> &nbsp; <span><% inv.item.name %> </span></td>
+                            <td><input type="checkbox" ng-model="checkChild[inv.id]" ng-change="checked(inv)" style="width: 15px; height:15px;"/></td>
+                            <td><% inv.item.name %></td>
                             <td><% inv.quantity %></td>
                             <td ng-click="toggle('unit', inv)"><% inv.unit %></td>
                             <td ng-click="toggle('item_price', inv)"><% inv.item_prices[inv.item_prices.length - 1].market_price %></td>
@@ -105,6 +106,7 @@
                             <td><% inv.donors[inv.donors.length - 1].name %></td>
                             <td ng-click="toggle('remarks', inv)"><% inv.remarks %></td>
                             <td><% inv.created %></td>  
+                            <td><img ng-if="inventory.length>1" src="data:image/png;base64,<% code(inv.item_codes, 'Barcode').barcode %>" alt="barcode" /></td>
                         </tr>
                     </tbody>
                         

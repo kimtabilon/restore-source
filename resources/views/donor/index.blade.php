@@ -93,7 +93,7 @@
                             <th>Status</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="inventory in modal.inventories | orderBy:'item_status.name' ">
+                            <tr ng-repeat="inventory in modal.inventories | orderBy:'item_status.name' | orderBy:'item_status.item.name' ">
                                 <td><% code(inventory.item_codes, 'Barcode').code %></td>
                                 <td><% inventory.item.name %></td>
                                 <td><% inventory.quantity %></td>

@@ -45,7 +45,8 @@ class InventoryController extends Controller
 					'inventories.itemDiscounts',
 					'inventories.donors',
 				])
-				->first()->inventories; 		
+				->first()
+				->inventories; 		
 		
 	}
 
@@ -104,8 +105,8 @@ class InventoryController extends Controller
 				break;	
 
 			case 'item_selling_price':
-				$price 		= ItemPrice::find($data['market_price_id']);
-				$inventory 	= Inventory::find($data['id']);
+				$price 			= ItemPrice::find($data['market_price_id']);
+				$inventory 		= Inventory::find($data['id']);
 				$newMarketPrice = $data['market_price'];
 
 				if($price->market_price != $newMarketPrice) {
@@ -173,15 +174,8 @@ class InventoryController extends Controller
 				$item->category()	->associate($category);
 				$item->save();
 
-				// $barcode 				= new ItemCode();
-				// $barcode->code 			= $data['code'];
-				// $barcode->item() 		->associate($item);
-				// $barcode->itemCodeType()->associate($data['code_type']);
-				// $barcode->save();
-
 				return [ 
 					'item' 			=> $item, 
-					// 'code' 			=> $barcode, 
 					'new_category'	=> $newCategory, 
 					'category'		=> $category 
 					];
@@ -220,6 +214,7 @@ class InventoryController extends Controller
 					$inv->save();
 
 					$discounts 		= $inv->itemDiscounts;
+					$codes 			= $inv->itemCodes;
 					$images 		= $inv->itemImages;
 					$refImages 		= $inv->itemRefImages;
 					$prices 		= $inv->itemPrices;
@@ -227,33 +222,34 @@ class InventoryController extends Controller
 					$donors 		= $inv->donors;
 					$transactions 	= $inv->transactions;
 
-					$data['inventory']['quantity'] = (int)$data['quantity']; 
-					$data['inventory']['remarks']  = $data['remarks']; 
+					$data['inventory']['quantity'] 	= (int)$data['quantity']; 
+					$data['inventory']['unit']  	= $data['unit']; 
+					$data['inventory']['remarks']  	= $data['remarks']; 
 					$inventory 					= new Inventory($data['inventory']);
 					$inventory->user()			->associate(Auth::user());
 					$inventory->item()			->associate($data['inventory']['item_id']);
 					$inventory->itemStatus()	->associate((int)$data['status']);
 					$inventory->save();
 
-					if($discounts->count()) {
-						foreach($discounts as $v) { $inventory->itemDiscounts()->attach($v); }
-					}
-					if($images->count()) 		{ $inventory->itemImages()	->attach($images->last()); }
-					if($refImages->count()) 	{ $inventory->itemRefImages()->attach($refImages->last()); }
-					if($prices->count()) 		{ $inventory->itemPrices()	->attach($prices->last()); }
-					if($sellingPrices->count()) { $inventory->itemSellingPrices()->attach($sellingPrices->last()); }
-					if($donors->count()) 		{ $inventory->donors()		->attach($donors->last()); }
-					if($transactions->count()) 	{ $inventory->transactions()->attach($transactions->last()); }
+					if($discounts 	->count()) { foreach($discounts  	as $v) { $inventory->itemDiscounts()	->attach($v); } }
+					if($transactions->count()) { foreach($transactions  as $v) { $inventory->transactions()		->attach($v); } }
+					if($donors 		->count()) { foreach($donors        as $v) { $inventory->donors()			->attach($v); } }
+					
+					if($codes 			->count()){ $inventory->itemCodes()			->attach($codes 		->last()); }
+					if($images 			->count()){ $inventory->itemImages()		->attach($images 		->last()); }
+					if($refImages 		->count()){ $inventory->itemRefImages()		->attach($refImages 	->last()); }
+					if($prices 			->count()){ $inventory->itemPrices()		->attach($prices 		->last()); }
+					if($sellingPrices 	->count()){ $inventory->itemSellingPrices()	->attach($sellingPrices ->last()); }
 				} 
 				else {
 					$left=0;
 					$inventory           		= Inventory::find($data['inventory']['id']);
 					$inventory->item_status_id 	= $data['status'];
 					$inventory->remarks 		= $data['remarks'];
+					$inventory->unit 			= $data['unit'];
 					$inventory->save();
 				}
-				return [ 'quantity' => $left, 'remarks' => $inventory->remarks];
-				// return $data;
+				return [ 'quantity' => $left, 'remarks' => $inventory->remarks ];
 				break;
 
 			default:
@@ -264,10 +260,10 @@ class InventoryController extends Controller
 	public function statusAndCodeTypes() 
 	{
 		return [ 
-			'status'=>ItemStatus::orderBy('name')->get(), 
-			'code_types'=>ItemCodeType::orderBy('name')->get(), 
-			'item_images'=>ItemImage::orderBy('name')->get(), 
-			'item_discounts'=>ItemDiscount::with('inventories','inventories.item','inventories.itemStatus')->orderBy('type')->get(), 
+			'status' 			=>ItemStatus::orderBy('name') 	->get(), 
+			'code_types' 		=>ItemCodeType::orderBy('name') ->get(), 
+			'item_images' 		=>ItemImage::orderBy('name') 	->get(), 
+			'item_discounts' 	=>ItemDiscount::with('inventories','inventories.item','inventories.itemStatus')->orderBy('type')->get(), 
 			];
 	}
 

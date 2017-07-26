@@ -28,14 +28,16 @@
                       <th>DA</th>
                       <th>Donor</th>
                       <th>No. of Items</th>
+                      <th>Special Discount</th>
                       <th>Remarks</th>
                       <th>Created</th>
                   </thead>
                   <tbody>
                       <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
                           <td ng-click="toggle(transaction)"><% transaction.da_number %></td>
-                          <td><% transaction.inventories[0].donors[0].name %></td>
+                          <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %></td>
                           <td><% transaction.inventories.length %></td>
+                          <td><% transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
                           <td><% transaction.created %></td>
                       </tr>
@@ -187,7 +189,7 @@
                                   
                               </div><!-- /.box-body -->
                               <div class="box-footer">
-                                <button ng-click="new_customer_btn(new_customer)" class="btn btn-primary btn-flat pull-right">New Donor</button>
+                                <button ng-click="new_customer_btn(new_customer, modal.title)" class="btn btn-primary btn-flat pull-right">New Donor</button>
                               </div><!-- /.box-footer -->
                             </form>
                             <input type="text" ng-model="search_donor" class="form-control" placeholder="Search..">
@@ -311,8 +313,12 @@
                                 </div>
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">Remarks</label>
-                                  <div class="col-sm-10">
+                                  <div class="col-sm-6">
                                     <input ng-model="remarks" type="text" class="form-control input-sm" placeholder="Remarks">
+                                  </div>
+                                  <label ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-1 control-label">Discount</label>
+                                  <div ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-3">
+                                    <input ng-model="special_discount" type="text" class="form-control input-sm" placeholder="Special Discount">
                                   </div>
                                 </div>  
                                 <table class="table" ng-show="added_items.length>0">
@@ -360,7 +366,7 @@
                                       <select 
                                           class="form-control select2" 
                                           ng-model="selected_item_from_items"
-                                          ng-options="item.id as item.name for item in items | orderBy:'name'"
+                                          ng-options="item.id as (item.name + ' - (' + item.category.name + ') ' + item.description) for item in items | orderBy:'name'"
                                           ng-change="choose_item_from_item(selected_item_from_items)"
                                           style="width: 100%;">
                                       </select>

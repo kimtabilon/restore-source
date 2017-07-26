@@ -3,13 +3,25 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div ng-controller="dashboardController">
+<div ng-controller="dashboardController" class="print-page">
     <section class="content-header">
-        <h1>Dashboard</h1>
+        <h1 class="pull-left">Report</h1>
+        <div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 15px;">
+          <span class="input-group-addon" id="basic-addon1">From</span>
+          <input ng-model="report.from" value="<% report.from %>" ng-change="show_report()" placeholder="04303" type="date" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 5px;">
+          <span class="input-group-addon" id="basic-addon1">To</span>
+          <input ng-model="report.to" value="<% report.to %>" ng-change="show_report()" type="date" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <div class="pull-left" style="width: 200px !important; margin: 0px 5px 0 15px;">
+          <span class="fa fa-2x fa-print" style="cursor: pointer;"></span>
+        </div>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Dashboard</li>
         </ol>
+        <div class="clearfix"></div>
     </section>    
 
     @include('adminlte::partials.alert')
@@ -19,21 +31,21 @@
         <span us-spinner="{radius:6, width:2, length:5}"></span>
          <!-- Info boxes -->
           <div class="row">
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-3 col-sm-6 col-xs-6">
               <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                <span class="info-box-icon bg-aqua"><i class="fa fa-list-alt"></i></span>
                 <div class="info-box-content">
-                  <span class="info-box-text">CPU Traffic</span>
-                  <span class="info-box-number">90<small>%</small></span>
+                  <span class="info-box-text">Floor Inventory</span>
+                  <span class="info-box-number"><% good_items.inventories.length %></span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-3 col-sm-6 col-xs-6">
               <div class="info-box">
-                <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
+                <span class="info-box-icon bg-red"><i class="fa fa-share-alt"></i></span>
                 <div class="info-box-content">
-                  <span class="info-box-text">Likes</span>
-                  <span class="info-box-number">41,410</span>
+                  <span class="info-box-text">Transactions</span>
+                  <span class="info-box-number"><% transactions.length %></span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -41,21 +53,21 @@
             <!-- fix for small devices only -->
             <div class="clearfix visible-sm-block"></div>
 
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-3 col-sm-6 col-xs-6">
               <div class="info-box">
                 <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
                 <div class="info-box-content">
-                  <span class="info-box-text">Sales</span>
-                  <span class="info-box-number">760</span>
+                  <span class="info-box-text">Sold</span>
+                  <span class="info-box-number"><% sold_items.inventories.length %></span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-3 col-sm-6 col-xs-6">
               <div class="info-box">
                 <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
                 <div class="info-box-content">
-                  <span class="info-box-text">New Members</span>
-                  <span class="info-box-number">2,000</span>
+                  <span class="info-box-text">Donors</span>
+                  <span class="info-box-number"><% donors.length %></span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -65,19 +77,10 @@
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Monthly Recap Report</h3>
+                  <h3 class="box-title">Recap</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    <div class="btn-group">
-                      <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                      </ul>
-                    </div>
+                    
                     <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                   </div>
                 </div><!-- /.box-header -->
@@ -85,7 +88,7 @@
                   <div class="row">
                     <div class="col-md-8">
                       <p class="text-center">
-                        <strong>Sales: 1 Jan, 2014 - 30 Jul, 2014</strong>
+                        <strong>Item: <% report.from %> - <% report.to %></strong>
                       </p>
                       <div class="chart">
                         <!-- Sales Chart Canvas -->
@@ -94,20 +97,20 @@
                     </div><!-- /.col -->
                     <div class="col-md-4">
                       <p class="text-center">
-                        <strong>Goal Completion</strong>
+                        <strong>Summary</strong>
                       </p>
                       <div class="progress-group">
-                        <span class="progress-text">Add Products to Cart</span>
+                        <span class="progress-text">Transaction</span>
                         <span class="progress-number"><b>160</b>/200</span>
                         <div class="progress sm">
                           <div class="progress-bar progress-bar-aqua" style="width: 80%"></div>
                         </div>
                       </div><!-- /.progress-group -->
                       <div class="progress-group">
-                        <span class="progress-text">Complete Purchase</span>
+                        <span class="progress-text">Item Per Transaction</span>
                         <span class="progress-number"><b>310</b>/400</span>
                         <div class="progress sm">
-                          <div class="progress-bar progress-bar-red" style="width: 80%"></div>
+                          <div class="progress-bar" style="width: 80%"></div>
                         </div>
                       </div><!-- /.progress-group -->
                       <div class="progress-group">
@@ -174,7 +177,7 @@
                 <div class="col-md-6">
                   <div class="box box-default">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Inventory Status</h3>
+                      <h3 class="box-title">Item Status</h3>
                       <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -191,18 +194,18 @@
                     </div><!-- /.box-body -->
                     <div class="box-footer no-padding">
                       <ul class="nav nav-pills nav-stacked">
-                        <li ng-repeat="status in itemStatus"><a href="#"><% status.name %> <span class="pull-right text-green"><% status.inventories.length %></span></a></li>
+                        <li ng-repeat="status in itemStatus"><a href="#"> <i class="fa fa-fw fa-circle-o" style="color: <% itemStatusColors[$index] %>"></i> <% status.name %> <span class="pull-right" style="color: <% itemStatusColors[$index] %>"><% status.inventories.length %></span></a></li>
                       </ul>
                     </div><!-- /.footer -->
                   </div><!-- /.box -->
                   
                 </div><!-- /.col -->
 
-                <div class="col-xs-6">
+                <div class="col-sm-6 col-xs-12">
                   <!-- PRODUCT LIST -->
               <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Recently Added Inventory</h3>
+                  <h3 class="box-title">Recently Added to Inventory</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -232,18 +235,18 @@
               </div><!-- /.row -->
             </div><!-- /.col -->
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-xs-12">
               <!-- Info Boxes Style 2 -->
               <div class="info-box bg-yellow">
                 <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">Inventory</span>
-                  <span class="info-box-number">5,200</span>
+                  <span class="info-box-number"><% inventories.length %></span>
                   <div class="progress">
                     <div class="progress-bar" style="width: 50%"></div>
                   </div>
                   <span class="progress-description">
-                    50% Increase in 30 Days
+                    <!-- 50% Increase in 30 Days -->
                   </span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
@@ -256,7 +259,7 @@
                     <div class="progress-bar" style="width: 20%"></div>
                   </div>
                   <span class="progress-description">
-                    20% Increase in 30 Days
+                    <!-- 20% Increase in 30 Days -->
                   </span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
@@ -264,12 +267,12 @@
                 <span class="info-box-icon"><i class="ion ion-ios-cloud-download-outline"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">Items</span>
-                  <span class="info-box-number">114,381</span>
+                  <span class="info-box-number"><% items.length %></span>
                   <div class="progress">
                     <div class="progress-bar" style="width: 70%"></div>
                   </div>
                   <span class="progress-description">
-                    70% Increase in 30 Days
+                    <!-- 70% Increase in 30 Days -->
                   </span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
@@ -277,12 +280,12 @@
                 <span class="info-box-icon"><i class="ion-ios-chatbubble-outline"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">Sold</span>
-                  <span class="info-box-number">163,921</span>
+                  <span class="info-box-number"><% sold_items.inventories.length %></span>
                   <div class="progress">
                     <div class="progress-bar" style="width: 40%"></div>
                   </div>
                   <span class="progress-description">
-                    40% Increase in 30 Days
+                    <!-- 40% Increase in 30 Days -->
                   </span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
@@ -292,7 +295,7 @@
                 <div class="box-header with-border">
                   <h3 class="box-title">Top Donors</h3>
                   <div class="box-tools pull-right">
-                    <span class="label label-danger"><% users.length %> Top Donors</span>
+                    <span class="label label-danger"><% donors.length %> Top Donors</span>
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                   </div>
@@ -308,7 +311,7 @@
                   </ul><!-- /.users-list -->
                 </div><!-- /.box-body -->
                 <div class="box-footer text-center">
-                  <a href="users" target="_self" class="uppercase">View All Users</a>
+                  <a href="donors" target="_self" class="uppercase">View All Donors</a>
                 </div><!-- /.box-footer -->
               </div><!--/.box -->
             </div><!-- /.col -->
@@ -329,16 +332,16 @@
                     <table class="table no-margin">
                       <thead>
                         <tr>
-                          <th>Barcode</th>
                           <th>Item</th>
                           <th>Description</th>
+                          <th>Created</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr ng-repeat="item in items">
-                          <td><a href=""><% item.item_codes[0].code %></a></td>
                           <td><% item.name %></td>
                           <td><% item.description %></td>
+                          <td><% item.created %></td>
                         </tr>
                       </tbody>
                     </table>
@@ -358,13 +361,50 @@
 @stop
 
 @section('css')
+  <style>
+        td { cursor:pointer; }
+        .table>tbody+tbody {
+            border-top: none; 
+        }
 
+        @media screen {
+
+        }
+        @media print {            
+            .btn, a, a.btn {
+              display: none;
+            }
+        }
+
+    </style>
 @stop
 
 @section('js')
-   <script src="{{ asset('app/controllers/dashboards.js') }}"></script>
    <script src="{{ asset('js/Chart.min.js') }}"></script>
    <script src="{{ asset('js/dashboard2.js') }}"></script>
+   <script src="{{ asset('app/controllers/dashboards.js') }}"></script>
+   <script src="{{ asset('js/printThis.js') }}"></script>
+    <script type="text/javascript">
+        $('.fa-print').on('click', function() {
+          $('.print-page').printThis({
+              debug: true,               // show the iframe for debugging
+              importCSS: true,            // import page CSS
+              importStyle: true,         // import style tags
+              printContainer: true,       // grab outer container as well as the contents of the selector
+              loadCSS: ["{{ asset('vendor/adminlte/bootstrap/css/bootstrap.min.css') }}", "{{ asset('css/font-awesome.min.css') }}", "{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}"],  // path to additional css file - use an array [] for multiple
+              pageTitle: "Print Report",              // add title to print page
+              removeInline: false,        // remove all inline styles from print elements
+              printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
+              header: null,               // prefix to html
+              footer: null,               // postfix to html
+              base: false ,               // preserve the BASE tag, or accept a string for the URL
+              formValues: true,           // preserve input/form values
+              canvas: true,              // copy canvas elements (experimental)
+              doctypeString: "...",       // enter a different doctype for older markup
+              removeScripts: false        // remove script tags from print content
+          });
+        });
+    </script>
 @stop
 
         

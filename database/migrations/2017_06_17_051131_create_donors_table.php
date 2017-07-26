@@ -15,10 +15,10 @@ class CreateDonorsTable extends Migration
     {
         Schema::create('donors', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('given_name');
+            $table->string('given_name')->nullable();
             $table->string('middle_name')->nullable();
-            $table->string('last_name');
-            $table->string('email', 100)    ->unique();
+            $table->string('last_name')->nullable();
+            $table->string('email', 100)->nullable();
             $table->integer('donor_type_id')->unsigned()->index();
             $table->timestamps();
 
