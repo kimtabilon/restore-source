@@ -8,11 +8,11 @@
         <h1 class="pull-left">Report</h1>
         <div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 15px;">
           <span class="input-group-addon" id="basic-addon1">From</span>
-          <input ng-model="report.from" value="<% report.from %>" ng-change="show_report()" placeholder="04303" type="date" class="form-control" aria-describedby="basic-addon1">
+          <input ng-model="report.from" value="<% report.from %>" ng-change="show_report()" class="from" placeholder="04303" type="date" class="form-control" aria-describedby="basic-addon1">
         </div>
         <div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 5px;">
           <span class="input-group-addon" id="basic-addon1">To</span>
-          <input ng-model="report.to" value="<% report.to %>" ng-change="show_report()" type="date" class="form-control" aria-describedby="basic-addon1">
+          <input ng-model="report.to" value="<% report.to %>" ng-change="show_report()" class="to" type="date" class="form-control" aria-describedby="basic-addon1">
         </div>
         <div class="pull-left" style="width: 200px !important; margin: 0px 5px 0 15px;">
           <span class="fa fa-2x fa-print" style="cursor: pointer;"></span>
@@ -73,98 +73,7 @@
             </div><!-- /.col -->
           </div><!-- /.row -->
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="box">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Recap</h3>
-                  <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    
-                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                  </div>
-                </div><!-- /.box-header -->
-                <div class="box-body">
-                  <div class="row">
-                    <div class="col-md-8">
-                      <p class="text-center">
-                        <strong>Item: <% report.from %> - <% report.to %></strong>
-                      </p>
-                      <div class="chart">
-                        <!-- Sales Chart Canvas -->
-                        <canvas id="salesChart" style="height: 180px;"></canvas>
-                      </div><!-- /.chart-responsive -->
-                    </div><!-- /.col -->
-                    <div class="col-md-4">
-                      <p class="text-center">
-                        <strong>Summary</strong>
-                      </p>
-                      <div class="progress-group">
-                        <span class="progress-text">Transaction</span>
-                        <span class="progress-number"><b>160</b>/200</span>
-                        <div class="progress sm">
-                          <div class="progress-bar progress-bar-aqua" style="width: 80%"></div>
-                        </div>
-                      </div><!-- /.progress-group -->
-                      <div class="progress-group">
-                        <span class="progress-text">Item Per Transaction</span>
-                        <span class="progress-number"><b>310</b>/400</span>
-                        <div class="progress sm">
-                          <div class="progress-bar" style="width: 80%"></div>
-                        </div>
-                      </div><!-- /.progress-group -->
-                      <div class="progress-group">
-                        <span class="progress-text">Visit Premium Page</span>
-                        <span class="progress-number"><b>480</b>/800</span>
-                        <div class="progress sm">
-                          <div class="progress-bar progress-bar-green" style="width: 80%"></div>
-                        </div>
-                      </div><!-- /.progress-group -->
-                      <div class="progress-group">
-                        <span class="progress-text">Send Inquiries</span>
-                        <span class="progress-number"><b>250</b>/500</span>
-                        <div class="progress sm">
-                          <div class="progress-bar progress-bar-yellow" style="width: 80%"></div>
-                        </div>
-                      </div><!-- /.progress-group -->
-                    </div><!-- /.col -->
-                  </div><!-- /.row -->
-                </div><!-- ./box-body -->
-                <div class="box-footer">
-                  <div class="row">
-                    <div class="col-sm-3 col-xs-6">
-                      <div class="description-block border-right">
-                        <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                        <h5 class="description-header">$35,210.43</h5>
-                        <span class="description-text">TOTAL REVENUE</span>
-                      </div><!-- /.description-block -->
-                    </div><!-- /.col -->
-                    <div class="col-sm-3 col-xs-6">
-                      <div class="description-block border-right">
-                        <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                        <h5 class="description-header">$10,390.90</h5>
-                        <span class="description-text">TOTAL COST</span>
-                      </div><!-- /.description-block -->
-                    </div><!-- /.col -->
-                    <div class="col-sm-3 col-xs-6">
-                      <div class="description-block border-right">
-                        <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                        <h5 class="description-header">$24,813.53</h5>
-                        <span class="description-text">TOTAL PROFIT</span>
-                      </div><!-- /.description-block -->
-                    </div><!-- /.col -->
-                    <div class="col-sm-3 col-xs-6">
-                      <div class="description-block">
-                        <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                        <h5 class="description-header">1200</h5>
-                        <span class="description-text">GOAL COMPLETIONS</span>
-                      </div><!-- /.description-block -->
-                    </div>
-                  </div><!-- /.row -->
-                </div><!-- /.box-footer -->
-              </div><!-- /.box -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
+    
 
           <!-- Main row -->
           <div class="row">
@@ -392,7 +301,7 @@
               importStyle: true,         // import style tags
               printContainer: true,       // grab outer container as well as the contents of the selector
               loadCSS: ["{{ asset('vendor/adminlte/bootstrap/css/bootstrap.min.css') }}", "{{ asset('css/font-awesome.min.css') }}", "{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}"],  // path to additional css file - use an array [] for multiple
-              pageTitle: "Print Report",              // add title to print page
+              pageTitle: "Summary Report for "+ $('.from').val() +" to "+ $('.to').val(),              // add title to print page
               removeInline: false,        // remove all inline styles from print elements
               printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
               header: null,               // prefix to html
