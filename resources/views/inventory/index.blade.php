@@ -90,7 +90,7 @@
                             <td ng-click="show_discounts(inv)"><% sum(inv.item_discounts, 'percent') %></td>
                             <td><% new_value(inv) %></td>
                             <td class="text-center">
-                                <i ng-if="inv.item_images.length==0" ng-click="display_image(inv, 'ref')" class="fa fa-plus"></i>
+                                <i ng-if="inv.item_ref_images.length==0" ng-click="display_image(inv, 'ref')" class="fa fa-plus"></i>
                                 <img ng-if="inv.item_ref_images.length>0" ng-click="display_image(inv, 'ref')" src="images/items/<% inv.item_ref_images[inv.item_ref_images.length-1].id %>_thumb.jpg" class="img-responsive">
                             </td>
                             <td><% inv.item_ref_images[inv.item_ref_images.length-1].description %></td>

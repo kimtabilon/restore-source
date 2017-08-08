@@ -194,7 +194,7 @@
                             </form>
                             <input type="text" ng-model="search_donor" class="form-control" placeholder="Search..">
                             <div class="table-responsive">
-                            <table class="table">
+                              <table class="table">
                                 <tr>
                                     <th>Type</th>
                                     <th>ID</th>

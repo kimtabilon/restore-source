@@ -128,7 +128,9 @@ app
         }
         // console.log($scope.new_inv.code);
     }
+    
     $scope.donor = [];
+    
     $scope.choose_donor = function(id) {
         $scope.donor = $filter('filter')($scope.donors, {id:id}, true)[0];
     }
@@ -192,9 +194,11 @@ app
     }
 
     $scope.cashier_add_item = function(inventory) {
+        var copy_inventory = angular.copy(inventory);
+        
         $scope.added_items
             .push(
-                inventory 
+                copy_inventory 
             );
     }
 
@@ -329,8 +333,10 @@ app
     }
 
     $scope.new_customer_btn = function(new_customer) {
-        console.log(new_customer);
-        if(new_customer.donor_type != "") {
+
+        if(new_customer.donor_type != "" || confirm('Create new customer?')) {
+            new_customer.donor_type = new_customer.donor_type != '' ? new_customer.donor_type : 'Customer';
+
             $http({
                 method  : 'POST',
                 url     : API_URL + 'donors/create',
@@ -360,9 +366,6 @@ app
                     }                
                 }
             });
-        }   
-        else {
-            alert("Please select type of donor.");
         }     
     }
 
