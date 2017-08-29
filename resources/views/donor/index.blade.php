@@ -38,10 +38,11 @@
                       <th>Company</th>
                       <th>Job Title</th>
                       <th>Created</th>
+                      <th>Store Credit</th>
                   </thead>
                   <tbody>
                       <tr ng-repeat="donor in type.donors | orderBy:'name' | filter:search">
-                          <td ng-click="toggle(donor, 'show_list_of_items')"><% donor.inventories.length %></td>
+                          <td ng-click="toggle(donor, 'show_list_of_items')"><span class="badge"><% donor.inventories.length %></span></td>
                           <td><% '00' + donor.id %></td>
                           <td><% donor.profile.title %></td>
                           <td><% donor.given_name %></td>
@@ -54,6 +55,7 @@
                           <td><% donor.profile.company %></td>
                           <td><% donor.profile.job_title %></td>
                           <td><% donor.created %></td>
+                          <td><% donor.store_credits[0].amount %></td>
                           <td>
                               <i ng-click="toggle(donor, 'create_new_donor')" class="fa fa-edit"></i>
                               <i ng-click="remove_donor(donor)" class="fa fa-times"></i>
@@ -150,21 +152,25 @@
 
                         <div class="form-group">
                           <label class="col-sm-1 control-label">Company</label>
-                          <div class="col-sm-6">
+                          <div class="col-sm-3">
                             <input ng-model="new_customer.profile.company" type="text" class="form-control" placeholder="Company">
                           </div>
-                          <label class="col-sm-2 control-label">Job Title</label>
+                          <label class="col-sm-1 control-label">Position</label>
                           <div class="col-sm-3">
                             <input ng-model="new_customer.profile.job_title" type="text" class="form-control" placeholder="Job Title">
+                          </div>
+                          <label class="col-sm-1 control-label">StrCrdt</label>
+                          <div class="col-sm-3">
+                            <input ng-model="new_customer.store_credits[0].amount" type="text" class="form-control" placeholder="Store Credit">
                           </div>
                         </div>  
 
                         <div class="form-group">
                           <label class="col-sm-1 control-label">Address</label>
-                          <div class="col-sm-6">
+                          <div class="col-sm-7">
                             <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address">
                           </div>
-                          <label class="col-sm-2 control-label">Donor Type</label>
+                          <label class="col-sm-1 control-label">Donor</label>
                           <div class="col-sm-3">
                             <input ng-model="new_customer.donor_type" list="donor_types" type="text" class="form-control" placeholder="Donor Type">
                           </div>

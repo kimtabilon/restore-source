@@ -25,8 +25,9 @@
               <div ng-repeat="type in types" class="tab-pane <% type.name=='Item Donation' ? 'active' : '' %>" id="<% type.name.replace(' ', '_') %>">
                 <table class="table">
                   <thead>
-                      <th>DA</th>
+                      <th>DA No.</th>
                       <th>Donor</th>
+                      <th>Company</th>
                       <th>No. of Items</th>
                       <th>Special Discount</th>
                       <th>Remarks</th>
@@ -34,8 +35,9 @@
                   </thead>
                   <tbody>
                       <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
-                          <td ng-click="toggle(transaction)"><% transaction.da_number %></td>
+                          <td ng-click="toggle(transaction)"><span class="badge"><% transaction.da_number %></span></td>
                           <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %></td>
+                          <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].profile.company %></td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
@@ -57,7 +59,7 @@
     <!-- Modal (Pop up when detail button clicked) -->
     <div class="modal fade" id="inventoryModal" tabindex="-1" role="dialog" aria-labelledby="inventoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content" id="PrintListOfItem">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
@@ -69,8 +71,9 @@
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Unit</th>
-                            <th>Market Price</th>
-                            <th>Selling Price</th>
+                            <th>Market Value</th>
+                            <th>ReStore Value</th>
+                            <th>Discount</th>
                             <th>Remarks</th>
                             <th>Status</th>
                         </thead>
@@ -82,13 +85,17 @@
                                 <td><% inventory.unit %></td>
 
                                 <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
-                                <td><% inventory.item_selling_prices[ inventory.item_selling_prices.length - 1].market_price %></td>
+                                <td><% new_value(inventory) %></td>
+                                <td><% sum(inventory.item_discounts, 'percent') %></td>
                                 
                                 <td><% inventory.remarks %></td>
                                 <td><% inventory.item_status.name %></td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-default btn-flat" id="PrintListOfItemBtn"><i class="fa fa-print"></i> Print</button>
                 </div>
             </div>
         </div>
@@ -163,21 +170,25 @@
 
                                 <div class="form-group">
                                   <label class="col-sm-1 control-label">Company</label>
-                                  <div class="col-sm-6">
+                                  <div class="col-sm-3">
                                     <input ng-model="new_customer.profile.company" type="text" class="form-control" placeholder="Company">
                                   </div>
-                                  <label class="col-sm-2 control-label">Job Title</label>
+                                  <label class="col-sm-1 control-label">Position</label>
                                   <div class="col-sm-3">
                                     <input ng-model="new_customer.profile.job_title" type="text" class="form-control" placeholder="Job Title">
+                                  </div>
+                                  <label class="col-sm-1 control-label">StrCrdt</label>
+                                  <div class="col-sm-3">
+                                    <input ng-model="new_customer.store_credits[0].amount" type="text" class="form-control" placeholder="Store Credit">
                                   </div>
                                 </div>  
 
                                 <div class="form-group">
                                   <label class="col-sm-1 control-label">Address</label>
-                                  <div class="col-sm-6">
+                                  <div class="col-sm-7">
                                     <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address">
                                   </div>
-                                  <label class="col-sm-2 control-label">Donor Type</label>
+                                  <label class="col-sm-1 control-label">Donor Type</label>
                                   <div class="col-sm-3">
                                     <input ng-model="new_customer.donor_type" list="donor_types" type="text" class="form-control" placeholder="Donor Type">
                                   </div>
@@ -203,11 +214,12 @@
                                     <th>Company</th>
                                     <th>Email</th>
                                     <th>Phone#</th>
+                                    <th>Store Credit</th>
                                     <!-- <th>Tel#</th>
                                     <th>Address</th>
                                     <th>Company</th>
                                     <th>Job Title</th> -->
-                                    <th></th>
+                                    <!-- <th></th> -->
                                 </tr>
                                 <tr ng-repeat="donor in donors | orderBy:'name' | filter:search_donor">
                                     <td><% donor.donor_type.name %></td>
@@ -217,11 +229,12 @@
                                     <td><% donor.profile.company %></td>
                                     <td><% donor.email %></td>
                                     <td><% donor.profile.phone %></td>
+                                    <td><% donor.store_credits[0].amount %></td>
                                     <!-- <td><% donor.profile.tel %></td>
                                     <td><% donor.profile.address %></td>
                                     <td><% donor.profile.company %></td>
                                     <td><% donor.profile.job_title %></td> -->
-                                    <td><i ng-click="remove_donor(donor)" class="fa fa-times"></i></td>
+                                    <!-- <td><i ng-click="remove_donor(donor)" class="fa fa-times"></i></td> -->
                                 </tr>
                               </table>
                             </div>
@@ -232,9 +245,9 @@
                               <div class="box-body">
 
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Category</label>
+                                  <label class="col-sm-2 control-label">Department</label>
                                   <div class="col-sm-3">
-                                    <input ng-model="new_item.category_name" list="categories" type="text" class="form-control" placeholder="Category">
+                                    <input ng-model="new_item.category_name" list="categories" type="text" class="form-control" placeholder="Department">
                                     <datalist id="categories">
                                         <option ng-repeat="category in categories" value="<% category.name %>"><% category.description %></option>
                                     </datalist>
@@ -285,6 +298,7 @@
                           <div class="tab-pane active" id="tab_3-2">
 
                             <form class="form-horizontal">
+                              <div id="PrintTransaction">
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">DA No.</label>
                                   <div class="col-sm-2">
@@ -305,7 +319,7 @@
                                     <select 
                                         class="form-control select2" 
                                         ng-model="selected_donor"
-                                        ng-options="donor.id as (donor.donor_type.name=='Company' ? donor.profile.company : donor.name) + ' - ' + donor.donor_type.name for donor in donors | orderBy:'name'"
+                                        ng-options="donor.id as '('+donor.store_credits[0].amount+') '+ (donor.donor_type.name=='Company' ? donor.profile.company : donor.name) + ' : ' + donor.donor_type.name for donor in donors | orderBy:'name'"
                                         ng-change="choose_donor(selected_donor)"
                                         style="width: 100%;">
                                     </select>
@@ -327,11 +341,11 @@
                                         <th class="text-center">Item Name</th>
                                         <th class="text-center">Qty</th>
                                         <th class="text-center">Unit</th>
-                                        <th class="text-center">Market Price</th>
-                                        <th class="text-center">Selling Price</th>
+                                        <th class="text-center">Market Value</th>
+                                        <th class="text-center">ReStore Value</th>
+                                        <th class="text-center">Discount</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Remarks</th>
-                                        <th class="text-center">Inventory</th>
                                         <th></th>
                                     </tr>
                                     <tr ng-repeat="inventory in added_items track by $index">
@@ -346,15 +360,17 @@
                                         </td>
                                         <td><% inventory.unit %></td>
                                         <td><% inventory.item_prices[inventory.item_prices.length-1].market_price %></td>
-                                        <td><% inventory.item_selling_prices[inventory.item_selling_prices.length-1].market_price %></td>
+                                        <td><% new_value(inventory) %></td>
+                                        <td><% sum(inventory.item_discounts, 'percent') %></td>
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
-                                        <td><% inventory.id>0 ? 'exist' : 'new' %></td>
                                         <td><i class="fa fa-times" ng-click="remove_item_from_transaction($index)"></i></td>
                                     </tr>
                                 </table>
+                                <h2 class="pull-left" style="color: red; margin-top: -10px;">Total: <span><% total_transaction(added_items) %></span></h2>
+                                </div>
 
-                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
+                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" id="PrintTransactionBtn" type="button" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
                                 <button type="submit" class="btn btn-flat btn-default pull-right" data-dismiss="modal" style="margin-right: 5px;">Cancel</button>
                                 <div class="clearfix"></div>
                                 
@@ -400,13 +416,13 @@
 
                                   </div>
                                   <div class="form-group">
-                                    <label class="col-sm-2 control-label">Market Price</label>
+                                    <label class="col-sm-2 control-label">Market Value</label>
                                     <div class="col-sm-4">
-                                      <input type="text" ng-model="new_inv.market_price" class="form-control input-sm" placeholder="Market Price">
+                                      <input type="text" ng-model="new_inv.market_price" class="form-control input-sm" placeholder="Market value">
                                     </div>
-                                    <label class="col-sm-2 control-label">Selling Price</label>
+                                    <label class="col-sm-2 control-label">New Value</label>
                                     <div class="col-sm-4">
-                                      <input type="text" ng-model="new_inv.selling_price" class="form-control input-sm" placeholder="Selling Price">
+                                      <input type="text" ng-model="new_inv.selling_price" class="form-control input-sm" placeholder="New Value">
                                     </div>
                                   </div>
                                   <div class="form-group">
@@ -477,7 +493,19 @@
         //Initialize Select2 Elements
         $(".select2").select2();
       });  
-   </script>   
+   </script>  
+
+   <script src="{{ asset('js/printThis.js') }}"></script>
+    <script type="text/javascript">
+        document.getElementById("PrintListOfItemBtn").onclick = function () {
+            // printElement(document.getElementById("printThis"));
+            $('#PrintListOfItem').printThis();
+        };
+        document.getElementById("PrintTransactionBtn").onclick = function () {
+            // printElement(document.getElementById("printThis"));
+            $('#PrintTransaction').printThis();
+        };
+    </script> 
 @stop
 
         

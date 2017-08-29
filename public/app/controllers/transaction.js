@@ -44,8 +44,11 @@ app
                     tel     : '',
                     company : '',
                     job_title: '',
-                }                
-            }
+                },
+                store_credits : [{ amount: '' }]                
+        }
+
+        // console.log($scope.inventories);
     });
 
     $scope.code = function(codes, type) {
@@ -248,6 +251,9 @@ app
                 var index = $scope.types.indexOf(match);
                 $scope.types[index].transactions.push(new_trans);
                 $scope.added_items = [];
+                $scope.donor = {};
+                $scope.payment_type = {};
+                $scope.remarks = '';
             });
 
             $('#transactionModal').modal('hide');
@@ -292,7 +298,7 @@ app
                 });
             }
             else {
-                console.log(category);
+                // console.log(category);
                 $scope.items.push({
                     id          : item.id,
                     category_id : item.category_id,
@@ -345,7 +351,7 @@ app
                         }
             })
             .then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 $scope.donors.push(
                     response.data
                 );
@@ -363,7 +369,8 @@ app
                         tel: '',
                         company: '',
                         job_title: '',
-                    }                
+                    },
+                    store_credits : [{ amount: '' }]                
                 }
             });
         }     
@@ -388,7 +395,30 @@ app
         
     }
 
+    $scope.sum = function(data, field) {
+        var total = 0;
+        angular.forEach(data, function(data) {
+            total += parseInt(data[field]);
+        });
 
+        return parseInt(total);
+    }
+
+    $scope.new_value = function(inventory) {
+        var discount = $scope.sum(inventory.item_discounts, 'percent');
+        var prices   = inventory.item_selling_prices;
+        var price    = parseFloat(prices[prices.length-1].market_price);
+        return  price - (price*discount/100);
+    }
+
+    $scope.total_transaction = function (inventories) {
+        var special_discount = $scope.special_discount;
+        var total = 0;
+        angular.forEach(inventories, function(i) {
+            total += $scope.new_value(i) * i.quantity;
+        });
+        return total - special_discount;
+    }
                 
 });
 

@@ -124,7 +124,7 @@
                   <ul class="products-list product-list-in-box">
                     <li class="item" ng-repeat="inventory in inventories">
                       <div class="product-img">
-                        <img src="{{ asset('images/items/<% inventory.item_images[inventory.item_images.length - 1].id %>_thumb.jpg') }}" alt="Product Image">
+                        <img src="{{ asset('images/items/<% inventory.item_images[inventory.item_images.length - 1].id %>_thumb.jpg') }}" alt="Item">
                       </div>
                       <div class="product-info">
                         <a href="javascript::;" class="product-title"><% inventory.item.name | limitTo:20 %> (<% inventory.quantity %>) <span class="label label-info pull-right"><% inventory.item_prices[0].market_price %></span></a>

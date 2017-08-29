@@ -34,7 +34,7 @@ class TransactionController extends Controller
 	{
 		switch (Auth::user()->role->name) {
 			case 'Cashier':
-				$paymentTypes = PaymentType::whereIn('name', ['Cash', 'Credit', 'Debit'])->pluck('name');
+				$paymentTypes = PaymentType::whereIn('name', ['Cash', 'Credit', 'Debit', 'Internal Sale'])->pluck('name');
 				break;
 			
 			default:
@@ -46,10 +46,12 @@ class TransactionController extends Controller
 								'transactions.inventories', 
 								'transactions.inventories.item',
 								'transactions.inventories.donors',
+								'transactions.inventories.donors.profile',
 								'transactions.inventories.itemPrices',
 								'transactions.inventories.itemSellingPrices',
 								'transactions.inventories.itemStatus',
-								'transactions.inventories.itemCodes'
+								'transactions.inventories.itemCodes',
+								'transactions.inventories.itemDiscounts'
 							])
 							->whereIn('name', $paymentTypes)
 							->get();	
@@ -63,12 +65,12 @@ class TransactionController extends Controller
 		return [
 			'categories'	=> Category::orderBy('name')->get(),
 			'code_types'	=> ItemCodeType::orderBy('name')->get(),
-			'donors' 		=> Donor::with(['profile', 'donorType', 'inventories'])->orderBy('given_name')->get(),
+			'donors' 		=> Donor::with(['profile', 'donorType', 'inventories', 'storeCredits'])->orderBy('given_name')->get(),
 			'donor_types'	=> DonorType::orderBy('name')->get(),
 			'item_status' 	=> $item_status,
 			'items' 		=> Item::with(['category'])->orderBy('name')->get(),
 			'inventories'	=> Inventory::where('item_status_id', $good_item)
-										->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices'])
+										->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices', 'itemDiscounts'])
 										->get(),
 		];
 	}	
@@ -198,7 +200,7 @@ class TransactionController extends Controller
 			}	 
 		}
 		else {
-			$new_status = $payment['name']=='Internal Transfer'|| $payment['name']=='Warehouse Transfer' ? $for_transfer : $sold;
+			$new_status = $payment['name']=='Internal Sale'|| $payment['name']=='Warehouse Transfer' ? $for_transfer : $sold;
 
 			foreach ($inventories as $inventory) {
 				$id = $inventory['id'];

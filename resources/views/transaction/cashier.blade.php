@@ -34,7 +34,7 @@
                   </thead>
                   <tbody>
                       <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
-                          <td ng-click="toggle(transaction)"><% transaction.da_number %></td>
+                          <td ng-click="toggle(transaction)"><span class="badge"><% transaction.da_number %></span></td>
                           <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %></td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
@@ -55,9 +55,10 @@
     </section>
     <!-- /.content -->
     <!-- Modal (Pop up when detail button clicked) -->
+    <!-- Modal (Pop up when detail button clicked) -->
     <div class="modal fade" id="inventoryModal" tabindex="-1" role="dialog" aria-labelledby="inventoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content" id="PrintListOfItem">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
@@ -65,24 +66,35 @@
                 <div class="modal-body">
                     <table class="table">
                         <thead>
+                            <th>Code</th>
                             <th>Item</th>
-                            <th>Market Price</th>
                             <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Market Value</th>
+                            <th>ReStore Value</th>
+                            <th>Discount</th>
                             <th>Remarks</th>
                             <th>Status</th>
-                            <th>Customer</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="inventory in modal.inventories | orderBy:'item_status.name' ">
+                                <td><% code(inventory.item_codes, 'Barcode').code %></td>
                                 <td><% inventory.item.name %></td>
-                                <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
                                 <td><% inventory.quantity %></td>
+                                <td><% inventory.unit %></td>
+
+                                <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
+                                <td><% new_value(inventory) %></td>
+                                <td><% sum(inventory.item_discounts, 'percent') %></td>
+                                
                                 <td><% inventory.remarks %></td>
                                 <td><% inventory.item_status.name %></td>
-                                <td><% inventory.donors[0].name %></td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-default btn-flat" id="PrintListOfItemBtn"><i class="fa fa-print"></i> Print</button>
                 </div>
             </div>
         </div>
@@ -215,6 +227,7 @@
                           <div class="tab-pane active" id="tab_3-2">
 
                             <form class="form-horizontal">
+                                <div id="PrintTransaction">
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">DA No.</label>
                                   <div class="col-sm-2">
@@ -257,11 +270,11 @@
                                         <th class="text-center">Item Name</th>
                                         <th class="text-center">Qty</th>
                                         <th class="text-center">Unit</th>
-                                        <th class="text-center">Market Price</th>
-                                        <th class="text-center">Selling Price</th>
+                                        <th class="text-center">Market Value</th>
+                                        <th class="text-center">ReStore Value</th>
+                                        <th class="text-center">Discount</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Remarks</th>
-                                        <th class="text-center">Inventory</th>
                                         <th></th>
                                     </tr>
                                     <tr ng-repeat="inventory in added_items track by $index">
@@ -276,15 +289,17 @@
                                         </td>
                                         <td><% inventory.unit %></td>
                                         <td><% inventory.item_prices[inventory.item_prices.length-1].market_price %></td>
-                                        <td><% inventory.item_selling_prices[inventory.item_selling_prices.length-1].market_price %></td>
+                                        <td><% new_value(inventory) %></td>
+                                        <td><% sum(inventory.item_discounts, 'percent') %></td>
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
-                                        <td><% inventory.id>0 ? 'exist' : 'new' %></td>
                                         <td><i class="fa fa-times" ng-click="remove_item_from_transaction($index)"></i></td>
                                     </tr>
                                 </table>
+                                <h2 class="pull-left" style="color: red; margin-top: -10px;">Total: <span><% total_transaction(added_items) %></span></h2>
+                                </div>
 
-                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
+                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" id="PrintTransactionBtn" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
                                 <button type="submit" class="btn btn-flat btn-default pull-right" data-dismiss="modal" style="margin-right: 5px;">Cancel</button>
                                 <div class="clearfix"></div>
                                 <hr />
@@ -297,8 +312,11 @@
                                         <div class="thumbnail">
                                           <img src="images/items/<% inventory.item_images[inventory.item_images.length - 1].id %>_thumb.jpg" alt="...">
                                           <div class="caption">
-                                            Name: <br/><strong><% inventory.item.name %></strong><br/>
-                                            Left: <strong><% inventory.quantity %></strong><br/>
+                                            <strong><% inventory.item.name %></strong><br/>
+                                            <strong><% inventory.quantity + ' ' + inventory.unit %>/s</strong><br/>
+                                            <strong><% inventory.item_codes[inventory.item_codes.length -1 ].code %></strong><br/>
+                                            <em>Market Value : <% inventory.item_prices[inventory.item_prices.length - 1].market_price %></em><br/>
+                                            <em>ReStore Value : <% new_value(inventory) %></em><br/>
                                             <em><% inventory.remarks %></em><br/>
                                             <p><button ng-click="cashier_add_item(inventory)" class="btn btn-primary btn-xs">Add Item</button></p>
                                           </div>
@@ -346,7 +364,19 @@
         //Initialize Select2 Elements
         $(".select2").select2();
       });  
-   </script>   
+   </script> 
+
+   <script src="{{ asset('js/printThis.js') }}"></script>
+    <script type="text/javascript">
+        document.getElementById("PrintListOfItemBtn").onclick = function () {
+            // printElement(document.getElementById("printThis"));
+            $('#PrintListOfItem').printThis();
+        };
+        document.getElementById("PrintTransactionBtn").onclick = function () {
+            // printElement(document.getElementById("printThis"));
+            $('#PrintTransaction').printThis();
+        };
+    </script>   
 @stop
 
         

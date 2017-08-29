@@ -24,14 +24,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        switch(Auth::user()->role->name) {
+        return redirect('/dashboard');
+        /*switch(Auth::user()->role->name) {
             case 'Cashier':
                 return redirect('/cashier');
                 break;
             default:
                 return redirect('/dashboard');
                 break;    
-        }
+        }*/
         // if(Auth::user()->role->name == 'Cashier') {
         //     redirect('/cashier');
         // }

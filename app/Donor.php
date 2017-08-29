@@ -11,10 +11,8 @@ class Donor extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'given_name', 'middle_name', 'last_name', 'email',
-    ];
-    protected $appends = ['name', 'created', 'modified'];
+    protected $fillable = ['given_name', 'middle_name', 'last_name', 'email'];
+    protected $appends  = ['name', 'created', 'modified'];
 
     public function profile() {     return $this->hasOne('App\Profile'); } 
     public function inventories() { return $this->belongsToMany('App\Inventory')->withTimestamps(); } 

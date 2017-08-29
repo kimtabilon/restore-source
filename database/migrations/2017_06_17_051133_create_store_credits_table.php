@@ -15,7 +15,7 @@ class CreateStoreCreditsTable extends Migration
     {
         Schema::create('store_credits', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('amount', 10);
+            $table->string('amount', 10)->nullable();
             $table->integer('donor_id')->unsigned()->index();
             $table->timestamps();
 

@@ -204,57 +204,64 @@ class InventoryController extends Controller
 	public function transferOrCreate(Request $request)
 	{
 		$data = $request->all();
+		$left = $data['inventory']['quantity'] - $data['quantity'];
+		
+		if($left > 0) {
+			$inv           = Inventory::find($data['inventory']['id']);
+			$inv->quantity = $left;
+			$inv->save();
 
-		switch ($data['type']) {
+			$discounts 		= $inv->itemDiscounts;
+			$codes 			= $inv->itemCodes;
+			$images 		= $inv->itemImages;
+			$refImages 		= $inv->itemRefImages;
+			$prices 		= $inv->itemPrices;
+			$sellingPrices 	= $inv->itemSellingPrices;
+			$donors 		= $inv->donors;
+			$transactions 	= $inv->transactions;
+
+			$data['inventory']['quantity'] 	= (int)$data['quantity']; 
+			$data['inventory']['unit']  	= $data['unit']; 
+			$data['inventory']['remarks']  	= $data['remarks']; 
+			$inventory 					= new Inventory($data['inventory']);
+			$inventory->user()			->associate(Auth::user());
+			$inventory->item()			->associate($data['inventory']['item_id']);
+			$inventory->itemStatus()	->associate((int)$data['status']);
+			$inventory->save();
+
+			if($discounts 	->count()) { foreach($discounts  	as $v) { $inventory->itemDiscounts()	->attach($v); } }
+			if($transactions->count()) { foreach($transactions  as $v) { $inventory->transactions()		->attach($v); } }
+			if($donors 		->count()) { foreach($donors        as $v) { $inventory->donors()			->attach($v); } }
+			
+			if($codes 			->count()){ $inventory->itemCodes()			->attach($codes 		->last()); }
+			if($images 			->count()){ $inventory->itemImages()		->attach($images 		->last()); }
+			if($refImages 		->count()){ $inventory->itemRefImages()		->attach($refImages 	->last()); }
+			if($prices 			->count()){ $inventory->itemPrices()		->attach($prices 		->last()); }
+			if($sellingPrices 	->count()){ $inventory->itemSellingPrices()	->attach($sellingPrices ->last()); }
+		} 
+		else {
+			$left=0;
+			$inventory           		= Inventory::find($data['inventory']['id']);
+			$inventory->item_status_id 	= $data['status'];
+			$inventory->remarks 		= $data['remarks'];
+			$inventory->unit 			= $data['unit'];
+			$inventory->save();
+		}
+		return [ 'quantity' => $left, 'remarks' => $inventory->remarks ];
+
+		/*switch ($data['type']) {
 			case 'transfer_or_create':
-				$left = $data['inventory']['quantity'] - $data['quantity'];
-				if($left > 0) {
-					$inv           = Inventory::find($data['inventory']['id']);
-					$inv->quantity = $left;
-					$inv->save();
-
-					$discounts 		= $inv->itemDiscounts;
-					$codes 			= $inv->itemCodes;
-					$images 		= $inv->itemImages;
-					$refImages 		= $inv->itemRefImages;
-					$prices 		= $inv->itemPrices;
-					$sellingPrices 	= $inv->itemSellingPrices;
-					$donors 		= $inv->donors;
-					$transactions 	= $inv->transactions;
-
-					$data['inventory']['quantity'] 	= (int)$data['quantity']; 
-					$data['inventory']['unit']  	= $data['unit']; 
-					$data['inventory']['remarks']  	= $data['remarks']; 
-					$inventory 					= new Inventory($data['inventory']);
-					$inventory->user()			->associate(Auth::user());
-					$inventory->item()			->associate($data['inventory']['item_id']);
-					$inventory->itemStatus()	->associate((int)$data['status']);
-					$inventory->save();
-
-					if($discounts 	->count()) { foreach($discounts  	as $v) { $inventory->itemDiscounts()	->attach($v); } }
-					if($transactions->count()) { foreach($transactions  as $v) { $inventory->transactions()		->attach($v); } }
-					if($donors 		->count()) { foreach($donors        as $v) { $inventory->donors()			->attach($v); } }
-					
-					if($codes 			->count()){ $inventory->itemCodes()			->attach($codes 		->last()); }
-					if($images 			->count()){ $inventory->itemImages()		->attach($images 		->last()); }
-					if($refImages 		->count()){ $inventory->itemRefImages()		->attach($refImages 	->last()); }
-					if($prices 			->count()){ $inventory->itemPrices()		->attach($prices 		->last()); }
-					if($sellingPrices 	->count()){ $inventory->itemSellingPrices()	->attach($sellingPrices ->last()); }
-				} 
-				else {
-					$left=0;
-					$inventory           		= Inventory::find($data['inventory']['id']);
-					$inventory->item_status_id 	= $data['status'];
-					$inventory->remarks 		= $data['remarks'];
-					$inventory->unit 			= $data['unit'];
-					$inventory->save();
-				}
-				return [ 'quantity' => $left, 'remarks' => $inventory->remarks ];
+				
 				break;
 
 			default:
 				break;
-		}        
+		}      */  
+	}
+
+	protected function storeCredit()
+	{
+		
 	}
 
 	public function statusAndCodeTypes() 

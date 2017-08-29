@@ -129,7 +129,6 @@ return [
             'text' => 'Dashboard',
             'url'  => 'dashboard',
             'icon' => 'dashboard',
-            'can'  => 'manager-access',
         ],
         [
             'text' => 'Inventory',
@@ -265,7 +264,7 @@ return [
             'text' => 'Donor',
             'url'  => 'donors',
             'icon' => 'users',
-            'can'  => 'manager-receiving-coordinator-access',
+            'can'  => 'manager-access',
         ],
 
         'ACCOUNTS',

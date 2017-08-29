@@ -31,7 +31,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="discount in discounts | orderBy:'type' | filter:search">
-                            <td ng-click="toggle(discount, 'edit')"><% discount.percent %></td>
+                            <td ng-click="toggle(discount, 'edit')"><span class="badge"><% discount.percent %></span></td>
                             <td><% discount.type %></td>
                             <td><% discount.remarks %></td>
                             <td><% discount.inventories.length %></td>

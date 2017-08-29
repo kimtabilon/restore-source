@@ -73,15 +73,6 @@ app
 	    $scope.countSelectedItems = $scope.SelectedItems.length;
 	}
 
-	$scope.sum = function(data, field) {
-		var total = 0;
-		angular.forEach(data, function(data) {
-			total += parseInt(data[field]);
-		});
-
-		return parseInt(total);
-	}
-
 	$scope.code = function(data, type) {
 		var codeType = $filter('filter')($scope.itemCodeTypes, { name: type }, true);
 		var match 	 = $filter('filter')(data, { item_code_type_id: codeType[0].id }, true);
@@ -111,7 +102,7 @@ app
 	            		unit 		: data.unit, 
 	            		inventory 	: data
 	            	},
-	            	button	: 'Transfer'
+	            	button	: 'OK'
 	            };
 
 	            $('#inventoryModal').modal('show');
@@ -447,11 +438,39 @@ app
         });
     }
 
+    $scope.sum = function(data, field) {
+		var total = 0;
+		angular.forEach(data, function(data) {
+			total += parseInt(data[field]);
+		});
+
+		return parseInt(total);
+	}
+
     $scope.new_value = function(inventory) {
     	var discount = $scope.sum(inventory.item_discounts, 'percent');
     	var prices   = inventory.item_selling_prices;
     	var price    = parseFloat(prices[prices.length-1].market_price);
     	return  price - (price*discount/100);
+    }
+
+    $scope.printable_barcode = function() {
+    	$scope.modal = {
+    		inventories : angular.copy($scope.inventories),
+        }
+
+        $('#barcodeModal').modal('show');
+    }
+
+    $scope.hide_parent = function(inventory) {
+    	var index = $scope.modal.inventories.indexOf(inventory);
+
+    	$scope.modal.inventories.splice(index, 1);
+    }
+
+    $scope.clone_parent = function(inventory) {
+    	var i = angular.copy(inventory);
+    	$scope.modal.inventories.push(i);
     }
 });
 

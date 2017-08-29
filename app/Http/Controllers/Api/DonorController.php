@@ -6,7 +6,9 @@ use Auth;
 use \App\Donor;
 use \App\DonorType;
 use \App\Profile;
+use \App\StoreCredit;
 use \App\ItemCodeType;
+use \App\ItemStatus;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -29,7 +31,9 @@ class DonorController extends Controller
 								'donors', 
 								'donors.profile', 
 								'donors.donorType', 
+								'donors.storeCredits', 
 								'donors.inventories', 
+								'donors.inventories.transactions', 
 								'donors.inventories.item',
 								'donors.inventories.itemPrices',
 								'donors.inventories.itemSellingPrices',
@@ -38,9 +42,10 @@ class DonorController extends Controller
 							])
 							->orderBy('name')
 							->get();
-		$code_types = ItemCodeType::all();	
+		$code_types 	= ItemCodeType::all();	
+		$item_status 	= ItemStatus::all();	
 
-		return [ 'donor_types'=>$donor_types, 'code_types'=>$code_types ];				
+		return [ 'donor_types'=>$donor_types, 'code_types'=>$code_types, 'item_status'=>$item_status ];				
 	}
 
 	public function create(Request $request) 
@@ -55,8 +60,8 @@ class DonorController extends Controller
 			$match_donor->last_name 	= $donor['last_name'];
 			$match_donor->email 		= $donor['email'];
 			$match_donor->donorType()->associate($donor_type->id);
-
 			$match_donor->save();
+
 			$new_donor = $match_donor;
 
 			$match_profile = Profile::find($donor['profile']['id']);
@@ -67,8 +72,11 @@ class DonorController extends Controller
 			$match_profile->company 	= $donor['profile']['company'];
 			$match_profile->job_title 	= $donor['profile']['job_title'];
 			$match_profile->catch_phrase = '';
-
 			$match_profile->save();
+
+			$match_credit = StoreCredit::where('donor_id', $donor['id'])->first();
+			$match_credit->amount = $donor['store_credits'][0]['amount'];
+			$match_credit->save();
 		}
 		else {
 			$new_donor = new Donor();
@@ -89,9 +97,14 @@ class DonorController extends Controller
 			$new_profile->catch_phrase = '';
 			$new_profile->donor()->associate($new_donor);
 			$new_profile->save();
+
+			$new_credit 		= new StoreCredit();
+			$new_credit->amount = $donor['store_credits'][0]['amount'];
+			$new_credit->donor()->associate($new_donor);
+			$new_credit->save();
 		}
 
-		return Donor::where('id', $new_donor->id)->with(['profile', 'donorType', 'inventories'])->get()->first();
+		return Donor::where('id', $new_donor->id)->with(['profile', 'donorType', 'inventories', 'storeCredits'])->get()->first();
 	}
 
 	public function destroy(Request $request) 

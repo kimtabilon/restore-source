@@ -17,15 +17,15 @@ Route::get('/', function () {
 
 Route::get('dashboard', 'DashboardController@index');
 
-Route::get('items', 'ItemController@index');
+Route::get('items', 'ItemController@index')						->middleware('role:Manager,Receiving Coordinator');
 Route::get('items/images', 'ItemImageController@index');
 Route::get('items/discounts', 'ItemDiscountController@index');
-Route::get('inventories', 'InventoryController@index');
+Route::get('inventories', 'InventoryController@index')			->middleware('role:Manager,Receiving Coordinator');
 Route::get('transactions', 'TransactionController@index');
 Route::get('cashier', 'TransactionController@cashier');
-Route::get('users', 'UserController@index');
-Route::get('profile', 'UserController@profile');
-Route::get('donors', 'DonorController@index');
+Route::get('users', 'UserController@index')						->middleware('role:Manager');
+Route::get('profile', 'UserController@profile')					->middleware('role:Manager');
+Route::get('donors', 'DonorController@index')					->middleware('role:Manager');
 
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');

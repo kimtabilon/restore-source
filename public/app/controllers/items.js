@@ -66,7 +66,7 @@ app
                 var item_index      = $scope.categories[category_index].items.indexOf(item);
 
             	$scope.modal = {
-                	title: "Modify Category",
+                	title: "Modify Department",
                 	field: { name: 'Name', description: 'Description' },
                 	data: { 
                 		type 		: type, 
@@ -83,7 +83,7 @@ app
             case 'new_item':
             	$scope.modal = {
                 	title: "Create New Item",
-                	field: { category: 'Category', name: 'Name', description: 'Description' },
+                	field: { category: 'Department', name: 'Name', description: 'Description' },
                 	array : { category: $scope.categories, },
                 	data: { 
                 		type 		: type,  

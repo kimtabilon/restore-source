@@ -4,8 +4,11 @@ app
     $http
     .get(API_URL + 'donors')
     .then(function (response) {
-        $scope.types  = response.data.donor_types;
-        $scope.itemCodeTypes = response.data.code_types;
+        $scope.types            = response.data.donor_types;
+        $scope.itemCodeTypes    = response.data.code_types;
+        $scope.item_status      = response.data.item_status;
+
+        // console.log($scope.types);
     });
 
     $scope.code = function(codes, type) {
@@ -13,6 +16,38 @@ app
 		var match 		= $filter('filter')(codes, { item_code_type_id: codeType[0].id });
 		return match.reverse()[0];
 	}
+
+    $scope.sum = function(data, field) {
+        var total = 0;
+        angular.forEach(data, function(data) {
+            total += parseInt(data[field]);
+        });
+
+        return parseInt(total);
+    }
+
+    $scope.new_value = function(inventory) {
+        var discount = $scope.sum(inventory.item_discounts, 'percent');
+        var prices   = inventory.item_selling_prices;
+        var price    = parseFloat(prices[prices.length-1].market_price);
+        return  price - (price*discount/100);
+    }
+
+    $scope.total_returned = function(inventories) {
+        var returned_id = $filter('filter')($scope.item_status, { name: 'Returned'}, true)[0].id;
+        var returned    = $filter('filter')(inventories, { item_status_id: returned_id  }, true);
+
+        var total       = 0;
+
+        angular.forEach(returned, function(data) {
+            total += $scope.new_value(data);
+            // console.log(data);
+        });
+
+        return total;
+    }
+
+
 
 	$scope.toggle = function(data, type) {
         switch(type) {
@@ -25,8 +60,11 @@ app
                 break;
             case 'create_new_donor':
                 if(data!='') {
+                    var donor_type_active = $filter('filter')($scope.types, { id: data.donor_type_id }, true)[0];
+                    // console.log(data.donor_type_id);
                     $scope.new_customer = data;
-                    $scope.new_customer.donor_type = data.donor_type.name;
+                    // console.log(data);
+                    $scope.new_customer.donor_type = donor_type_active.name;
                     $scope.modal = {
                         type        : type, 
                         title       : 'Modify Donor',
@@ -47,7 +85,8 @@ app
                             tel         : '',
                             company     : '',
                             job_title   : '',
-                        }                
+                        },   
+                        store_credits : [{ amount: '' }]             
                     }
 
                     $scope.modal = {
@@ -62,7 +101,6 @@ app
     }
 
     $scope.new_customer_btn = function(donor, action) {
-        console.log(donor);
         if(donor.donor_type != '')
         {
             $http({
@@ -107,7 +145,8 @@ app
                         tel         : '',
                         company     : '',
                         job_title   : '',
-                    }                
+                    },   
+                    store_credits : [{ amount: '' }]                
                 }
             });
 
