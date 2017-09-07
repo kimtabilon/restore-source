@@ -72,7 +72,7 @@ class UserController extends Controller
 		$user->given_name  = $data['given_name'];
 		$user->middle_name = $data['middle_name'];
 		$user->last_name   = $data['last_name'];
-		$user->username    = $data['username'];
+		// $user->username    = $data['username'];
 		$user->email       = $data['email'];
 		$user->role()->associate($role->id);
 		$user->save();

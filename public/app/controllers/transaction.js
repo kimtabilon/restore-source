@@ -45,7 +45,7 @@ app
                     company : '',
                     job_title: '',
                 },
-                store_credits : [{ amount: '' }]                
+                store_credits : [{ amount: 0 }]                
         }
 
         // console.log($scope.inventories);
@@ -59,6 +59,7 @@ app
 
     $scope.toggle = function(transaction) {
         var donors = transaction.inventories[0].donors;
+        console.log(transaction.inventories);
         $scope.modal = {
             title       : transaction.da_number + ' - ' + donors[donors.length - 1].name,
             inventories : transaction.inventories,
@@ -110,6 +111,7 @@ app
         code            : '',
         market_price    : 0,
         selling_price   : 0,
+        restore_price   : 0,
         remarks         : '',
     };
 
@@ -126,6 +128,7 @@ app
                 code            : $scope.generate_code('RS'),
                 market_price    : 0,
                 selling_price   : 0,
+                restore_price   : 0,
                 remarks         : '',
             };
         }
@@ -162,6 +165,16 @@ app
     $scope.add_item_to_transaction = function() {
         if(selected.id==0) {
             var codeType    = $filter('filter')($scope.itemCodeTypes, { name: 'Barcode' });
+            console.log(selected.item_id);
+            if(selected.item_id == 0)
+            {
+                selected = {
+                    id              : 0,
+                    item            : $scope.added_items[$scope.added_items.length-1].item,
+                };
+                // selected.item =  copy_selected.item;
+            }
+            
             selected = {
                 item            : selected.item,
                 item_id         : selected.item.id,
@@ -175,9 +188,12 @@ app
                         }],
                 item_prices     : [{ market_price: $scope.new_inv.market_price }],
                 item_selling_prices : [{ market_price: $scope.new_inv.selling_price }],
+                item_restore_prices : [{ market_price: $scope.new_inv.restore_price }],
                 remarks         : $scope.new_inv.remarks,
             };
+            
         }
+        // console.log(selected);
 
         var copy_selected = angular.copy(selected);
 
@@ -185,15 +201,25 @@ app
             .push(
                 copy_selected 
             );  
+        // console.log(copy_selected);    
 
-        /* SET EMPTY AGAIN */    
-        selected = [];  
+        /* SET EMPTY AGAIN */   
+
+        selected = {
+            id              : 0,
+            item            : {},
+            item_id         : 0
+        };
+        // $scope.selected_item_from_items = {};
+         
         $scope.new_inv ={ 
             code            : $scope.generate_code('RS'),
             market_price    : 0,
             selling_price   : 0,
+            restore_price   : 0,
             remarks         : '',
         };  
+        console.log(selected);
     }
 
     $scope.cashier_add_item = function(inventory) {
@@ -370,7 +396,7 @@ app
                         company: '',
                         job_title: '',
                     },
-                    store_credits : [{ amount: '' }]                
+                    store_credits : [{ amount: 0 }]                
                 }
             });
         }     
@@ -415,7 +441,9 @@ app
         var special_discount = $scope.special_discount;
         var total = 0;
         angular.forEach(inventories, function(i) {
-            total += $scope.new_value(i) * i.quantity;
+            // total += $scope.new_value(i) * i.quantity;
+            var restore_value = i.item_restore_prices[i.item_restore_prices.length-1].market_price;
+            total += restore_value * i.quantity;
         });
         return total - special_discount;
     }

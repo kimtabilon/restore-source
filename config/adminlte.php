@@ -252,12 +252,12 @@ return [
                     'icon' => 'file-o',
                     'icon_color' => 'yellow',
                 ],
-                [
+                /*[
                     'text' => 'Discount',
                     'url'  => 'items/discounts',
                     'icon' => 'edit',
                     'icon_color' => 'aqua',
-                ],
+                ],*/
             ],
         ],
         [

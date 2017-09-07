@@ -73,12 +73,12 @@
                             <th>Unit</th>
                             <th>Market Value</th>
                             <th>ReStore Value</th>
-                            <th>Discount</th>
+                            <!-- <th>Discount</th> -->
                             <th>Remarks</th>
                             <th>Status</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="inventory in modal.inventories | orderBy:'item_status.name' ">
+                            <tr ng-repeat="inventory in modal.inventories">
                                 <td><% code(inventory.item_codes, 'Barcode').code %></td>
                                 <td><% inventory.item.name %></td>
                                 <td><% inventory.quantity %></td>
@@ -86,7 +86,7 @@
 
                                 <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
                                 <td><% new_value(inventory) %></td>
-                                <td><% sum(inventory.item_discounts, 'percent') %></td>
+                                <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                 
                                 <td><% inventory.remarks %></td>
                                 <td><% inventory.item_status.name %></td>
@@ -144,9 +144,9 @@
                                   <div class="col-sm-1">
                                     <input ng-model="new_customer.middle_name" type="text" class="form-control" placeholder="MI">
                                   </div>
-                                  <label class="col-sm-1 control-label">Lastname</label>
+                                  <label class="col-sm-1 control-label">Last Name</label>
                                   <div class="col-sm-3">
-                                    <input ng-model="new_customer.last_name" type="text" class="form-control" placeholder="Lastname">
+                                    <input ng-model="new_customer.last_name" type="text" class="form-control" placeholder="Last Name">
                                   </div>
                                 </div>
 
@@ -177,7 +177,7 @@
                                   <div class="col-sm-3">
                                     <input ng-model="new_customer.profile.job_title" type="text" class="form-control" placeholder="Job Title">
                                   </div>
-                                  <label class="col-sm-1 control-label">StrCrdt</label>
+                                  <label class="col-sm-1 control-label">Store Credit</label>
                                   <div class="col-sm-3">
                                     <input ng-model="new_customer.store_credits[0].amount" type="text" class="form-control" placeholder="Store Credit">
                                   </div>
@@ -186,14 +186,15 @@
                                 <div class="form-group">
                                   <label class="col-sm-1 control-label">Address</label>
                                   <div class="col-sm-7">
-                                    <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address">
+                                    <textarea ng-model="new_customer.profile.address" class="form-control"></textarea>
+                                    <!-- <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address"> -->
                                   </div>
                                   <label class="col-sm-1 control-label">Donor Type</label>
                                   <div class="col-sm-3">
                                     <input ng-model="new_customer.donor_type" list="donor_types" type="text" class="form-control" placeholder="Donor Type">
                                   </div>
                                   <datalist id="donor_types">
-                                    <option ng-repeat="type in donor_types" value="<% type.name %>"><% type.description %></option>
+                                    <option ng-repeat="type in donor_types" value="<% type.name %>"><!-- <% type.description %> --></option>
                                   </datalist>
                                 </div>  
 
@@ -264,7 +265,8 @@
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">Description</label>
                                   <div class="col-sm-10">
-                                    <input ng-model="new_item.description" type="text" class="form-control" placeholder="Description">
+                                    <textarea  ng-model="new_item.description" class="form-control"></textarea>
+                                    <!-- <input ng-model="new_item.description" type="text" class="form-control" placeholder="Description"> -->
                                   </div>
                                 </div>
                                   
@@ -328,7 +330,8 @@
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">Remarks</label>
                                   <div class="col-sm-6">
-                                    <input ng-model="remarks" type="text" class="form-control input-sm" placeholder="Remarks">
+                                    <textarea ng-model="remarks" class="form-control input-sm"></textarea>
+                                    <!-- <input ng-model="remarks" type="text" class="form-control input-sm" placeholder="Remarks"> -->
                                   </div>
                                   <label ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-1 control-label">Discount</label>
                                   <div ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-3">
@@ -342,8 +345,9 @@
                                         <th class="text-center">Qty</th>
                                         <th class="text-center">Unit</th>
                                         <th class="text-center">Market Value</th>
+                                        <th class="text-center">New Value</th>
                                         <th class="text-center">ReStore Value</th>
-                                        <th class="text-center">Discount</th>
+                                        <!-- <th class="text-center">Discount</th> -->
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Remarks</th>
                                         <th></th>
@@ -360,8 +364,10 @@
                                         </td>
                                         <td><% inventory.unit %></td>
                                         <td><% inventory.item_prices[inventory.item_prices.length-1].market_price %></td>
-                                        <td><% new_value(inventory) %></td>
-                                        <td><% sum(inventory.item_discounts, 'percent') %></td>
+                                        <td><% inventory.item_selling_prices[inventory.item_selling_prices.length-1].market_price %></td>
+                                        <td><% inventory.item_restore_prices[inventory.item_restore_prices.length-1].market_price %></td>
+                                        <!-- <td><% new_value(inventory) %></td> -->
+                                        <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
                                         <td><i class="fa fa-times" ng-click="remove_item_from_transaction($index)"></i></td>
@@ -417,19 +423,24 @@
                                   </div>
                                   <div class="form-group">
                                     <label class="col-sm-2 control-label">Market Value</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-2">
                                       <input type="text" ng-model="new_inv.market_price" class="form-control input-sm" placeholder="Market value">
                                     </div>
                                     <label class="col-sm-2 control-label">New Value</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-2">
                                       <input type="text" ng-model="new_inv.selling_price" class="form-control input-sm" placeholder="New Value">
+                                    </div>
+                                    <label class="col-sm-2 control-label">ReStore Value</label>
+                                    <div class="col-sm-2">
+                                      <input type="text" ng-model="new_inv.restore_price" class="form-control input-sm" placeholder="ReStore Value">
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     
                                     <label class="col-sm-2 control-label">Remarks</label>
                                     <div class="col-sm-10">
-                                      <input ng-model="new_inv.remarks" type="text" class="form-control input-sm" placeholder="Remarks">
+                                      <textarea ng-model="new_inv.remarks" class="form-control input-sm"></textarea>
+                                      <!-- <input ng-model="new_inv.remarks" type="text" class="form-control input-sm" placeholder="Remarks"> -->
                                     </div>
                                   </div>
                                 <button ng-click="add_item_to_transaction()" type="button" class="btn btn-xs btn-success pull-right" >Add Item to Transaction</button>

@@ -72,7 +72,7 @@
                             <th>Unit</th>
                             <th>Market Value</th>
                             <th>ReStore Value</th>
-                            <th>Discount</th>
+                            <!-- <th>Discount</th> -->
                             <th>Remarks</th>
                             <th>Status</th>
                         </thead>
@@ -85,7 +85,7 @@
 
                                 <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
                                 <td><% new_value(inventory) %></td>
-                                <td><% sum(inventory.item_discounts, 'percent') %></td>
+                                <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                 
                                 <td><% inventory.remarks %></td>
                                 <td><% inventory.item_status.name %></td>
@@ -142,9 +142,9 @@
                                   <div class="col-sm-1">
                                     <input ng-model="new_customer.middle_name" type="text" class="form-control" placeholder="MI">
                                   </div>
-                                  <label class="col-sm-1 control-label">Lastname</label>
+                                  <label class="col-sm-1 control-label">Last Name</label>
                                   <div class="col-sm-3">
-                                    <input ng-model="new_customer.last_name" type="text" class="form-control" placeholder="Lastname">
+                                    <input ng-model="new_customer.last_name" type="text" class="form-control" placeholder="Last Name">
                                   </div>
                                 </div>
 
@@ -167,8 +167,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Company</label>
-                                  <div class="col-sm-4">
+                                  <label class="col-sm-1 control-label">Company</label>
+                                  <div class="col-sm-5">
                                     <input ng-model="new_customer.profile.company" type="text" class="form-control" placeholder="Company">
                                   </div>
                                   <label class="col-sm-2 control-label">Job Title</label>
@@ -178,9 +178,10 @@
                                 </div>  
 
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Full Address</label>
-                                  <div class="col-sm-10">
-                                    <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address">
+                                  <label class="col-sm-1 control-label">Address</label>
+                                  <div class="col-sm-11">
+                                    <textarea ng-model="new_customer.profile.address" class="form-control"></textarea>
+                                    <!-- <input ng-model="new_customer.profile.address" type="text" class="form-control" placeholder="Full Address"> -->
                                   </div>
                                 </div>  
 
@@ -205,7 +206,7 @@
                                     <th>Address</th>
                                     <th>Company</th>
                                     <th>Job Title</th> -->
-                                    <th></th>
+                                    <!-- <th></th> -->
                                 </tr>
                                 <tr ng-repeat="donor in donors | orderBy:'name' | filter:search_donor">
                                     <td><% donor.donor_type.name %></td>
@@ -219,7 +220,7 @@
                                     <td><% donor.profile.address %></td>
                                     <td><% donor.profile.company %></td>
                                     <td><% donor.profile.job_title %></td> -->
-                                    <td><i ng-click="remove_donor(donor)" class="fa fa-times"></i></td>
+                                    <!-- <td><i ng-click="remove_donor(donor)" class="fa fa-times"></i></td> -->
                                 </tr>
                               </table>
                             </div>
@@ -248,7 +249,7 @@
                                     <select 
                                         class="form-control select2" 
                                         ng-model="selected_donor"
-                                        ng-options="donor.id as (donor.donor_type.name=='Company' ? donor.profile.company : donor.name) + ' - ' + donor.donor_type.name for donor in donors | orderBy:'name'"
+                                        ng-options="donor.id as '('+donor.store_credits[0].amount+') '+ (donor.donor_type.name=='Company' ? donor.profile.company : donor.name) + ' : ' + donor.donor_type.name for donor in donors | orderBy:'name'"
                                         ng-change="choose_donor(selected_donor)"
                                         style="width: 100%;">
                                     </select>
@@ -257,7 +258,8 @@
                                 <div class="form-group">
                                   <label class="col-sm-2 control-label">Remarks</label>
                                   <div class="col-sm-6">
-                                    <input ng-model="remarks" type="text" class="form-control input-sm" placeholder="Remarks">
+                                    <textarea ng-model="remarks" class="form-control input-sm"></textarea>
+                                    <!-- <input ng-model="remarks" type="text" class="form-control input-sm" placeholder="Remarks"> -->
                                   </div>
                                   <label ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-1 control-label">Discount</label>
                                   <div ng-show="payment_type!='' && payment_type.name!='Item Donation'" class="col-sm-3">
@@ -272,7 +274,7 @@
                                         <th class="text-center">Unit</th>
                                         <th class="text-center">Market Value</th>
                                         <th class="text-center">ReStore Value</th>
-                                        <th class="text-center">Discount</th>
+                                        <!-- <th class="text-center">Discount</th> -->
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Remarks</th>
                                         <th></th>
@@ -290,7 +292,7 @@
                                         <td><% inventory.unit %></td>
                                         <td><% inventory.item_prices[inventory.item_prices.length-1].market_price %></td>
                                         <td><% new_value(inventory) %></td>
-                                        <td><% sum(inventory.item_discounts, 'percent') %></td>
+                                        <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
                                         <td><i class="fa fa-times" ng-click="remove_item_from_transaction($index)"></i></td>
@@ -312,8 +314,8 @@
                                         <div class="thumbnail">
                                           <img src="images/items/<% inventory.item_images[inventory.item_images.length - 1].id %>_thumb.jpg" alt="...">
                                           <div class="caption">
-                                            <strong><% inventory.item.name %></strong><br/>
-                                            <strong><% inventory.quantity + ' ' + inventory.unit %>/s</strong><br/>
+                                            <strong><% inventory.item.name %></strong> <% inventory.remarks %><br/>
+                                            <strong><% inventory.quantity %></strong> <% inventory.unit %>/s<br/>
                                             <strong><% inventory.item_codes[inventory.item_codes.length -1 ].code %></strong><br/>
                                             <em>Market Value : <% inventory.item_prices[inventory.item_prices.length - 1].market_price %></em><br/>
                                             <em>ReStore Value : <% new_value(inventory) %></em><br/>

@@ -24,7 +24,7 @@
                         <th>Given Name</th>
                         <th>MI</th>
                         <th>Last Name</th>
-                        <th>Username</th>
+                        <!-- <th>Username</th> -->
                         <th>Email</th>
                         <th>Role</th>
                         <th>Created at</th>
@@ -35,7 +35,7 @@
                             <td><% user.given_name %></td>
                             <td><% user.middle_name %></td>
                             <td><% user.last_name %></td>
-                            <td><% user.username %></td>
+                            <!-- <td><% user.username %></td> -->
                             <td><% user.email %></td>
                             <td><% user.role.name %></td>
                             <td><% user.created %></td>
@@ -67,7 +67,7 @@
                         <div class="form-group error" ng-repeat="(field, label) in modal.field" >
                             <label for="name" class="col-sm-3 control-label"><% label %></label>
                             <div class="col-sm-9">
-                                <input type="text" 
+                                <input type="<% field=='password'?'password':'text' %>" 
                                     class="form-control has-error" 
                                     id="<% field %>"
                                     list="<% field %>" 

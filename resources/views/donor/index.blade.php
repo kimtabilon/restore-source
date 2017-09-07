@@ -159,7 +159,7 @@
                           <div class="col-sm-3">
                             <input ng-model="new_customer.profile.job_title" type="text" class="form-control" placeholder="Job Title">
                           </div>
-                          <label class="col-sm-1 control-label">StrCrdt</label>
+                          <label class="col-sm-1 control-label">Store Credit</label>
                           <div class="col-sm-3">
                             <input ng-model="new_customer.store_credits[0].amount" type="text" class="form-control" placeholder="Store Credit">
                           </div>

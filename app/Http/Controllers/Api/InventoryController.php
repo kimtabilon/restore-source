@@ -40,6 +40,7 @@ class InventoryController extends Controller
 					'inventories.itemCodes.itemCodeType', 
 					'inventories.itemPrices', 
 					'inventories.itemSellingPrices', 
+					'inventories.itemRestorePrices', 
 					'inventories.itemImages', 
 					'inventories.itemRefImages', 
 					'inventories.itemDiscounts',
@@ -127,7 +128,32 @@ class InventoryController extends Controller
 					}
 				}
 				return $inventory;
-				break;		
+				break;	
+
+			case 'item_restore_price':
+				$price 			= ItemPrice::find($data['market_price_id']);
+				$inventory 		= Inventory::find($data['id']);
+				$newMarketPrice = $data['market_price'];
+
+				if($price->market_price != $newMarketPrice) {
+					$findSamePrice = ItemPrice::where('market_price', $newMarketPrice)->get();
+
+					if($findSamePrice->count() > 0) {
+						$newPrice = $findSamePrice->first();
+					}
+					else {
+						$newPrice = new ItemPrice();
+						$newPrice->market_price = $data['market_price'];
+						$newPrice->save();
+					}
+					$inventory->itemRestorePrices()->attach($newPrice);
+
+					if($price->inventories()->count()==1) {
+						$price->delete();
+					}
+				}
+				return $inventory;
+				break;				
 
 			case 'remarks':
 				$inventory 				= Inventory::where('id', $data['id'])->first();
@@ -217,6 +243,7 @@ class InventoryController extends Controller
 			$refImages 		= $inv->itemRefImages;
 			$prices 		= $inv->itemPrices;
 			$sellingPrices 	= $inv->itemSellingPrices;
+			$restorePrices 	= $inv->itemRestorePrices;
 			$donors 		= $inv->donors;
 			$transactions 	= $inv->transactions;
 
@@ -238,6 +265,7 @@ class InventoryController extends Controller
 			if($refImages 		->count()){ $inventory->itemRefImages()		->attach($refImages 	->last()); }
 			if($prices 			->count()){ $inventory->itemPrices()		->attach($prices 		->last()); }
 			if($sellingPrices 	->count()){ $inventory->itemSellingPrices()	->attach($sellingPrices ->last()); }
+			if($restorePrices 	->count()){ $inventory->itemRestorePrices()	->attach($restorePrices ->last()); }
 		} 
 		else {
 			$left=0;

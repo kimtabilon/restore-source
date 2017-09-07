@@ -38,7 +38,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'given_name'        => 'Vicente',
         'middle_name'       => 'O',
         'last_name'         => 'Abana',
-        'username'          => 'Vic',
+        // 'username'          => 'Vic',
         'email'             => 'vic@kiakaha.co',
         'password'          => $password ?: $password = bcrypt('secret'),
         'role_id'           => 1,

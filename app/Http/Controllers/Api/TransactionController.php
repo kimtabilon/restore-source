@@ -49,6 +49,7 @@ class TransactionController extends Controller
 								'transactions.inventories.donors.profile',
 								'transactions.inventories.itemPrices',
 								'transactions.inventories.itemSellingPrices',
+								'transactions.inventories.itemRestorePrices',
 								'transactions.inventories.itemStatus',
 								'transactions.inventories.itemCodes',
 								'transactions.inventories.itemDiscounts'
@@ -70,7 +71,7 @@ class TransactionController extends Controller
 			'item_status' 	=> $item_status,
 			'items' 		=> Item::with(['category'])->orderBy('name')->get(),
 			'inventories'	=> Inventory::where('item_status_id', $good_item)
-										->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices', 'itemDiscounts'])
+										->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices', 'itemRestorePrices', 'itemDiscounts'])
 										->get(),
 		];
 	}	
@@ -78,7 +79,7 @@ class TransactionController extends Controller
 	public function inventories($status)
 	{
 		return Inventory::where('item_status_id', $status)
-						->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices'])
+						->with(['item', 'itemStatus', 'itemImages', 'itemCodes', 'itemPrices', 'itemSellingPrices', 'itemRestorePrices'])
 						->get();
 	}
 
@@ -138,9 +139,11 @@ class TransactionController extends Controller
 				/* ITEM PRICE */
 				$new_market_price  = $inventory['item_prices'][0]['market_price'];
 				$new_selling_price = $inventory['item_selling_prices'][0]['market_price'];
+				$new_restore_price = $inventory['item_restore_prices'][0]['market_price'];
 				
 				$find_market_price  = ItemPrice::where('market_price', $new_market_price)->get();
 				$find_selling_price = ItemPrice::where('market_price', $new_selling_price)->get();
+				$find_restore_price = ItemPrice::where('market_price', $new_restore_price)->get();
 
 				if($find_selling_price->count() != 0) {
 					$selling_price = $find_selling_price->first();
@@ -149,6 +152,15 @@ class TransactionController extends Controller
 					$selling_price = new ItemPrice();
 					$selling_price->market_price = $new_selling_price;
 					$selling_price->save();
+				}
+
+				if($find_restore_price->count() != 0) {
+					$restore_price = $find_restore_price->first();
+				}
+				else {
+					$restore_price = new ItemPrice();
+					$restore_price->market_price = $new_restore_price;
+					$restore_price->save();
 				}
 
 				if($find_market_price->count() != 0) {
@@ -161,6 +173,7 @@ class TransactionController extends Controller
 				}
 				$new_inv->itemPrices()  		->attach($new_price);
 				$new_inv->itemSellingPrices()  	->attach($selling_price);
+				$new_inv->itemRestorePrices()  	->attach($restore_price);
 				/* end of ITEM PRICE */
 				
 				if($match) {
@@ -170,6 +183,7 @@ class TransactionController extends Controller
 					$refImages 		= $match->itemRefImages;
 					$prices 		= $match->itemPrices;
 					$sellingPrices 	= $match->itemSellingPrices;
+					$restorePrices 	= $match->itemRestorePrices;
 					$donors 		= $match->donors;
 					$transactions 	= $match->transactions;
 
@@ -182,6 +196,7 @@ class TransactionController extends Controller
 					if($refImages 		->count()){ $new_inv->itemRefImages()		->attach($refImages 	->last()); }
 					if($prices 			->count()){ $new_inv->itemPrices()			->attach($prices 		->last()); }
 					if($sellingPrices 	->count()){ $new_inv->itemSellingPrices()	->attach($sellingPrices ->last()); }
+					if($restorePrices 	->count()){ $new_inv->itemRestorePrices()	->attach($restorePrices ->last()); }
 				}
 
 				$new_inv->donors()				->attach($found_donor);
@@ -220,6 +235,7 @@ class TransactionController extends Controller
 					$refImages 		= $match->itemRefImages;
 					$prices 		= $match->itemPrices;
 					$sellingPrices 	= $match->itemSellingPrices;
+					$restorePrices 	= $match->itemRestorePrices;
 					$donors 		= $match->donors;
 					$transactions 	= $match->transactions;
 					
@@ -245,6 +261,7 @@ class TransactionController extends Controller
 						if($refImages 		->count()){ $new_inv->itemRefImages()		->attach($refImages 	->last()); }
 						if($prices 			->count()){ $new_inv->itemPrices()			->attach($prices 		->last()); }
 						if($sellingPrices 	->count()){ $new_inv->itemSellingPrices()	->attach($sellingPrices ->last()); }
+						if($restorePrices 	->count()){ $new_inv->itemRestorePrices()	->attach($restorePrices ->last()); }
 						
 						$new_inv->donors()		->attach($found_donor);
 						$new_inv->transactions()->attach($new_transaction); 
@@ -268,6 +285,7 @@ class TransactionController extends Controller
 								'inventories.itemCodes',
 								'inventories.itemPrices',
 								'inventories.itemSellingPrices',
+								'inventories.itemRestorePrices',
 								'inventories.itemStatus', 
 								'paymentType'
 							])

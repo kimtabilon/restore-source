@@ -86,7 +86,7 @@ app
                             company     : '',
                             job_title   : '',
                         },   
-                        store_credits : [{ amount: '' }]             
+                        store_credits : [{ amount: 0 }]             
                     }
 
                     $scope.modal = {
@@ -146,7 +146,7 @@ app
                         company     : '',
                         job_title   : '',
                     },   
-                    store_credits : [{ amount: '' }]                
+                    store_credits : [{ amount: 0 }]                
                 }
             });
 

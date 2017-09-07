@@ -21,6 +21,7 @@ class Inventory extends Model
     public function itemDiscounts() {       return $this->belongsToMany('App\ItemDiscount')     ->withTimestamps(); } 
     public function itemPrices() {          return $this->belongsToMany('App\ItemPrice')        ->withTimestamps(); } 
     public function itemSellingPrices() {   return $this->belongsToMany('App\ItemSellingPrice') ->withTimestamps(); } 
+    public function itemRestorePrices() {   return $this->belongsToMany('App\ItemRestorePrice') ->withTimestamps(); } 
     public function itemImages() {          return $this->belongsToMany('App\ItemImage')        ->withTimestamps(); }
     public function itemRefImages() {       return $this->belongsToMany('App\ItemRefImage')     ->withTimestamps(); }
     public function itemCodes() {           return $this->belongsToMany('App\ItemCode')         ->withTimestamps(); }

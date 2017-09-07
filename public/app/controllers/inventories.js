@@ -171,8 +171,8 @@ app
             case 'item_price':
             	var itemPrice = data.item_prices[data.item_prices.length - 1];
                 $scope.modal = {
-                	title: "Modify Market Price",
-                	field: { market_price: 'Market Price' },
+                	title: "Modify Market Value",
+                	field: { market_price: 'Market Value' },
                 	data: { 
                 		type 			: type, 
                 		index 			: index,
@@ -187,8 +187,8 @@ app
             case 'item_selling_price':
             	var itemSellingPrice = data.item_selling_prices[data.item_selling_prices.length - 1];
                 $scope.modal = {
-                	title: "Modify Selling Price",
-                	field: { market_price: 'Selling Price' },
+                	title: "Modify New Value",
+                	field: { market_price: 'New Value' },
                 	data: { 
                 		type 			: type, 
                 		index 			: index,
@@ -199,6 +199,22 @@ app
                 	button: 'Save changes'
                 };	
             	break;	
+
+            case 'item_restore_price':
+            	var itemRestorePrice = data.item_restore_prices[data.item_restore_prices.length - 1];
+                $scope.modal = {
+                	title: "Modify ReStore Value",
+                	field: { market_price: 'ReStore Value' },
+                	data: { 
+                		type 			: type, 
+                		index 			: index,
+                		market_price 	: itemRestorePrice.market_price, 
+                		market_price_id : itemRestorePrice.id, 
+                		id 				: data.id 
+                	},
+                	button: 'Save changes'
+                };	
+            	break;		
 
             case 'remarks':
                 $scope.modal = {
@@ -298,7 +314,23 @@ app
 	            	$scope.inventories[index].item_selling_prices[count-1].market_price = data.market_price;
 					$('#inventoryModal').modal('hide');
 	            });
-                break;       
+                break;  
+
+            case 'item_restore_price':
+                $http({
+		            method 	: 'POST',
+		            url 	: API_URL + 'inventories/update',
+		            data 	: data
+		        })
+	            .then(function (response) {
+	            	var inventory 	= $filter('filter')($scope.inventories, { id:response.data.id }, true)[0];
+	            	var count 		= inventory.item_restore_prices.length;
+	            	var index 		= $scope.inventories.indexOf(inventory);
+
+	            	$scope.inventories[index].item_restore_prices[count-1].market_price = data.market_price;
+					$('#inventoryModal').modal('hide');
+	            });
+                break;             
 
             case 'remarks':
                 $http({
