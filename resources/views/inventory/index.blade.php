@@ -40,7 +40,7 @@
                         <th>Market Value</th>
                         <th>ReStore Image</th>
                         <th>ReStore Value</th>
-                        <th>Dscnt</th>
+                        <!-- <th>Dscnt</th> -->
                         <th>Donor</th>
                         <th>Remarks</th>
                         <th>Added</th>
@@ -71,7 +71,7 @@
                             <td ng-click="toggle('item_restore_price', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].item_restore_prices[inventory[0].item_restore_prices.length - 1].market_price %></span></td>
                             <!-- <td><span ng-if="inventory.length==1"><% new_value(inventory[0]) %></span></td> -->
                             
-                            <td ng-click="show_discounts(inventory[0])"><span ng-if="inventory.length==1"><% sum(inventory[0].item_discounts, 'percent') %></span></td>
+                            <!-- <td ng-click="show_discounts(inventory[0])"><span ng-if="inventory.length==1"><% sum(inventory[0].item_discounts, 'percent') %></span></td> -->
                             <td><span ng-if="inventory.length==1"><% '00' + inventory[0].donors[inventory[0].donors.length - 1].id + ' - ' + inventory[0].donors[inventory[0].donors.length - 1].name %></span></td>
                             <td ng-click="toggle('remarks', inventory[0])"><span ng-if="inventory.length==1"><% inventory[0].remarks %></span></td>
                             <td><span ng-if="inventory.length==1"><% inventory[0].created %></span></td>     
@@ -97,8 +97,9 @@
                                 <i ng-if="inv.item_images.length==0" ng-click="display_image(inv, 'restore')" class="fa fa-plus"></i>
                                 <img ng-if="inv.item_images.length>0" ng-click="display_image(inv, 'restore')" src="images/items/<% inv.item_images[inv.item_images.length-1].id %>_thumb.jpg" class="img-responsive">
                             </td>
-                            <td><% new_value(inv) %></td>
-                            <td ng-click="show_discounts(inv)"><% sum(inv.item_discounts, 'percent') %></td>
+                            <!-- <td><% new_value(inv) %></td> -->
+                            <td ng-click="toggle('item_restore_price', inv)"><% inv.item_restore_prices[inv.item_restore_prices.length - 1].market_price %></td>
+                            <!-- <td ng-click="show_discounts(inv)"><% sum(inv.item_discounts, 'percent') %></td> -->
                             <td><% inv.donors[inv.donors.length - 1].name %></td>
                             <td ng-click="toggle('remarks', inv)"><% inv.remarks %></td>
                             <td><% inv.created %></td>  
@@ -153,7 +154,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="btn-save" ng-click="update(modal.data)" ng-disabled="modal.data.$invalid"><% modal.button %></button>
+                        <button type="button" class="btn btn-primary pull-right" id="btn-save" ng-click="update(modal.data)" ng-disabled="modal.data.$invalid"><% modal.button %></button>
+                        <button type="submit" class="btn btn-default pull-right" data-dismiss="modal" style="margin-right: 5px;">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -177,7 +179,8 @@
                               <img src="images/items/<% image.id %>_thumb.jpg" class="pull-left" style="height: 50px !important; margin-right: 10px;"> 
                               <button ng-click="set_image(image, modal.inventory, modal.type)" class="btn btn-success btn-xs pull-right" style="margin-right: 10px;">Select</button>
                               <div class="clearfix"></div>
-                              <div><% image.name | limitTo: 31 %></div>
+                              <strong><% image.name | limitTo: 31 %></strong><br />
+                              <em><% image.description | limitTo: 31 %></em><br />                              
                             </div>
                         </div>
                         </div>
@@ -264,7 +267,8 @@
                             ITEM CODE: <% code(i.item_codes, 'Barcode').code %><br />
                             ITEM: <% i.item.name %> - <% i.remarks %><br />
                             MARKET VALUE: <% i.item_prices[i.item_prices.length - 1].market_price %><br />
-                            RESTORE VALUE: <% new_value(i) %><br />
+                            RESTORE VALUE: <% i.item_restore_prices[i.item_restore_prices.length - 1].market_price %><br />
+                            <!-- RESTORE VALUE: <% new_value(i) %><br /> -->
                             <!-- DISCOUNT: <% sum(inv.item_discounts, 'percent') %> -->
                         </div>
                     </div>

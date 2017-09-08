@@ -94,6 +94,7 @@ app
                 break;
 
             case 'edit':
+                user.middle_name = user.middle_name!=null?user.middle_name:''; 
                 $http({
                     method  : 'POST',
                     url     : API_URL + 'users/save',

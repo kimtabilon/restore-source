@@ -24,16 +24,16 @@
                 <div class="col-md-12 form-horizontal">
                     <div class="form-group">
                       <label class="col-sm-1 control-label">Name</label>
-                      <div class="col-sm-3">
+                      <div class="col-sm-2">
                         <input ng-model="image.name" list="items" type="text" class="form-control" placeholder="Image Name">
                       </div>
                       <datalist id="items">
                           <option ng-repeat="item in items" value="<% item.name %>"><% item.description %></option>
                       </datalist>
 
-                      <label class="col-sm-1 control-label">Description</label>
+                      <label class="col-sm-2 control-label">Short Description</label>
                       <div class="col-sm-3">
-                        <input ng-model="image.description" type="text" class="form-control" placeholder="Image Description">
+                        <input ng-model="image.description" type="text" class="form-control" placeholder="Image Short Description">
                       </div>
 
                       <div class="col-sm-2">
@@ -60,7 +60,7 @@
                             <th>No.</th>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Image Description</th>
+                            <th>Short Description</th>
                             <th>Size</th>
                             <th>Type</th>
                             <th>Uploaded</th>

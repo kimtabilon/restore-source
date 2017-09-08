@@ -164,7 +164,7 @@ app
                 		code 	 : itemCode.code, 
                 		id 		 : itemCode.id 
                 	},
-                	button: 'Save changes'
+                	button: 'Generate New Code'
                 };	
             	break;
 
@@ -270,7 +270,8 @@ app
                 break;
 
             case 'item_code':
-            	// console.log(data);
+            	data.code = $scope.generate_code('RS');
+            	console.log(data);
                 $http({
 		            method 	: 'POST',
 		            url 	: API_URL + 'inventories/update',
@@ -503,6 +504,14 @@ app
     $scope.clone_parent = function(inventory) {
     	var i = angular.copy(inventory);
     	$scope.modal.inventories.push(i);
+    }
+
+    $scope.generate_code = function(begin_with) {
+        auto_gen_code = begin_with + '-' + Math.random().toString(36).split('').filter( function(value, index, self) { 
+                        return self.indexOf(value) === index;
+                    }).join('').substr(2,8);
+       
+        return auto_gen_code;
     }
 });
 

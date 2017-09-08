@@ -26,7 +26,7 @@
                 <table class="table">
                   <thead>
                       <th>DA</th>
-                      <th>Donor</th>
+                      <th>Donor/Company</th>
                       <th>No. of Items</th>
                       <th>Special Discount</th>
                       <th>Remarks</th>
@@ -35,7 +35,10 @@
                   <tbody>
                       <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
                           <td ng-click="toggle(transaction)"><span class="badge"><% transaction.da_number %></span></td>
-                          <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %></td>
+                          <td>
+                            <% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %>
+                            <% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].profile.company %>
+                          </td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
@@ -291,7 +294,8 @@
                                         </td>
                                         <td><% inventory.unit %></td>
                                         <td><% inventory.item_prices[inventory.item_prices.length-1].market_price %></td>
-                                        <td><% new_value(inventory) %></td>
+                                        <td><% inventory.item_restore_prices[inventory.item_restore_prices.length-1].market_price %></td>
+                                        <!-- <td><% new_value(inventory) %></td> -->
                                         <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                         <td><% inventory.item_status.name %></td>
                                         <td><% inventory.remarks %></td>
@@ -301,7 +305,8 @@
                                 <h2 class="pull-left" style="color: red; margin-top: -10px;">Total: <span><% total_transaction(added_items) %></span></h2>
                                 </div>
 
-                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" id="PrintTransactionBtn" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
+                                <!-- <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" id="PrintTransactionBtn" class="btn btn-flat btn-primary pull-right" >Create Transaction</button> -->
+                                <button ng-click="save_transaction()" ng-disabled="added_items.length==0" type="button" class="btn btn-flat btn-primary pull-right" >Create Transaction</button>
                                 <button type="submit" class="btn btn-flat btn-default pull-right" data-dismiss="modal" style="margin-right: 5px;">Cancel</button>
                                 <div class="clearfix"></div>
                                 <hr />
@@ -318,7 +323,8 @@
                                             <strong><% inventory.quantity %></strong> <% inventory.unit %>/s<br/>
                                             <strong><% inventory.item_codes[inventory.item_codes.length -1 ].code %></strong><br/>
                                             <em>Market Value : <% inventory.item_prices[inventory.item_prices.length - 1].market_price %></em><br/>
-                                            <em>ReStore Value : <% new_value(inventory) %></em><br/>
+                                            <em>ReStore Value : <% inventory.item_restore_prices[inventory.item_restore_prices.length - 1].market_price %></em><br/>
+                                            <!-- <em>ReStore Value : <% new_value(inventory) %></em><br/> -->
                                             <em><% inventory.remarks %></em><br/>
                                             <p><button ng-click="cashier_add_item(inventory)" class="btn btn-primary btn-xs">Add Item</button></p>
                                           </div>
