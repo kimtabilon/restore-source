@@ -59,9 +59,10 @@ app
 
     $scope.toggle = function(transaction) {
         var donors = transaction.inventories[0].donors;
-        console.log(transaction.inventories);
+        var d = donors[donors.length - 1];
+        console.log(d);
         $scope.modal = {
-            title       : transaction.da_number + ' - ' + donors[donors.length - 1].name,
+            title       : transaction.da_number + ' - ' + d.name + ' / ' + d.profile.company,
             inventories : transaction.inventories,
         }
         $('#inventoryModal').modal('show');
@@ -272,15 +273,31 @@ app
                         }
             })
             .then(function (response) {
+                /*APPEND VALUES*/
                 var new_trans = response.data;
                 var match = $filter('filter')($scope.types, { id: new_trans.payment_type.id }, true)[0];
                 var index = $scope.types.indexOf(match);
                 $scope.types[index].transactions.push(new_trans);
+
+                /*DEDUCT VALUES*/
+                angular.forEach($scope.added_items, function(i){
+                    var match = $filter('filter')($scope.inventories, {id:i.id}, true)[0];
+
+                    match.quantity -= i.quantity;
+
+                    console.log(match.quantity);
+                });
+
+
+                /*CLEAR VALUES*/
                 $scope.added_items = [];
-                $scope.donor = {};
-                $scope.payment_type = {};
+                $scope.selected_donor = [];
+                $scope.selected_payment_type = [];
+                $scope.special_discount = 0;
                 $scope.remarks = '';
             });
+
+            
 
             $('#transactionModal').modal('hide');
         }

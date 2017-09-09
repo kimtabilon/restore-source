@@ -282,6 +282,7 @@ class TransactionController extends Controller
 								'inventories', 
 								'inventories.item',
 								'inventories.donors',
+								'inventories.donors.profile',
 								'inventories.itemCodes',
 								'inventories.itemPrices',
 								'inventories.itemSellingPrices',

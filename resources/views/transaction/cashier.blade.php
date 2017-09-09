@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="transactionsController">
     <section class="content-header">
-        <h1>Trasactions <span class="badge" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
+        <h1>Trasactions <span class="badge create-new-trans" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Transactions</li>
@@ -364,16 +364,20 @@
 @stop
 
 @section('js')
-   <script src="{{ asset('app/controllers/transaction.js') }}"></script>
+   
    <script src="{{ asset('js/select2.full.min.js') }}"></script>
    <script>
       $(function () {
         $.fn.modal.Constructor.prototype.enforceFocus = function () {};
         //Initialize Select2 Elements
         $(".select2").select2();
+
+        $(".create-new-trans").click(function(){
+          $('.select2-selection__rendered').text('');
+        });
       });  
    </script> 
-
+   <script src="{{ asset('app/controllers/transaction.js') }}"></script>
    <script src="{{ asset('js/printThis.js') }}"></script>
     <script type="text/javascript">
         document.getElementById("PrintListOfItemBtn").onclick = function () {

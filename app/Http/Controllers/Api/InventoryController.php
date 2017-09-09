@@ -45,6 +45,7 @@ class InventoryController extends Controller
 					'inventories.itemRefImages', 
 					'inventories.itemDiscounts',
 					'inventories.donors',
+					'inventories.donors.profile',
 				])
 				->first()
 				->inventories; 		
