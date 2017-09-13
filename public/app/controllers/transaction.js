@@ -60,9 +60,9 @@ app
     $scope.toggle = function(transaction) {
         var donors = transaction.inventories[0].donors;
         var d = donors[donors.length - 1];
-        console.log(d);
         $scope.modal = {
-            title       : transaction.da_number + ' - ' + d.name + ' / ' + d.profile.company,
+            title       : transaction.da_number + ' - ' + d.name + ' / ' + (d.profile.company || ''),
+            trans       : transaction,
             inventories : transaction.inventories,
         }
         $('#inventoryModal').modal('show');
@@ -444,7 +444,16 @@ app
             total += parseInt(data[field]);
         });
 
-        return parseInt(total);
+        return parseFloat(total);
+    }
+
+    $scope.trans_total_each = function(ins) {
+        var total = 0;
+        angular.forEach(ins, function(i){
+            total+= (parseFloat(i.item_restore_prices[ i.item_restore_prices.length - 1].market_price) * parseFloat(i.quantity));
+        });
+
+        return parseFloat(total);
     }
 
     $scope.new_value = function(inventory) {

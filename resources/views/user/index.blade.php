@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="usersController">
     <section class="content-header">
-        <h1>Users <span class="badge" style="cursor: pointer;" ng-click="toggle('', 'new')" >create</span></h1>
+        <h1>Users <!-- <span class="badge" style="cursor: pointer;" ng-click="toggle('', 'new')" >create</span> --></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Users</li>

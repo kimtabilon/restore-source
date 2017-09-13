@@ -29,6 +29,7 @@
                       <th>Donor/Company</th>
                       <th>No. of Items</th>
                       <th>Special Discount</th>
+                      <th>Total</th>
                       <th>Remarks</th>
                       <th>Created</th>
                   </thead>
@@ -41,6 +42,7 @@
                           </td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
+                          <td><% trans_total_each(transaction.inventories) - transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
                           <td><% transaction.created %></td>
                       </tr>
@@ -64,7 +66,7 @@
             <div class="modal-content" id="PrintListOfItem">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
+                    <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %> <small>(<% trans_total_each(modal.inventories) - modal.trans.special_discount %>)</small></h4>
                 </div>
                 <div class="modal-body">
                     <table class="table">
@@ -87,7 +89,8 @@
                                 <td><% inventory.unit %></td>
 
                                 <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
-                                <td><% new_value(inventory) %></td>
+                                <td><% inventory.item_restore_prices[ inventory.item_restore_prices.length - 1].market_price %></td>
+                                <!-- <td><% new_value(inventory) %></td> -->
                                 <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                 
                                 <td><% inventory.remarks %></td>
@@ -316,7 +319,7 @@
                                   </div><hr>
                                   <div class="row">
                                     <div class="col-xs-6 col-md-3" ng-repeat="inventory in inventories | filter:searh_good_items">
-                                        <div class="thumbnail">
+                                        <div class="thumbnail" ng-if="inventory.quantity>0">
                                           <img src="images/items/<% inventory.item_images[inventory.item_images.length - 1].id %>_thumb.jpg" alt="...">
                                           <div class="caption">
                                             <strong><% inventory.item.name %></strong> <% inventory.remarks %><br/>
@@ -325,7 +328,7 @@
                                             <em>Market Value : <% inventory.item_prices[inventory.item_prices.length - 1].market_price %></em><br/>
                                             <em>ReStore Value : <% inventory.item_restore_prices[inventory.item_restore_prices.length - 1].market_price %></em><br/>
                                             <!-- <em>ReStore Value : <% new_value(inventory) %></em><br/> -->
-                                            <em><% inventory.remarks %></em><br/>
+                                            <!-- <em><% inventory.remarks %></em><br/> -->
                                             <p><button ng-click="cashier_add_item(inventory)" class="btn btn-primary btn-xs">Add Item</button></p>
                                           </div>
                                         </div>

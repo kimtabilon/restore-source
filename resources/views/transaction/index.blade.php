@@ -29,6 +29,7 @@
                       <th>Donor/Company</th>
                       <th>No. of Items</th>
                       <th>Special Discount</th>
+                      <th>Total</th>
                       <th>Remarks</th>
                       <th>Created</th>
                   </thead>
@@ -38,6 +39,7 @@
                           <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %> <% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].profile.company %></td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
+                          <td><% trans_total_each(transaction.inventories) - transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
                           <td><% transaction.created %></td>
                       </tr>
@@ -60,7 +62,7 @@
             <div class="modal-content" id="PrintListOfItem">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %></h4>
+                    <h4 class="modal-title" id="inventoryModalLabel"><% modal.title %> <small>(<% trans_total_each(modal.inventories) - modal.trans.special_discount %>)</small></h4>
                 </div>
                 <div class="modal-body">
                     <table class="table">
@@ -83,7 +85,8 @@
                                 <td><% inventory.unit %></td>
 
                                 <td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
-                                <td><% new_value(inventory) %></td>
+                                <td><% inventory.item_restore_prices[ inventory.item_restore_prices.length - 1].market_price %></td>
+                                <!-- <td><% new_value(inventory) %></td> -->
                                 <!-- <td><% sum(inventory.item_discounts, 'percent') %></td> -->
                                 
                                 <td><% inventory.remarks %></td>
@@ -261,7 +264,7 @@
                                   </div> -->
                                 </div>  
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label">Description</label>
+                                  <label class="col-sm-2 control-label">Short Description</label>
                                   <div class="col-sm-10">
                                     <textarea  ng-model="new_item.description" class="form-control"></textarea>
                                     <!-- <input ng-model="new_item.description" type="text" class="form-control" placeholder="Description"> -->
