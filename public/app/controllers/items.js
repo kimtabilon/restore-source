@@ -1,5 +1,4 @@
-app
-.controller('itemsController', function($scope, $http, $location, $filter, API_URL) { 
+app.controller('itemsController', function($scope, $http, $location, $filter, API_URL) { 
 	$http
 	.get(API_URL + 'item-status-and-code-types')
 	.then(function(response) {

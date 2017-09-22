@@ -1,5 +1,4 @@
-app
-.controller('usersController', function($scope, $http, $location, $filter, API_URL) { 
+app.controller('usersController', function($scope, $http, $location, $filter, API_URL) { 
 	
     $http
     .get(API_URL + 'users/profile')

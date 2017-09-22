@@ -1,5 +1,4 @@
-app
-.controller('donorsController', function($scope, $http, $location, $filter, API_URL) { 
+app.controller('donorsController', function($scope, $http, $location, $filter, API_URL) { 
 
     $http
     .get(API_URL + 'donors')

@@ -108,9 +108,9 @@
                     </tbody>
                         
                 </table>
-            </div> 
+            </div>
             <div class="box-footer">
-                <select ng-if="countSelectedItems" style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
+                <select ng-if="countSelectedItems" ng-show="'{{Auth::user()->role->name}}' != 'Receiving Coordinator' || (status.replace('-', ' ') | camelCase) != 'Good'" style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
                     ng-model="selectedStatus" 
                     ng-options="status.id as status.name for status in itemStatus"
                     ng-change="transfer(selectedStatus)">

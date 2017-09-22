@@ -1,5 +1,4 @@
-app
-.controller('itemImagesController', function ($scope, $http, $location, $filter, API_URL) {
+app.controller('itemImagesController', function ($scope, $http, $location, $filter, API_URL) {
 
 	/*$http
     .get(API_URL + 'item-images/')

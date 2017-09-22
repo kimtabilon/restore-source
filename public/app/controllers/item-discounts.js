@@ -1,5 +1,4 @@
-app
-.controller('discountsController', function($scope, $http, $location, $filter, API_URL) { 
+app.controller('discountsController', function($scope, $http, $location, $filter, API_URL) { 
 	
     $http
     .get(API_URL + 'item-discounts')

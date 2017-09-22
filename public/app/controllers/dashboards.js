@@ -1,5 +1,4 @@
-app
-.controller('dashboardController', function ($scope, $http, $location, $filter, API_URL) {
+app.controller('dashboardController', function ($scope, $http, $location, $filter, API_URL) {
 
     var current         = $filter('date')(Date.now(), 'yyyy-MM-dd');
     var date            = new Date();

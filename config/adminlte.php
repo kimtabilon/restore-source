@@ -182,7 +182,7 @@ return [
                     'url'  => 'inventories#good',
                     'icon' => 'check-square-o',
                     'icon_color' => 'green',
-                    'can'  => 'manager-access',
+                    'can'  => 'manager-receiving-coordinator-access',
                 ],
                 [
                     'text' => 'Sold',

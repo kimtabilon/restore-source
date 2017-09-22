@@ -1,5 +1,4 @@
-app
-.controller('transactionsController', function($scope, $http, $location, $filter, API_URL) { 
+app.controller('transactionsController', function($scope, $http, $location, $filter, API_URL) { 
 	$http
     .get(API_URL + 'transactions')
     .then(function (response) {
