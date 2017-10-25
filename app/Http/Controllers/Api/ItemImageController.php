@@ -44,7 +44,8 @@ class ItemImageController extends Controller
             'size' 			=> $request->file('image_file')->getClientSize(),
         ]);
 
- 		$image_path 	= public_path().'/images/items';
+ 		$image_path 	= 'images/items';
+
  		$saved_image 	= $file->id . '.' . $file->type;
 
         $request->file('image_file')->move($image_path, $saved_image);

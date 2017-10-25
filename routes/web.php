@@ -31,7 +31,7 @@ Route::get('donors', 'DonorController@index')					->middleware('role:Manager');
 Route::get('angular', 'ItemController@angular');
 Route::get('apiV2/items/{id?}', 'ItemController@list');
 
-Route::group(['prefix' => 'api/v1'], function () {
+Route::group(['prefix' => '/api/v1'], function () {
 	Route::get('dashboard/status', 'Api\DashboardController@status');
 	Route::get('dashboard/{from?}/{to?}', 'Api\DashboardController@index');
 
