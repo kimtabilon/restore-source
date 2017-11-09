@@ -108,6 +108,10 @@
                     </tbody>
                         
                 </table>
+				<div id="printSection" class="text-right">
+					<br /><br /><br />
+                    <p>Prepared By: <strong>{{ App\Role::where('name', 'Manager')->first()->users()->first()->name }}</strong></p>
+                </div>
             </div>
             <div class="box-footer">
                 <select ng-if="countSelectedItems" ng-show="'{{Auth::user()->role->name}}' != 'Receiving Coordinator' || (status.replace('-', ' ') | camelCase) != 'Good'" style="max-width: 200px !important; font-size: 13pt; padding: 3px !important;"
@@ -326,12 +330,12 @@
     <script type="text/javascript">
         document.getElementById("Print").onclick = function () {
             // printElement(document.getElementById("printThis"));
-            $('#printThis').printThis();
+            $('#printThis').printThis({base:'true'});
         };
 
         document.getElementById("PrintBarcode").onclick = function () {
             // printElement(document.getElementById("printThis"));
-            $('#printOnlyBarcode').printThis();
+            $('#printOnlyBarcode').printThis({base:'true'});
         };
     </script>
 
