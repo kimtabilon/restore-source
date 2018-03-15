@@ -5,7 +5,7 @@
 @section('content')
 <div ng-controller="transactionsController">
     <section class="content-header">
-        <h1>Trasactions <span class="badge create-new-trans" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
+        <h1>Transactions <span class="badge create-new-trans" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Transactions</li>
@@ -31,7 +31,7 @@
                       <th>Special Discount</th>
                       <th>Total</th>
                       <th>Remarks</th>
-                      <th>Created</th>
+                      <th>Date</th>
                   </thead>
                   <tbody>
                       <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
@@ -44,7 +44,7 @@
                           <td><% transaction.special_discount %></td>
                           <td><% trans_total_each(transaction.inventories) - transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
-                          <td><% transaction.created %></td>
+                          <td><% transaction.created_at %></td>
                       </tr>
                   </tbody>
                       

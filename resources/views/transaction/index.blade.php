@@ -5,25 +5,31 @@
 @section('content')
 <div ng-controller="transactionsController">
     <section class="content-header">
-        <h1>Trasactions <span class="badge" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
+        <h1>Transactions <span class="badge" style="cursor: pointer;" ng-click="new_transaction()">Create</span></h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Transactions</li>
+            <div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 15px;">
+			  <span class="input-group-addon" id="basic-addon1">From</span>
+			  <input ng-model="report.from" class="from" placeholder="04303" type="date" class="form-control" aria-describedby="basic-addon1">
+			</div>
+			<div class="input-group pull-left" style="width: 200px !important; margin: -3px 5px 0 5px;">
+			  <span class="input-group-addon" id="basic-addon1">To</span>
+			  <input ng-model="report.to" class="to" type="date" class="form-control" aria-describedby="basic-addon1">
+			</div>
         </ol>
     </section>    
 
     @include('adminlte::partials.alert')
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content" id="PrintReport">
         <span us-spinner="{radius:6, width:2, length:5}"></span>
         <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs pull-right">
+            <ul class="nav nav-tabs pull-right non-printable">
               <li ng-repeat="type in types" class="<% type.name=='Item Donation' ? 'active' : '' %>"><a href="#<% type.name.replace(' ', '_') %>" data-toggle="tab" aria-expanded="false"><% type.name %></a></li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" >
               <div ng-repeat="type in types" class="tab-pane <% type.name=='Item Donation' ? 'active' : '' %>" id="<% type.name.replace(' ', '_') %>">
-                <table class="table">
+                <table class="table non-printable">
                   <thead>
                       <th>DA No.</th>
                       <th>Donor/Company</th>
@@ -31,21 +37,77 @@
                       <th>Special Discount</th>
                       <th>Total</th>
                       <th>Remarks</th>
-                      <th>Created</th>
+                      <th>Date</th>
                   </thead>
                   <tbody>
-                      <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:search">
+                      <tr ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:{ created_at:report.from }:dateComparator | filter:search">
                           <td ng-click="toggle(transaction)"><span class="badge"><% transaction.da_number %></span></td>
                           <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %> <% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].profile.company %></td>
                           <td><% transaction.inventories.length %></td>
                           <td><% transaction.special_discount %></td>
                           <td><% trans_total_each(transaction.inventories) - transaction.special_discount %></td>
                           <td><% transaction.remarks %></td>
-                          <td><% transaction.created %></td>
+                          <td><% transaction.created_at %></td>
                       </tr>
                   </tbody>
                       
               </table>
+			  <div class="printable" style="display:none;">
+				  <h2><% type.name %> Reports <small><%formatDate(report.from)%> to <%formatDate(report.to)%></small></h2>
+				  <table class="table">
+					  <thead>
+						  <th>DA No.</th>
+						  <th>Donor/Company</th>
+						  <th></th>
+						  <th>No. of Items</th>
+						  <th></th>
+						  <th>Special Discount</th>
+						  <th>Total</th>
+						  <th>Remarks</th>
+						  <th>Date</th>
+					  </thead>
+					  <tbody ng-repeat="transaction in type.transactions | orderBy:'-created_at' | filter:{ created_at:report.from }:dateComparator | filter:search">
+						  <tr style="background: #eee">
+							  <td ng-click="toggle(transaction)"><span class="badge"><% transaction.da_number %></span></td>
+							  <td><% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].name %> <% transaction.inventories[0].donors[ transaction.inventories[0].donors.length - 1 ].profile.company %></td>
+							  <td></td>
+							  <td><% transaction.inventories.length %></td>
+							  <td></td>
+							  <td><% transaction.special_discount %></td>
+							  <td><% trans_total_each(transaction.inventories) - transaction.special_discount %></td>
+							  <td><% transaction.remarks %></td>
+							  <td><% transaction.created_at %></td>
+						  </tr>
+						  <tr>
+							<td></td>
+							<td><strong>Code</strong></td>
+							<td><strong>Item</strong></td>
+							<td><strong>Quantity</strong></td>
+							<td><strong>Unit</strong></td>
+							<td><strong>Market Value</strong></td>
+							<td><strong>ReStore Value</strong></td>
+							<td><strong>Remarks</strong></td>
+							<td><strong>Status</strong></td>
+						  </tr>
+							<tr ng-repeat="inventory in transaction.inventories">
+								<td></td>
+								<td><% code(inventory.item_codes, 'Barcode').code %></td>
+								<td><% inventory.item.name %></td>
+								<td><% inventory.quantity %></td>
+								<td><% inventory.unit %></td>
+
+								<td><% inventory.item_prices[ inventory.item_prices.length - 1].market_price %></td>
+								<td><% inventory.item_restore_prices[ inventory.item_restore_prices.length - 1].market_price %></td>
+								
+								<td><% inventory.remarks %></td>
+								<td><% inventory.item_status.name %></td>
+							</tr>
+					  </tbody>
+						  
+				  </table>
+				</div>
+			  
+			  
               </div><!-- /.tab-pane -->
             </div><!-- /.tab-content -->
           </div>
@@ -54,6 +116,7 @@
                 
             </div> 
         </div>  --> 
+		<button class="btn btn-default btn-flat print-report"><i class="fa fa-print"></i> Print</button>
     </section>
     <!-- /.content -->
     <!-- Modal (Pop up when detail button clicked) -->
@@ -496,6 +559,9 @@
         .table>tbody+tbody {
             border-top: none; 
         }
+		
+		.hide { display: none !important; }
+		.show { display: block !important; }
     </style>
 @stop
 
@@ -512,14 +578,24 @@
 
    <script src="{{ asset('js/printThis.js') }}"></script>
     <script type="text/javascript">
+		$('.print-report').on('click', function() {
+			$('.non-printable').addClass('hide');
+			$('.printable').addClass('show');
+			
+			$('#PrintReport').printThis();
+			
+			setTimeout(function (){
+
+			  $('.non-printable').removeClass('hide');
+			  $('.printable').removeClass('show');
+
+			}, 500);
+			
+		});
         document.getElementById("PrintListOfItemBtn").onclick = function () {
-            // printElement(document.getElementById("printThis"));
             $('#PrintListOfItem').printThis();
         };
-        document.getElementById("PrintTransactionBtn").onclick = function () {
-            // printElement(document.getElementById("printThis"));
-            $('#PrintTransaction').printThis();
-        };
+		
     </script> 
 @stop
 
